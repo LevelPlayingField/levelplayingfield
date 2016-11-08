@@ -1,0 +1,10 @@
+[ignore]
+.*/build
+.*/config
+.*/gulpfile.js
+.*/node_modules/xlsx/bower.json
+.*/node_modules/react-tap-event-plugin/node_modules/.*
+
+[include]
+.*/src
+.*/tools

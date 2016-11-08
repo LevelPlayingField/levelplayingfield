@@ -1,0 +1,69 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+@import '../variables.css';
+
+:root {
+  --brand-color: #61dafb;
+}
+
+.root {
+  margin: 0;
+}
+
+.link {
+  display: inline-block;
+  padding: 3px 8px;
+  text-decoration: none;
+  font-size: 1.125em; /* ~18px */
+}
+
+.link,
+.link:active,
+.link:visited {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.highlight {
+  margin-right: 8px;
+  margin-left: 8px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+}
+
+.highlight:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.spacer {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.searchIcon {
+  color: color(var(--brand-color) lightness(+0%));
+  font-size: 1.75em;
+}
+
+.searchInput {
+  background-color: transparent;
+  font-size: 1.5em;
+  height: 100%;
+  padding: 4px 8px;
+  border: 0;
+  color: color(var(--brand-color) lightness(+0%));
+  border-bottom: 1px color(var(--brand-color) lightness(-20%)) solid;
+}
+
+.searchInput::hover {
+  border-bottom: 4px color(var(--brand-color)) solid;
+}
