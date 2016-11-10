@@ -3,10 +3,11 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Debug.css';
 
 function Debug({ children }) {
-  return ( <div className={s.debug} children={children}/> );
+  return <div className={s.debug}>{children}</div>;
 }
+
 Debug.propTypes = {
-  children: React.PropTypes.element.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
-export default withStyles(s)(Debug)
+export default withStyles(s)(Debug);

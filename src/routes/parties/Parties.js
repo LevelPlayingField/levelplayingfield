@@ -37,6 +37,7 @@ function Parties({ parties }) {
 }
 
 Parties.propTypes = {
+  parties: PropTypes.arrayOf(PropTypes.any).isRequired,
 };
 
 export default withStyles(s)(Parties);

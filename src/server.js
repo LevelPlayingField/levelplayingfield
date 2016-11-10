@@ -23,7 +23,7 @@ import errorPageStyle from './routes/error/ErrorPage.css';
 import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
-import assets from './assets';
+import assets from './assets'; // eslint-disable-line import/no-unresolved
 import { port } from './config'; // eslint-disable-line import/no-unresolved
 
 const app = express();
@@ -32,7 +32,7 @@ const app = express();
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
 // user agent is not known.
 // -----------------------------------------------------------------------------
-global.navigator           = global.navigator || {};
+global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
 
 //
@@ -46,10 +46,10 @@ app.use(bodyParser.json());
 // Register API middleware
 // -----------------------------------------------------------------------------
 app.use('/graphql', expressGraphQL(req => ({
-             schema,
-  graphiql:  true,
+  schema,
+  graphiql: true,
   rootValue: { request: req },
-  pretty:    process.env.NODE_ENV !== 'production',
+  pretty: process.env.NODE_ENV !== 'production',
 })));
 
 //
@@ -71,7 +71,7 @@ app.get('*', async(req, res, next) => {
     };
 
     const route = await UniversalRouter.resolve(routes, {
-      path:  req.path,
+      path: req.path,
       query: req.query,
     });
 
@@ -80,12 +80,12 @@ app.get('*', async(req, res, next) => {
       return;
     }
 
-    const data    = { ...route };
+    const data = { ...route };
     data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
-    data.style    = [...css].join('');
-    data.script   = assets.main.js;
-    data.chunk    = assets[route.chunk] && assets[route.chunk].js;
-    const html    = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+    data.style = [...css].join('');
+    data.script = assets.main.js;
+    data.chunk = assets[route.chunk] && assets[route.chunk].js;
+    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
 
     res.status(route.status || 200);
     res.send(`<!doctype html>${html}`);
@@ -109,7 +109,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
       description={err.message}
       style={errorPageStyle._getCss()} // eslint-disable-line no-underscore-dangle
     >
-    {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err}/>)}
+      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
     </Html>
   );
   res.status(err.status || 500);

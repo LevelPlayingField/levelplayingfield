@@ -36,7 +36,7 @@ const ContextType = {
  */
 class App extends React.Component {
   static propTypes = {
-    context:  PropTypes.shape(ContextType).isRequired,
+    context: PropTypes.shape(ContextType).isRequired,
     children: PropTypes.element.isRequired,
   };
 
@@ -54,7 +54,7 @@ class App extends React.Component {
     }, {
       avatar: {
         borderColor: null,
-      }
+      },
     });
   }
 
@@ -66,7 +66,9 @@ class App extends React.Component {
     // NOTE: If you need to add or modify header, footer etc. of the app,
     // please do that inside the Layout component.
     return (
-      <MuiThemeProvider muiTheme={this.theme} children={React.Children.only(this.props.children)}/>
+      <MuiThemeProvider muiTheme={this.theme}>
+        {React.Children.only(this.props.children)}
+      </MuiThemeProvider>
     );
   }
 

@@ -7,12 +7,11 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Search.css';
-import logoUrl from './search-icon.png';
 import MDSearch from 'react-icons/lib/md/search';
+import s from './Search.css';
 
 function Search({ className }) {
   return (
@@ -24,5 +23,9 @@ function Search({ className }) {
     </div>
   );
 }
+
+Search.propTypes = {
+  className: PropTypes.string,
+};
 
 export default withStyles(s)(Search);

@@ -12,16 +12,16 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
 import s from './Case.css';
+import first from '../../core/first';
 
-const first = arr => arr.length > 0 ? arr[0] : null;
-const days  = date => date / 1000 / 60 / 60 / 24;
+const days = date => date / 1000 / 60 / 60 / 24;
 
 function Case({ case_ }) {
-  const parties          = case_.Parties.edges.map(edge => edge.node),
-        non_consumer     = first(parties.filter(node => node.Party.type === 'Non Consumer')),
-        attorneys        = parties.filter(node => node.Party.type === 'Attorney'),
-        arbitrators      = parties.filter(node => node.Party.type === 'Arbitrator'),
-        first_arbitrator = first(arbitrators.sort(node => node.date));
+  const parties = case_.Parties.edges.map(edge => edge.node);
+  const nonConsumer = first(parties.filter(node => node.Party.type === 'Non Consumer'));
+  const attorneys = parties.filter(node => node.Party.type === 'Attorney');
+  const arbitrators = parties.filter(node => node.Party.type === 'Arbitrator');
+  const firstArbitrator = first(arbitrators.sort(node => node.date));
 
   return (
     <Layout>
@@ -49,13 +49,13 @@ function Case({ case_ }) {
               </dl>
             </div>
             <div className={s.col_third}>
-              {first_arbitrator !== null
-                ? (
+              {firstArbitrator !== null ? (
                 <dl className={s.dl_horizontal}>
                   <dt>Filing to appointment</dt>
-                  <dd>{days(new Date(first_arbitrator.date) - new Date(case_.filing_date))} Days</dd>
+                  <dd>{days(new Date(firstArbitrator.date) - new Date(case_.filing_date))} Days
+                  </dd>
                   <dt>Appointment to close</dt>
-                  <dd>{days(new Date(case_.close_date) - new Date(first_arbitrator.date))} Days</dd>
+                  <dd>{days(new Date(case_.close_date) - new Date(firstArbitrator.date))} Days</dd>
                 </dl>
               ) : (
                 <span>&nbsp;</span>
@@ -66,13 +66,17 @@ function Case({ case_ }) {
           <h2 className={s.title}>{arbitrators.length === 1 ? 'Arbitrator' : 'Arbitrators'}</h2>
           <div className={s.row}>
 
-            {arbitrators.length > 0
-              ? arbitrators.map(arbitrator => (
+            {arbitrators.length > 0 ? arbitrators.map(arbitrator =>
               <div className={s.col_third} key={`arbitrator_${arbitrator.Party.id}`}>
-                <h3 className={s.title}><Link to={`/party/${arbitrator.Party.slug}`}>{arbitrator.Party.name}</Link></h3>
-                <p className={s.details}>Appointed {new Date(arbitrator.date).toLocaleDateString()}</p>
+                <h3 className={s.title}>
+                  <Link to={`/party/${arbitrator.Party.slug}`}>
+                    {arbitrator.Party.name}
+                  </Link>
+                </h3>
+                <p className={s.details}>
+                  Appointed {new Date(arbitrator.date).toLocaleDateString()}</p>
               </div>
-            )) : (
+            ) : (
               <div className={s.col_full}>
                 <h3 className={s.title}>Unknown</h3>
               </div>
@@ -108,8 +112,8 @@ function Case({ case_ }) {
               <h2 className={s.subtitle}>Defendant</h2>
               <div className={s.row}>
                 <h3 className={s.title}>
-                  <Link to={`/party/${non_consumer.Party.slug}`}>
-                    {non_consumer.Party.name}
+                  <Link to={`/party/${nonConsumer.Party.slug}`}>
+                    {nonConsumer.Party.name}
                   </Link>
                 </h3>
               </div>
@@ -144,6 +148,8 @@ function Case({ case_ }) {
   );
 }
 
-Case.propTypes = {};
+Case.propTypes = {
+  case_: PropTypes.any.isRequired,
+};
 
 export default withStyles(s)(Case);

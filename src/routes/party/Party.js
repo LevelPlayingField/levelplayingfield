@@ -14,7 +14,7 @@ function Party({ party }) {
             <small className={s.titleMuted}>{party.type}</small>
           </h1>
 
-          <PartyDetails party={party}/>
+          <PartyDetails party={party} />
         </div>
       </div>
     </Layout>
@@ -23,5 +23,5 @@ function Party({ party }) {
 
 Party.propTypes = {
   party: PropTypes.any.isRequired,
-}
+};
 export default withStyles(s)(Party);

@@ -17,7 +17,7 @@ export default {
 
   async action() {
     const resp = await graphql(`{
-	cases: Cases(limit: 20){
+  cases: Cases(limit: 20){
     id
     case_number
     initiating_party
@@ -39,7 +39,7 @@ export default {
 
     return {
       title: 'Cases',
-      component: <Cases cases={data.cases} />,
+      component: <Cases cases={data.cases}/>,
     };
   },
 

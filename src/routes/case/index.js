@@ -84,8 +84,8 @@ export default {
     if (!data || !data.case) throw new Error('Failed to load case.');
 
     return {
-      title:     'Case',
-      component: <Case case_={data.case}/>,
+      title: 'Case',
+      component: <Case case_={data.case} />,
     };
   },
 };

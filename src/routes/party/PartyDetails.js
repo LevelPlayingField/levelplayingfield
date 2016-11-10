@@ -6,11 +6,11 @@ import GeneralPartyDetails from './GeneralPartyDetails';
 function PartyDetails({ party }) {
   switch (party.type) {
     case 'Law Firm':
-      return <LawFirmDetails party={party}/>;
+      return <LawFirmDetails party={party} />;
     case 'Attorney':
-      return <AttorneyDetails party={party}/>;
+      return <AttorneyDetails party={party} />;
     default:
-      return <GeneralPartyDetails party={party}/>;
+      return <GeneralPartyDetails party={party} />;
   }
 }
 

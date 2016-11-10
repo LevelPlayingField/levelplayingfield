@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 
-export default sequelize.define('party', {
+const Party = sequelize.define('party', {
   type: Sequelize.STRING(32),
   name: Sequelize.STRING(255),
   slug: Sequelize.STRING(255),
@@ -10,5 +10,12 @@ export default sequelize.define('party', {
     { fields: ['id'] },
     { fields: ['name'] },
     { fields: ['type', 'name'] },
-  ]
+  ],
 });
+
+Party.NON_CONSUMER = 'Non Consumer';
+Party.ARBITRATOR = 'Arbitrator';
+Party.ATTORNEY = 'Attorney';
+Party.LAW_FIRM = 'Law Firm';
+
+export default Party;

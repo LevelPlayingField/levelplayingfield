@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: "off" */
 import {
   GraphQLSchema,
   GraphQLList,
@@ -5,182 +6,180 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLInt,
-  GraphQLID
+  GraphQLID,
 } from 'graphql';
 import { defaultListArgs, attributeFields, resolver, relay } from 'graphql-sequelize';
 import { Case, Party, CaseParty } from './models';
 
 const CasePartyType = new GraphQLObjectType({
-  name:   'CaseParty',
+  name: 'CaseParty',
   fields: () => Object.assign(attributeFields(CaseParty), {
-    Case:  {
-      type:    CaseType,
-      resolve: resolver(CaseParty.Case)
+    Case: {
+      type: CaseType,
+      resolve: resolver(CaseParty.Case),
     },
     Party: {
-      type:    PartyType,
-      resolve: resolver(CaseParty.Party)
+      type: PartyType,
+      resolve: resolver(CaseParty.Party),
     },
-    Firm:  {
-      type:    PartyType,
-      resolve: resolver(CaseParty.Firm)
+    Firm: {
+      type: PartyType,
+      resolve: resolver(CaseParty.Firm),
     },
-  })
+  }),
 });
 
 
 const PartyType = new GraphQLObjectType({
-  name:   'Party',
+  name: 'Party',
   fields: () => Object.assign(attributeFields(Party), {
-    Cases:     {
-      type:    PartyCasesConnection.connectionType,
+    Cases: {
+      type: PartyCasesConnection.connectionType,
       resolve: PartyCasesConnection.resolve,
-      args:    {
+      args: {
         ...PartyCasesConnection.connectionArgs,
-      }
+      },
     },
     FirmCases: {
-      type:    PartyFirmCasesConnection.connectionType,
+      type: PartyFirmCasesConnection.connectionType,
       resolve: PartyFirmCasesConnection.resolve,
-      args:    {
+      args: {
         ...PartyFirmCasesConnection.connectionArgs,
-      }
+      },
     },
     Attorneys: {
-      type:    PartyAttorneysConnection.connectionType,
+      type: PartyAttorneysConnection.connectionType,
       resolve: PartyAttorneysConnection.resolve,
-      args:    {
+      args: {
         ...PartyAttorneysConnection.connectionArgs,
-      }
+      },
     },
-    Firms:     {
-      type:    PartyFirmsConnection.connectionType,
+    Firms: {
+      type: PartyFirmsConnection.connectionType,
       resolve: PartyFirmsConnection.resolve,
-      args:    {
+      args: {
         ...PartyFirmsConnection.connectionArgs,
-      }
+      },
     },
-  })
+  }),
 });
 
 const CaseType = new GraphQLObjectType({
-  name:   Case.name,
+  name: Case.name,
   fields: () => Object.assign(attributeFields(Case), {
     Parties: {
-      type:    CasePartiesConnection.connectionType,
+      type: CasePartiesConnection.connectionType,
       resolve: CasePartiesConnection.resolve,
-      args:    {
+      args: {
         ...CasePartiesConnection.connectionArgs,
-      }
+      },
     },
   }),
 });
 
 const CasePartiesConnection = relay.sequelizeConnection({
-  name:             'caseParty',
-  nodeType:         CasePartyType,
-  target:           Case.Parties,
-  where:            (key, value) => ({ [key]: value }),
+  name: 'caseParty',
+  nodeType: CasePartyType,
+  target: Case.Parties,
+  where: (key, value) => ({ [key]: value }),
   connectionFields: {
     total: {
-      type:    GraphQLInt,
-      resolve: ({ source }) => source.countParties()
-    }
-  }
+      type: GraphQLInt,
+      resolve: ({ source }) => source.countParties(),
+    },
+  },
 });
 
 const PartyCasesConnection = relay.sequelizeConnection({
-  name:             'cases',
-  nodeType:         CasePartyType,
-  target:           Party.Cases,
-  where:            (key, value) => ({ [key]: value }),
+  name: 'cases',
+  nodeType: CasePartyType,
+  target: Party.Cases,
+  where: (key, value) => ({ [key]: value }),
   connectionFields: {
     total: {
-      type:    GraphQLInt,
-      resolve: ({ source }) => source.countCases()
-    }
-  }
+      type: GraphQLInt,
+      resolve: ({ source }) => source.countCases(),
+    },
+  },
 });
 
 const PartyFirmCasesConnection = relay.sequelizeConnection({
-  name:             'firmCases',
-  nodeType:         CasePartyType,
-  target:           Party.FirmCases,
-  where:            (key, value) => ({ [key]: value }),
+  name: 'firmCases',
+  nodeType: CasePartyType,
+  target: Party.FirmCases,
+  where: (key, value) => ({ [key]: value }),
   connectionFields: {
     total: {
-      type:    GraphQLInt,
-      resolve: ({ source }) => source.countFirmCases()
-    }
-  }
+      type: GraphQLInt,
+      resolve: ({ source }) => source.countFirmCases(),
+    },
+  },
 });
 
 
 const PartyFirmsConnection = relay.sequelizeConnection({
-  name:             'firms',
-  nodeType:         PartyType,
-  target:           Party.Firms,
-  where:            (key, value) => ({ [key]: value }),
+  name: 'firms',
+  nodeType: PartyType,
+  target: Party.Firms,
+  where: (key, value) => ({ [key]: value }),
   connectionFields: {
     total: {
-      type:    GraphQLInt,
-      resolve: ({ source }) => source.countFirms()
-    }
-  }
+      type: GraphQLInt,
+      resolve: ({ source }) => source.countFirms(),
+    },
+  },
 });
 
 const PartyAttorneysConnection = relay.sequelizeConnection({
-  name:             'attorneys',
-  nodeType:         PartyType,
-  target:           Party.Attorneys,
-  where:            (key, value) => ({ [key]: value }),
+  name: 'attorneys',
+  nodeType: PartyType,
+  target: Party.Attorneys,
+  where: (key, value) => ({ [key]: value }),
   connectionFields: {
     total: {
-      type:    GraphQLInt,
-      resolve: ({ source }) => source.countAttorneys()
-    }
-  }
+      type: GraphQLInt,
+      resolve: ({ source }) => source.countAttorneys(),
+    },
+  },
 });
 
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name:   'Query',
+    name: 'Query',
     fields: () => ({
-      Cases:   {
-        type:    new GraphQLList(CaseType),
+      Cases: {
+        type: new GraphQLList(CaseType),
         resolve: resolver(Case),
-        args:    Object.assign(defaultListArgs(), {}),
+        args: Object.assign(defaultListArgs(), {}),
       },
       Parties: {
-        type:    new GraphQLList(PartyType),
+        type: new GraphQLList(PartyType),
         resolve: resolver(Party),
-        args:    Object.assign(defaultListArgs(), {}),
+        args: Object.assign(defaultListArgs(), {}),
       },
-      Case:    {
-        type:    CaseType,
+      Case: {
+        type: CaseType,
         resolve: resolver(Case),
-        args:    {
+        args: {
           id: { type: new GraphQLNonNull(GraphQLID) },
-        }
+        },
       },
-      Party:   {
+      Party: {
         type: PartyType,
         resolve(args, context, ...extra) {
           if (!(context.id || context.slug)) {
-            throw new Error('id or slug is required')
+            throw new Error('id or slug is required');
           }
 
-          let data = resolver(Party)(args, context, ...extra);
-
-          console.log(data);
+          const data = resolver(Party)(args, context, ...extra);
 
           return data;
         },
         args: {
-          id:   { type: GraphQLID },
+          id: { type: GraphQLID },
           slug: { type: GraphQLString },
-        }
+        },
       },
     }),
   }),

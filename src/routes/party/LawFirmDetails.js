@@ -12,7 +12,7 @@ function LawFirmDetails({ party }) {
 
         <ul className={s.parties}>
           {party.Attorneys.edges.map(attorney =>
-            <PartyItem party={attorney} key={`attorney_${attorney.node.id}`}/>
+            <PartyItem party={attorney} key={`attorney_${attorney.node.id}`} />
           )}
         </ul>
       </div>
@@ -21,7 +21,7 @@ function LawFirmDetails({ party }) {
 
         <ul className={s.cases}>
           {party.FirmCases.edges.map(case_ =>
-            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`}/>
+            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`} />
           )}
         </ul>
       </div>

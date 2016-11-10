@@ -7,22 +7,24 @@ import first from '../../core/first';
 const Consumer = { party_type: 'Consumer', party_name: 'Consumer' };
 
 function CaseItem({ party, case_ }) {
-  const consumer     = party.type === 'Non Consumer' ? Consumer : { party_type: party.type, party_name: party.name },
-        non_consumer = first(
+  const consumer = party.type === 'Non Consumer' ? Consumer : { party_type: party.type, party_name: party.name };
+  const nonConsumer = first(
           case_.node.Case.Parties.edges
             .map(edge => edge.node)
             .filter(other => other.party_type === 'Non Consumer')
         );
 
-  let case_string    = non_consumer.party_name;
+  let caseString;
 
   switch (case_.node.Case.initiating_party) {
     case 'Consumer':
-      case_string = `${consumer.party_name} vs. ${non_consumer.party_name}`;
+      caseString = `${consumer.party_name} vs. ${nonConsumer.party_name}`;
       break;
     case 'Non Consumer':
-      case_string = `${non_consumer.party_name} vs. ${consumer.party_name}`;
+      caseString = `${nonConsumer.party_name} vs. ${consumer.party_name}`;
       break;
+    default:
+      caseString = nonConsumer.party_name;
   }
 
   return (
@@ -30,7 +32,7 @@ function CaseItem({ party, case_ }) {
       <Link to={`/case/${case_.node.case_id}`} className={s.caseNumber}>
         Case Number {case_.node.Case.case_number}
       </Link>
-      <div>{case_string}</div>
+      <div>{caseString}</div>
     </li>
   );
 }

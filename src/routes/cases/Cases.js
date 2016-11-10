@@ -12,6 +12,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
 import s from './Cases.css';
+import first from '../../core/first';
 
 function Cases({ cases }) {
   return (
@@ -21,15 +22,19 @@ function Cases({ cases }) {
           <h1 className={s.title}>Cases</h1>
           <ul className={s.cases}>
             {cases.map(case_ => {
-              let non_consumer = case_.Parties.edges.filter(party => party.node.party_type === 'Non Consumer')[0];
+              const nonConsumer = first(
+                case_.Parties.edges.filter(party => party.node.party_type === 'Non Consumer')
+              );
 
               return (
                 <li className={s.casesItem}>
-                  <Link className={s.casesTitle} to={`/case/${case_.id}`}>Case Number {case_.case_number}</Link>
+                  <Link className={s.casesTitle} to={`/case/${case_.id}`}>
+                    Case Number {case_.case_number}
+                  </Link>
                   <span className={s.casesDesc}>
                     {case_.initiating_party === 'Consumer'
-                      ? `${case_.initiating_party} vs. ${non_consumer.node.party_name}`
-                      : `${non_consumer.node.party_name} vs. Consumer`
+                      ? `${case_.initiating_party} vs. ${nonConsumer.node.party_name}`
+                      : `${nonConsumer.node.party_name} vs. Consumer`
                     }
                   </span>
                 </li>
@@ -42,6 +47,8 @@ function Cases({ cases }) {
   );
 }
 
-Cases.propTypes = {};
+Cases.propTypes = {
+  cases: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
 
 export default withStyles(s)(Cases);

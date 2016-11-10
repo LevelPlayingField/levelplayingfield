@@ -21,11 +21,11 @@ function Header() {
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
-            <img src={logoUrl} width="38" height="38" alt="React"/>
-            {/*<span className={s.brandTxt}>lpf.io</span>*/}
+            <img src={logoUrl} width="38" height="38" alt="React" />
+            {/* <span className={s.brandTxt}>lpf.io</span>*/}
           </Link>
-          <Search className={s.search}/>
-          <Navigation className={s.nav}/>
+          <Search className={s.search} />
+          <Navigation className={s.nav} />
         </div>
         <div className={s.banner}>
           <h1 className={s.bannerTitle}>Level Playing Field</h1>

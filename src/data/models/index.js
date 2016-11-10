@@ -6,39 +6,39 @@ import Party from './Party';
 
 Case.Parties = Case.hasMany(CaseParty, {
   foreignKey: 'case_id',
-  as:         'Parties',
+  as: 'Parties',
 });
 
-Party.Cases     = Party.hasMany(CaseParty, {
+Party.Cases = Party.hasMany(CaseParty, {
   foreignKey: 'party_id',
-  as:         'Cases',
+  as: 'Cases',
 });
 Party.FirmCases = Party.hasMany(CaseParty, {
   foreignKey: 'firm_id',
-  as:         'FirmCases',
+  as: 'FirmCases',
 });
-Party.Firms     = Party.belongsToMany(Party, {
-  as:         'Firms',
-  through:    'attorney_firms',
+Party.Firms = Party.belongsToMany(Party, {
+  as: 'Firms',
+  through: 'attorney_firms',
   foreignKey: 'party_id',
 });
 Party.Attorneys = Party.belongsToMany(Party, {
-  as:         'Attorneys',
-  through:    'attorney_firms',
+  as: 'Attorneys',
+  through: 'attorney_firms',
   foreignKey: 'firm_id',
 });
 
-CaseParty.Case  = CaseParty.belongsTo(Case, {
+CaseParty.Case = CaseParty.belongsTo(Case, {
   foreignKey: 'case_id',
-  as:         'Case',
+  as: 'Case',
 });
 CaseParty.Party = CaseParty.belongsTo(Party, {
   foreignKey: 'party_id',
-  as:         'Party',
+  as: 'Party',
 });
-CaseParty.Firm  = CaseParty.belongsTo(Party, {
+CaseParty.Firm = CaseParty.belongsTo(Party, {
   foreignKey: 'firm_id',
-  as:         'Firm',
+  as: 'Firm',
 });
 
 function sync(...args) {

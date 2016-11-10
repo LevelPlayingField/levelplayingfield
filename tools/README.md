@@ -1,3 +1,13 @@
+## Data Tools
+
+##### `npm run cleanDB` (`cleanDB.js`)
+
+* Cleans the database of all data
+
+##### `npm run importAAA file.xlsx` (`importAAA.js`)
+
+* Import data from AAA Excel file
+
 ## Build Automation Tools
 
 ##### `npm start` (`start.js`)

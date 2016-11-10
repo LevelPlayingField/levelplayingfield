@@ -13,7 +13,7 @@ function GeneralPartyDetails({ party }) {
 
         <ul className={s.cases}>
           {party.Cases.edges.map(case_ =>
-            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`}/>
+            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`} />
           )}
         </ul>
       </div>

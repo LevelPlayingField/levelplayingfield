@@ -5,6 +5,7 @@
     "npm": ">=3.10"
   },
   "dependencies": {
+    "awesome-progress": "0.0.53",
     "babel-polyfill": "6.16.0",
     "babel-runtime": "6.11.6",
     "bluebird": "3.4.6",
@@ -41,7 +42,8 @@
     "sequelize": "3.24.8",
     "source-map-support": "0.4.5",
     "universal-router": "2.0.0",
-    "whatwg-fetch": "1.0.0"
+    "whatwg-fetch": "1.0.0",
+    "xlsx": "^0.8.0"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.5.0",
@@ -68,6 +70,7 @@
     "eslint": "^3.8.1",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-loader": "^1.6.0",
+    "eslint-plugin-flowtype-errors": "^1.5.0",
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
@@ -137,6 +140,9 @@
   "eslintConfig": {
     "parser": "babel-eslint",
     "extends": "airbnb",
+    "plugins": [
+      "flowtype-errors"
+    ],
     "globals": {
       "__DEV__": true
     },
@@ -148,10 +154,12 @@
       "generator-star-spacing": "off",
       "import/extensions": "off",
       "import/no-extraneous-dependencies": "off",
+      "react/jsx-space-before-closing": "off",
       "react/forbid-prop-types": "off",
       "react/jsx-filename-extension": "off",
       "react/no-danger": "off",
-      "react/no-unused-prop-types": "off"
+      "react/no-unused-prop-types": "off",
+      "flowtype-errors/show-errors": 2
     }
   },
   "stylelint": {
@@ -189,6 +197,8 @@
     "deploy": "babel-node tools/run deployToAzureWebApps",
     "render": "babel-node tools/run render",
     "serve": "babel-node tools/run runServer",
-    "start": "babel-node tools/run start"
+    "start": "babel-node tools/run start",
+    "cleanDB": "babel-node tools/run cleanDB",
+    "importAAA": "babel-node tools/run importAAA"
   }
 }
