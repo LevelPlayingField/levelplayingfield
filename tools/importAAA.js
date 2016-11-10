@@ -120,7 +120,8 @@ async function parseRow(row) {
     const firm = await createParty(
       Party.LAW_FIRM,
       (
-        utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() === 'attorney at law' || !utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
+        utils.cleanStr(CONSUMER_ATTORNEY_FIRM) !== '' &&
+        utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() !== 'attorney at law'
       ) ? utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
         : `${attorney.name}, Attorney at Law`
     );
