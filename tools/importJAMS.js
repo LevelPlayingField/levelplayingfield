@@ -260,6 +260,7 @@ async function parseRow(row) {
     const attorneyParty = await createParty(Party.ATTORNEY, attorney);
     const firmParty = await createParty(Party.LAW_FIRM, firm);
 
+    await firmParty.addAttorney(attorneyParty);
     await CaseParty.create({
       case_id: newCase.id,
       firm_id: firmParty.id,

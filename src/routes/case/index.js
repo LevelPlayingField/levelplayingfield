@@ -39,8 +39,8 @@ export default {
         type_of_disposition
         business_fees
         consumer_fees
-        feeallocation_consumer
-        feeallocation_business
+        fee_allocation_consumer
+        fee_allocation_business
         award_amount_consumer
         award_amount_business
         other_relief_consumer
