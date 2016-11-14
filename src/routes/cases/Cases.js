@@ -27,7 +27,7 @@ function Cases({ cases }) {
               );
 
               return (
-                <li className={s.casesItem}>
+                <li className={s.casesItem} key={`case_${case_.id}`}>
                   <Link className={s.casesTitle} to={`/case/${case_.id}`}>
                     Case Number {case_.case_number}
                   </Link>

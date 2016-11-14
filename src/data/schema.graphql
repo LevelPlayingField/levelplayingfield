@@ -1,0 +1,223 @@
+# A connection to a list of items.
+type attorneysConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [attorneysEdge]
+  total: Int
+}
+
+enum attorneysConnectionOrder {
+  ID
+}
+
+# An edge in a connection.
+type attorneysEdge {
+  # The item at the end of the edge
+  node: Party
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+type case {
+  id: Int!
+  case_number: String
+  arbitration_board: String
+  initiating_party: String
+  source_of_authority: String
+  dispute_type: String
+  dispute_subtype: String
+  salary_range: String
+  prevailing_party: String
+  filing_date: String
+  close_date: String
+  type_of_disposition: String
+  business_fees: String
+  consumer_fees: String
+  fee_allocation_consumer: String
+  fee_allocation_business: String
+  award_amount_consumer: Int
+  award_amount_business: Int
+  other_relief_consumer: String
+  other_relief_business: String
+  attorney_fees_consumer: Int
+  attorney_fees_business: Int
+  consumer_rep_state: String
+  consumer_self_represented: Boolean
+  document_only_proceeding: Boolean
+  type_of_hearing: String
+  hearing_addr1: String
+  hearing_addr2: String
+  hearing_city: String
+  hearing_state: String
+  hearing_zip: String
+  arb_count: Int
+  med_count: Int
+  consumer_arb_count: Int
+  adr_process: String
+  createdAt: String!
+  updatedAt: String!
+  Parties(after: String, first: Int, before: String, last: Int, orderBy: [casePartyConnectionOrder]): casePartyConnection
+}
+
+type CaseParty {
+  type: String
+  case_id: Int!
+  party_id: Int!
+  party_name: String
+  party_type: String
+  firm_id: Int
+  date: String
+  fees: Int
+  createdAt: String!
+  updatedAt: String!
+  Case: case
+  Party: Party
+  Firm: Party
+}
+
+# A connection to a list of items.
+type casePartyConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [casePartyEdge]
+  total: Int
+}
+
+enum casePartyConnectionOrder {
+  ID
+}
+
+# An edge in a connection.
+type casePartyEdge {
+  # The item at the end of the edge
+  node: CaseParty
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# A connection to a list of items.
+type casesConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [casesEdge]
+  total: Int
+}
+
+enum casesConnectionOrder {
+  ID
+}
+
+# An edge in a connection.
+type casesEdge {
+  # The item at the end of the edge
+  node: CaseParty
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# A connection to a list of items.
+type firmCasesConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [firmCasesEdge]
+  total: Int
+}
+
+enum firmCasesConnectionOrder {
+  ID
+}
+
+# An edge in a connection.
+type firmCasesEdge {
+  # The item at the end of the edge
+  node: CaseParty
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# A connection to a list of items.
+type firmsConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [firmsEdge]
+  total: Int
+}
+
+enum firmsConnectionOrder {
+  ID
+}
+
+# An edge in a connection.
+type firmsEdge {
+  # The item at the end of the edge
+  node: Party
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# The `JSON` scalar type represents raw JSON as values.
+scalar JSON
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Party {
+  id: Int!
+  type: String
+  name: String
+  slug: String
+  createdAt: String!
+  updatedAt: String!
+  Cases(after: String, first: Int, before: String, last: Int, orderBy: [casesConnectionOrder]): casesConnection
+  FirmCases(after: String, first: Int, before: String, last: Int, orderBy: [firmCasesConnectionOrder]): firmCasesConnection
+  Attorneys(after: String, first: Int, before: String, last: Int, orderBy: [attorneysConnectionOrder]): attorneysConnection
+  Firms(after: String, first: Int, before: String, last: Int, orderBy: [firmsConnectionOrder]): firmsConnection
+}
+
+type Query {
+  Cases(
+    limit: Int
+    order: String
+
+    # A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    where: JSON
+    offset: Int
+  ): [case]
+  Parties(
+    limit: Int
+    order: String
+
+    # A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    where: JSON
+    offset: Int
+  ): [Party]
+  Case(id: ID!): case
+  Party(id: ID, slug: String): Party
+}
