@@ -1,3 +1,10 @@
+import pace from 'awesome-progress';
+import xlsx from 'xlsx';
+import slugify from '../../src/core/slugify';
+import models, { Party } from '../../src/data/models';
+
+const NA = new Set(['na', 'n/a', 'nan', 'none', 'null', 'undefined']);
+
 const nonNaN = v => (isNaN(v) ? null : v);
 const nullOr = c => v => ((v === null || String(v).trim() === '') ? null : c(v));
 const date = v => new Date(v);
@@ -5,9 +12,17 @@ const integer = v => parseInt(v, 10);
 const decimal = v => parseFloat(v);
 const rtrim = c => v => v.replace(new RegExp(`${c}+$`), '');
 const ltrim = c => v => v.replace(new RegExp(`^${c}+`), '');
+const rsplit = (v, c) => {
+  if (v === null) {
+    return null;
+  }
+  const parts = v.split(c);
+  const right = parts.pop();
+  return [parts.join(c), right];
+};
 const cleanStr = str => String(str).replace(/\s+/, ' ').trim();
 const lookupValue = table => str => table[str];
-const naOr = str => (['na', 'n/a', 'nan', 'none', 'null', 'undefined'].indexOf(str.toString().toLowerCase()) === -1 ? null : str);
+const naOr = (str, v = null) => (NA.has(String(str).toLowerCase()) ? v : str);
 const percent = v => ((typeof v === 'string') ? decimal(rtrim('%')(v)) : decimal(v));
 const bool = v => ['true', 't', 'yes', 'y'].indexOf(v.toString().toLowerCase()) !== -1;
 const money = v => {
@@ -22,6 +37,36 @@ const money = v => {
   return Math.floor(dec * 100);
 };
 
+async function createParty(type, name) {
+  const slug = slugify(`${type} ${name}`);
+  return await Party.findOrCreate({
+    where: { slug },
+    defaults: { type, name, slug },
+  }).spread(p => p);
+}
+
+async function runImport(parseRow) {
+  const workbook = xlsx.readFile(process.argv[process.argv.length - 1]);
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+  const rows = xlsx.utils.sheet_to_row_object_array(worksheet);
+  const pb = pace(rows.length);
+
+  await models.sync({ logging: false });
+
+  for (const row of rows) {
+    try {
+      await parseRow(row);
+      pb.op();
+    } catch (e) {
+      console.log('\n\n\n\n');
+      console.error(e);
+      console.log('Failed on row', row);
+      pb.op({ errors: 1 });
+    }
+  }
+}
+
 export default {
   date: nullOr(date),
   integer: nullOr(integer),
@@ -30,8 +75,14 @@ export default {
   ltrim: nullOr(ltrim),
   cleanStr: nullOr(cleanStr),
   lookupValue: nullOr(lookupValue),
-  naOr: nullOr(naOr),
   percent: nullOr(percent),
   money: nullOr(money),
   bool: nullOr(bool),
+  nonNaN,
+  naOr,
+  rsplit,
+};
+export {
+  runImport,
+  createParty,
 };

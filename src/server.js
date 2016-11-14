@@ -16,6 +16,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import UniversalRouter from 'universal-router';
 import PrettyError from 'pretty-error';
+import createMemoryHistory from 'history/createMemoryHistory';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
@@ -61,6 +62,7 @@ app.get('*', async(req, res, next) => {
 
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
+    const history = createMemoryHistory({ initialEntries: [req.url] });
     const context = {
       // Enables critical path CSS rendering
       // https://github.com/kriasoft/isomorphic-style-loader
@@ -68,6 +70,7 @@ app.get('*', async(req, res, next) => {
         // eslint-disable-next-line no-underscore-dangle
         styles.forEach(style => css.add(style._getCss()));
       },
+      history,
     };
 
     const route = await UniversalRouter.resolve(routes, {

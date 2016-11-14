@@ -8,15 +8,12 @@
  */
 
 import React, { PropTypes } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { green100, green500, green700 } from 'material-ui/styles/colors';
-
 
 const ContextType = {
   // Enables critical path CSS rendering
   // https://github.com/kriasoft/isomorphic-style-loader
   insertCss: PropTypes.func.isRequired,
+  history: PropTypes.any.isRequired,
 };
 
 /**
@@ -42,22 +39,6 @@ class App extends React.Component {
 
   static childContextTypes = ContextType;
 
-  constructor(props) {
-    super(props);
-
-    this.theme = getMuiTheme({
-      palette: {
-        primary1Color: green500,
-        primary2Color: green700,
-        primary3Color: green100,
-      },
-    }, {
-      avatar: {
-        borderColor: null,
-      },
-    });
-  }
-
   getChildContext() {
     return this.props.context;
   }
@@ -65,11 +46,7 @@ class App extends React.Component {
   render() {
     // NOTE: If you need to add or modify header, footer etc. of the app,
     // please do that inside the Layout component.
-    return (
-      <MuiThemeProvider muiTheme={this.theme}>
-        {React.Children.only(this.props.children)}
-      </MuiThemeProvider>
-    );
+    return React.Children.only(this.props.children);
   }
 
 }

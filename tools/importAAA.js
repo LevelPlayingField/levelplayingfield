@@ -1,16 +1,5 @@
-import pace from 'awesome-progress';
-import xlsx from 'xlsx';
-import slugify from '../src/core/slugify';
-import models, { Case, Party, CaseParty } from '../src/data/models';
-import utils from './lib/importlib';
-
-async function createParty(type, name) {
-  const slug = slugify(`${type} ${name}`);
-  return await Party.findOrCreate({
-    where: { slug },
-    defaults: { type, name, slug },
-  }).spread(p => p);
-}
+import { Case, Party, CaseParty } from '../src/data/models';
+import utils, { createParty, runImport } from './lib/importlib';
 
 async function parseRow(row) {
   const {
@@ -61,6 +50,7 @@ async function parseRow(row) {
 
   const newCase = await Case.create({
     case_number: CASE_ID,
+    arbitration_board: 'AAA',
     party: NONCONSUMER,
     initiating_party: INITIATING_PARTY,
     source_of_authority: SOURCE_OF_AUTHORITY,
@@ -148,25 +138,6 @@ async function parseRow(row) {
   }
 }
 
-async function runImport() {
-  const workbook = xlsx.readFile(process.argv[process.argv.length - 1]);
-  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-  const rows = xlsx.utils.sheet_to_row_object_array(worksheet);
-  const pb = pace(rows.length);
-
-  await models.sync({ logging: false });
-
-  for (const row of rows) {
-    try {
-      await parseRow(row);
-      pb.op();
-    } catch (e) {
-      console.error(e);
-      console.log('Failed on row', row);
-      pb.op({ errors: 1 });
-    }
-  }
+export default async function importAAA() {
+  await runImport(parseRow);
 }
-
-export default runImport;

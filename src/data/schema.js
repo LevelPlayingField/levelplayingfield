@@ -29,7 +29,6 @@ const CasePartyType = new GraphQLObjectType({
   }),
 });
 
-
 const PartyType = new GraphQLObjectType({
   name: 'Party',
   fields: () => Object.assign(attributeFields(Party), {
@@ -172,9 +171,7 @@ const schema = new GraphQLSchema({
             throw new Error('id or slug is required');
           }
 
-          const data = resolver(Party)(args, context, ...extra);
-
-          return data;
+          return resolver(Party)(args, context, ...extra);
         },
         args: {
           id: { type: GraphQLID },

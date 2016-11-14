@@ -14,12 +14,13 @@ import FastClick from 'fastclick';
 import UniversalRouter from 'universal-router';
 import queryString from 'query-string';
 import { createPath } from 'history/PathUtils';
-import history from './core/history';
+import createBrowserHistory from 'history/createBrowserHistory';
 import App from './components/App';
 import { ErrorReporter, deepForceUpdate } from './core/devUtils';
 
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
+const history = createBrowserHistory();
 const context = {
   // Enables critical path CSS rendering
   // https://github.com/kriasoft/isomorphic-style-loader
@@ -28,6 +29,7 @@ const context = {
     const removeCss = styles.map(x => x._insertCss());
     return () => { removeCss.forEach(f => f()); };
   },
+  history,
 };
 
 function updateTag(tagName, keyName, keyValue, attrName, attrValue) {
