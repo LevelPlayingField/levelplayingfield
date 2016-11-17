@@ -11,17 +11,49 @@ import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
-import s from './Case.css';
+import s from './Case.scss';
 import first from '../../core/first';
+import AwardsTable from './AwardsTable';
+import { days, partyType, CONSUMER, NON_CONSUMER, ConsumerParty } from './utils';
 
-const days = date => date / 1000 / 60 / 60 / 24;
+function renderAttorneys(attorneys) {
+  if (!attorneys) {
+    return null;
+  }
+
+  return (
+    <div className={s.row}>
+      {attorneys.map(attorney => (
+        <div key={`attorney_${attorney.Party.id}`} className={s.col_half}>
+          <h3 className={s.title}>
+            <Link to={`/party/${attorney.Party.slug}`}>
+              {attorney.Party.name}
+            </Link>
+          </h3>
+
+          { attorney.Firm && (
+            <div className={s.detail}>
+              <Link to={`/party/${attorney.Firm.slug}`}>
+                {attorney.Firm.name}
+              </Link>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Case({ case_ }) {
+  const initiatedBy = partyType(case_.initiating_party);
   const parties = case_.Parties.edges.map(edge => edge.node);
-  const nonConsumer = first(parties.filter(node => node.Party.type === 'Non Consumer'));
+  const nonConsumer = first(parties.filter(node => node.Party.type === 'Non Consumer')).Party;
   const attorneys = parties.filter(node => node.Party.type === 'Attorney');
   const arbitrators = parties.filter(node => node.Party.type === 'Arbitrator');
   const firstArbitrator = first(arbitrators.sort(node => node.date));
+
+  const plaintiff = initiatedBy === NON_CONSUMER ? nonConsumer : { ...ConsumerParty, attorneys };
+  const defendant = initiatedBy === CONSUMER ? nonConsumer : { ...ConsumerParty, attorneys };
 
   return (
     <Layout>
@@ -31,7 +63,7 @@ function Case({ case_ }) {
             <div className={s.col_third}>
               <dl className={s.dl_horizontal}>
                 <dt>Forum</dt>
-                <dd>AAA</dd>
+                <dd>{case_.arbitration_board}</dd>
                 {/* TODO: Fix */}
 
                 <dt>Case ID</dt>
@@ -74,7 +106,8 @@ function Case({ case_ }) {
                   </Link>
                 </h3>
                 <p className={s.details}>
-                  Appointed {new Date(arbitrator.date).toLocaleDateString()}</p>
+                  Appointed {new Date(arbitrator.date).toLocaleDateString()}
+                </p>
               </div>
             ) : (
               <div className={s.col_full}>
@@ -85,38 +118,17 @@ function Case({ case_ }) {
 
           <div className={s.row}>
             <div className={s.col_half}>
-              <h2 className={s.subtitle}>Plaintiff</h2>
+              {initiatedBy && <h2 className={s.subtitle}>Plaintiff</h2>}
+              <h3>{plaintiff.name}</h3>
 
-              <div className={s.row}>
-                {attorneys.map(attorney => (
-                  <div key={`attorney_${attorney.Party.id}`} className={s.col_half}>
-                    <h3 className={s.title}>
-                      <Link to={`/party/${attorney.Party.slug}`}>
-                        {attorney.Party.name}
-                      </Link>
-                    </h3>
-
-                    { attorney.Firm && (
-                      <div className={s.detail}>
-                        <Link to={`/party/${attorney.Firm.slug}`}>
-                          {attorney.Firm.name}
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {plaintiff.attorneys && renderAttorneys(plaintiff.attorneys)}
             </div>
 
             <div className={s.col_half}>
-              <h2 className={s.subtitle}>Defendant</h2>
-              <div className={s.row}>
-                <h3 className={s.title}>
-                  <Link to={`/party/${nonConsumer.Party.slug}`}>
-                    {nonConsumer.Party.name}
-                  </Link>
-                </h3>
-              </div>
+              {initiatedBy && <h2 className={s.subtitle}>Defendant</h2>}
+              <h3>{defendant.name}</h3>
+
+              {defendant.attorneys && renderAttorneys(defendant.attorneys)}
             </div>
           </div>
 
@@ -140,6 +152,46 @@ function Case({ case_ }) {
             <div className={s.col_third}>
               <h4 className={s.subtitle}>Prevailing Party</h4>
               <p className={s.details}>{case_.prevailing_party}</p>
+            </div>
+          </div>
+          <div className={s.row}>
+            <div className={s.col_half}>
+              <AwardsTable case_={case_}/>
+            </div>
+          </div>
+
+          <div className={s.row}>
+            <div className={s.col_third}>
+              <h4 className={s.subtitle}>Arbitration Details</h4>
+              <dl className={s.dl_horizontal}>
+                <dt>Hearing</dt>
+                <dd>{case_.type_of_hearing ? 'Yes' : 'No'}</dd>
+                {case_.type_of_hearing && [
+                  <dt>Hearing Type</dt>,
+                  <dd>{case_.type_of_hearing}</dd>,
+                ]}
+                {case_.document_only_proceeding && [
+                  <dt>Documents Only</dt>,
+                  <dd>{case_.document_only_proceeding}</dd>,
+                ]}
+                {case_.hearing_state && [
+                  <dt>Hearing Location</dt>,
+                  <dd>{`${case_.hearing_city}, ${case_.hearing_state}`}</dd>,
+                ]}
+              </dl>
+            </div>
+            <div className={s.col_two_third}>
+              <h4 className={s.subtitle}>Other Data</h4>
+              <dl className={s.dl_horizontal}>
+                <dt>Consumer Cases Involving Business</dt>
+                <dd>{case_.arb_count}</dd>
+                <dt>Mediated Cases Involving Business</dt>
+                <dd>{case_.med_count}</dd>
+                <dt>Arbitrations Involving Business</dt>
+                <dd>{case_.arb_or_cca_count}</dd>
+                <dt>Source of Authority</dt>
+                <dd>{case_.source_of_authority}</dd>
+              </dl>
             </div>
           </div>
         </div>

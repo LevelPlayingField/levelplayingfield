@@ -8,6 +8,7 @@
  */
 
 import React, { PropTypes } from 'react';
+import { IntlProvider } from 'react-intl';
 
 const ContextType = {
   // Enables critical path CSS rendering
@@ -46,7 +47,11 @@ class App extends React.Component {
   render() {
     // NOTE: If you need to add or modify header, footer etc. of the app,
     // please do that inside the Layout component.
-    return React.Children.only(this.props.children);
+    return (
+      <IntlProvider locale="en">
+        {React.Children.only(this.props.children)}
+      </IntlProvider>
+    );
   }
 
 }

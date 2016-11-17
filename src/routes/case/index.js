@@ -16,7 +16,7 @@ export default {
   path: '/case/:caseID',
 
   async action({ params }) {
-    const resp = await graphql(`
+    const data = await graphql(`
     fragment PartyFields on Party {
       id
       slug
@@ -28,6 +28,7 @@ export default {
       case: Case(id: ${params.caseID}) {
         id
         case_number
+        arbitration_board
         initiating_party
         source_of_authority
         dispute_type
@@ -37,16 +38,18 @@ export default {
         filing_date
         close_date
         type_of_disposition
-        business_fees
-        consumer_fees
-        fee_allocation_consumer
+        claim_amount_business
         fee_allocation_business
-        award_amount_consumer
+        fees_business
         award_amount_business
-        other_relief_consumer
-        other_relief_business
-        attorney_fees_consumer
         attorney_fees_business
+        other_relief_business
+        claim_amount_consumer
+        fee_allocation_consumer
+        fees_consumer
+        award_amount_consumer
+        attorney_fees_consumer
+        other_relief_consumer
         consumer_rep_state
         consumer_self_represented
         document_only_proceeding
@@ -58,7 +61,7 @@ export default {
         hearing_zip
         arb_count
         med_count
-        consumer_arb_count
+        arb_or_cca_count
         adr_process
         
         Parties {
@@ -78,8 +81,6 @@ export default {
       }
     }
     `);
-
-    const { data } = await resp.json();
 
     if (!data || !data.case) throw new Error('Failed to load case.');
 

@@ -9,7 +9,7 @@
 
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Layout.css';
+import s from './Layout.scss';
 import Header from '../Header';
 import Footer from '../Footer';
 

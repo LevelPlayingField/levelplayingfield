@@ -16,24 +16,22 @@ export default {
   path: '/cases',
 
   async action() {
-    const resp = await graphql(`{
-  cases: Cases(limit: 20){
-    id
-    case_number
-    initiating_party
-    
-    Parties {
-      edges {
-        node {
-          party_type
-          party_name
+    const data = await graphql(`{
+      cases: Cases(limit: 20){
+        id
+        case_number
+        initiating_party
+        
+        Parties {
+          edges {
+            node {
+              party_type
+              party_name
+            }
+          }
         }
       }
-    }
-  }
-}`);
-
-    const { data } = await resp.json();
+    }`);
 
     if (!data || !data.cases) throw new Error('Failed to load cases.');
 

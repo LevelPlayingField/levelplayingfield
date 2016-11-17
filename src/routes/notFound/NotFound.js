@@ -10,7 +10,7 @@
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
-import s from './NotFound.css';
+import s from './NotFound.scss';
 
 function NotFound({ title }) {
   return (

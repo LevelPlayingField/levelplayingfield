@@ -6,21 +6,17 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-@import '../variables.css';
-
-:root {
-  --brand-color: #61dafb;
-}
+@import '../variables.scss';
 
 .root {
-  background: #373277;
+  background: $primary-color;
   color: #fff;
 }
 
 .container {
   margin: 0 auto;
   padding: 20px 0;
-  max-width: var(--max-content-width);
+  max-width: $max-content-width;
 }
 
 .sections {
@@ -28,23 +24,19 @@
 }
 
 .brand {
-  color: color(var(--brand-color) lightness(+10%));
+  color: lighten($accent-color, 10);
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
 }
 
 .brandTxt {
-  margin-left: 10px;
+  margin: 10px;
 }
 
 .nav {
+  flex: 1;
   text-align: right;
   margin-top: 6px;
-}
-
-.search {
-  flex: 1;
-  text-align: center;
 }
 
 .banner {
@@ -64,4 +56,36 @@
   color: rgba(255, 255, 255, 0.5);
   font-size: 1.25em;
   margin: 0;
+}
+
+@media(max-width: $screen-xs-min) {
+  .container {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 0;
+  }
+
+  .sections {
+    flex-direction: column-reverse;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .bannerTitle {
+    font-size: 2.5em;
+    //padding: 0;
+  }
+
+  .nav {
+    text-align: center;
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .search {
+    display: none;
+  }
 }

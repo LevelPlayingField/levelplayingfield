@@ -10,9 +10,9 @@
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
-import s from './Home.css';
+import s from './Home.scss';
 
-function Home() {
+function Home({ cases, parties }) {
   return (
     <Layout>
       <div className={s.root}>
@@ -36,10 +36,17 @@ function Home() {
             facere illum incidunt ipsam itaque laudantium maiores, molestiae numquam sapiente velit
             voluptatem? Animi in nemo nostrum odio quo quod.
           </p>
+          <p className={s.marketing}>
+            Currently indexing <b>{cases}</b> cases and <b>{parties}</b> parties
+          </p>
         </div>
       </div>
     </Layout>
   );
 }
+Home.propTypes = {
+  cases: React.PropTypes.number.isRequired,
+  parties: React.PropTypes.number.isRequired,
+};
 
 export default withStyles(s)(Home);

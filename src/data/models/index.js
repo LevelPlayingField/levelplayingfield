@@ -3,6 +3,7 @@ import AttorneyFirms from './AttorneyFirms';
 import CaseParty from './CaseParty';
 import Case from './Case';
 import Party from './Party';
+import Search from './Search';
 
 Case.Parties = Case.hasMany(CaseParty, {
   foreignKey: 'case_id',
@@ -41,8 +42,19 @@ CaseParty.Firm = CaseParty.belongsTo(Party, {
   as: 'Firm',
 });
 
-function sync(...args) {
-  return sequelize.sync(...args);
+async function sync(...args) {
+  for (const k of Object.keys(sequelize.models)) {
+    const model = sequelize.models[k];
+    if (!model.options.view) {
+      await model.sync(...args);
+    }
+  }
+  // for (const k of Object.keys(sequelize.models)) {
+  //   const model = sequelize.models[k];
+  //   if (model.options.view) {
+  //     await sequelize.query(model.options.viewExpression);
+  //   }
+  // }
 }
 
 export default { sync };
@@ -51,4 +63,5 @@ export {
   Case,
   CaseParty,
   Party,
+  Search,
 };

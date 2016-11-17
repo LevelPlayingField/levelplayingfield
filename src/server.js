@@ -12,6 +12,7 @@ import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import expressGraphQL from 'express-graphql';
+import morgan from 'morgan';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import UniversalRouter from 'universal-router';
@@ -20,7 +21,7 @@ import createMemoryHistory from 'history/createMemoryHistory';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
-import errorPageStyle from './routes/error/ErrorPage.css';
+import errorPageStyle from './routes/error/ErrorPage.scss';
 import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
@@ -42,6 +43,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(morgan('short'));
 
 //
 // Register API middleware

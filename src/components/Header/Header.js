@@ -9,10 +9,9 @@
 
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Header.css';
+import s from './Header.scss';
 import Link from '../Link';
 import Navigation from '../Navigation';
-import Search from '../Search';
 import logoUrl from './logo-small.png';
 
 function Header() {
@@ -21,15 +20,16 @@ function Header() {
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
-            <img src={logoUrl} width="38" height="38" alt="React" />
+            <img src={logoUrl} width="38" height="38" alt="React"/>
             {/* <span className={s.brandTxt}>lpf.io</span>*/}
           </Link>
-          <Search className={s.search} />
-          <Navigation className={s.nav} />
+          <Navigation className={s.nav}/>
         </div>
         <div className={s.banner}>
           <h1 className={s.bannerTitle}>Level Playing Field</h1>
-          <p className={s.bannerDesc}>Leveling the playing field for consumer arbitration</p>
+          {/*
+            <p className={s.bannerDesc}>Leveling the playing field for consumer arbitration</p>
+          */}
         </div>
       </div>
     </div>

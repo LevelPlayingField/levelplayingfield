@@ -11,6 +11,7 @@ import path from 'path';
 import webpack from 'webpack';
 import extend from 'extend';
 import AssetsPlugin from 'assets-webpack-plugin';
+import FlowBabelWebpackPlugin from 'flow-babel-webpack-plugin';
 
 const isDebug = !process.argv.includes('--release');
 const isVerbose = process.argv.includes('--verbose');
@@ -101,7 +102,16 @@ const config = {
         test: /\.scss$/,
         loaders: [
           'isomorphic-style-loader',
-          `css-loader?${JSON.stringify({ sourceMap: isDebug, minimize: !isDebug })}`,
+          `css-loader?${JSON.stringify({
+            // CSS Loader https://github.com/webpack/css-loader
+            importLoaders: 1,
+            sourceMap: isDebug,
+            // CSS Modules https://github.com/css-modules/css-modules
+            modules: true,
+            localIdentName: isDebug ? '[name]-[local]-[hash:base64:5]' : '[hash:base64:5]',
+            // CSS Nano http://cssnano.co/options/
+            minimize: !isDebug,
+          })}`,
           'postcss-loader?pack=sass',
           'sass-loader',
         ],
@@ -229,7 +239,7 @@ const clientConfig = extend(true, {}, config, {
   target: 'web',
 
   plugins: [
-
+    new FlowBabelWebpackPlugin(),
     // Define free variables
     // https://webpack.github.io/docs/list-of-plugins.html#defineplugin
     new webpack.DefinePlugin({

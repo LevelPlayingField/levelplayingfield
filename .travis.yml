@@ -4,11 +4,14 @@ node_js:
 env:
   - CXX=g++-4.8
 addons:
+  postgresql: "9.4"
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+before_script:
+  - psql -U postgres -C 'create database levelplayingfield;'
 script:
   - npm run lint
   - npm run test

@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "name": "graphql",
+  "main": "./graphql.server.js",
+  "browser": "./graphql.client.js"
+}

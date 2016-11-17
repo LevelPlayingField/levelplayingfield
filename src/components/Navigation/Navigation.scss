@@ -6,11 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-@import '../variables.css';
-
-:root {
-  --brand-color: #61dafb;
-}
+@import '../variables';
 
 .root {
   margin: 0;
@@ -20,7 +16,7 @@
   display: inline-block;
   padding: 3px 8px;
   text-decoration: none;
-  font-size: 1.125em; /* ~18px */
+  font-size: 1.2em; /* ~18px */
 }
 
 .link,
@@ -49,21 +45,31 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
+.search {
+  @extend .link;
+  display: none;
+}
+
 .searchIcon {
-  color: color(var(--brand-color) lightness(+0%));
-  font-size: 1.75em;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.searchInput {
-  background-color: transparent;
-  font-size: 1.5em;
-  height: 100%;
-  padding: 4px 8px;
-  border: 0;
-  color: color(var(--brand-color) lightness(+0%));
-  border-bottom: 1px color(var(--brand-color) lightness(-20%)) solid;
+.searchText {
+  display: inline;
 }
 
-.searchInput::hover {
-  border-bottom: 4px color(var(--brand-color)) solid;
+@media(max-width: $screen-xs-min) {
+  .root {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .link {
+    flex: 2;
+  }
+
+  .search {
+    flex: 1;
+    display: block;
+  }
 }

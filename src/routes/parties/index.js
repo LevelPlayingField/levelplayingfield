@@ -16,7 +16,7 @@ export default {
   path: '/parties',
 
   async action() {
-    const resp = await graphql(`{
+    const data = await graphql(`{
   parties: Parties(limit: 20) {
     id
     slug
@@ -31,7 +31,6 @@ export default {
   }
 }`);
 
-    const { data } = await resp.json();
     if (!data || !data.parties) throw new Error('Failed to load parties.');
 
     return {

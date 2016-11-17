@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Party.css';
+import Pager from '../../components/Pager';
+import s from './Party.scss';
 import CaseItem from './CaseItem';
 import PartyItem from './PartyItem';
 
@@ -12,7 +13,7 @@ function AttorneyDetails({ party }) {
 
         <ul className={s.parties}>
           {party.Firms.edges.map(firm => (
-            <PartyItem party={firm} key={`firm_${firm.node.party_id}`} />
+            <PartyItem party={firm} key={`firm_${firm.node.party_id}`}/>
           ))}
         </ul>
       </div>
@@ -21,9 +22,10 @@ function AttorneyDetails({ party }) {
 
         <ul className={s.cases}>
           {party.Cases.edges.map(case_ =>
-            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`} />
+            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`}/>
           )}
         </ul>
+        <Pager queryKey={'Case'} pageInfo={party.Cases.pageInfo}/>
       </div>
     </div>
   );

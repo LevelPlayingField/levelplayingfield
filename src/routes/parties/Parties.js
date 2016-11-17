@@ -11,7 +11,7 @@ import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
-import s from './Parties.css';
+import s from './Parties.scss';
 
 function Parties({ parties }) {
   return (

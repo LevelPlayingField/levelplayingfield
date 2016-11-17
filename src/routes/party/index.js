@@ -10,13 +10,21 @@
 import React from 'react';
 import Party from './Party';
 import graphql from '../../core/graphql';
+import { page } from '../../components/Pager';
 
 export default {
 
   path: '/party/:slug',
 
-  async action({ params }) {
-    const resp = await graphql(`
+  async action({ params, query }) {
+    const data = await graphql(`
+fragment pageInfo on PageInfo {
+  hasNextPage
+  hasPreviousPage
+  startCursor
+  endCursor
+}
+
 fragment PartyFields on Party {
   id
   slug
@@ -43,24 +51,29 @@ fragment CasePartyFields on CaseParty {
 {
   party: Party(slug: "${params.slug}") {
     ...PartyFields
-    Cases(first: 10) {
-      total
+    Cases(${page('Case')(query, 5)}) {
+      pageInfo {
+          ...pageInfo
+      }
       edges {
+        cursor
         node {
           ...CasePartyFields
         }
       }
     }
-    FirmCases(first: 10) {
-      total
+    FirmCases(${page('Case')(query, 5)}) {
+      pageInfo {
+          ...pageInfo
+      }      
       edges {
+        cursor
         node {
           ...CasePartyFields
         }
       }
     }
     Firms {
-      total
       edges {
         node {
           ...PartyFields
@@ -68,7 +81,6 @@ fragment CasePartyFields on CaseParty {
       }
     }
     Attorneys {
-      total
       edges {
         node {
           ...PartyFields
@@ -79,13 +91,11 @@ fragment CasePartyFields on CaseParty {
 }
 `);
 
-    const { data } = await resp.json();
-
     if (!data || !data.party) throw new Error('Failed to load party.');
 
     return {
       title: 'Party',
-      component: <Party party={data.party} />,
+      component: <Party party={data.party}/>,
     };
   },
 

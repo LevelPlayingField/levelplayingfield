@@ -9,15 +9,25 @@
 
 import React from 'react';
 import Home from './Home';
+import graphql from '../../core/graphql';
 
 export default {
 
   path: '/',
 
   async action() {
+    const { summary } = await graphql(`
+      {
+        summary: Summary {
+          cases
+          parties
+        }
+      }
+    `);
+
     return {
       title: 'LevelPlayingField',
-      component: <Home />,
+      component: <Home cases={summary.cases} parties={summary.parties}/>,
     };
   },
 

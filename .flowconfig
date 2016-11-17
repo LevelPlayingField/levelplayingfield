@@ -3,8 +3,16 @@
 .*/config
 .*/gulpfile.js
 .*/node_modules/xlsx/bower.json
-.*/node_modules/react-tap-event-plugin/node_modules/.*
+.*/node_modules/react-relay/lib/relayUnstableBatchedUpdates.native.js
+.*/node_modules/react-tap-event-plugin/.*
 
 [include]
 .*/src
 .*/tools
+
+[libs]
+./interfaces
+
+[options]
+module.name_mapper='.+\.s?css$' -> 'CSSModule'
+module.system=haste

@@ -1,6 +1,6 @@
 {
-  "name": "Search",
+  "name": "Pager",
   "version": "0.0.0",
   "private": true,
-  "main": "./Search.js"
+  "main": "./Pager.js"
 }

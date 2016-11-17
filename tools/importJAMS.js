@@ -1,5 +1,7 @@
+/* eslint-disable dot-notation, max-len, no-unused-vars, prefer-const */
+
 import { Party, Case, CaseParty } from '../src/data/models';
-import utils, { runImport, createParty } from './lib/importlib';
+import utils, { runImport, createParty, validateCaseData } from './lib/importlib';
 
 const awardTypes = {
   MONETARY_AWARD: 'Monetary Award',
@@ -8,7 +10,7 @@ const awardTypes = {
 };
 
 const moneyRegex = /^\$?[\d,.]+$/;
-const awardsRegex = /(Monetary Award|Attorney Fees|Non-Monetary Award): (.*?)(?=(Monetary Award|Attorney Fees|Non-Monetary Award|$))/g;
+const awardsRegex = /(Monetary Award|Attorney Fees|Non-Monetary Award): .*?)(?=(Monetary Award|Attorney Fees|Non-Monetary Award|$))/g;
 
 function parseAwards(awards) {
   if (typeof awards === 'number' || moneyRegex.test(awards)) {
@@ -35,7 +37,7 @@ function parseAttorneyNames(names) {
   if (names === undefined || names === null) {
     return [];
   }
-  const seen = new Set;
+  const seen = new Set();
 
   return names.split(';').map(utils.cleanStr).map(name => {
     if (!name) {
@@ -43,7 +45,7 @@ function parseAttorneyNames(names) {
     }
 
     const [attorney, fullFirm] = utils.cleanStr(name).split(':').map(utils.cleanStr);
-    let [firm, fullLocation] = utils.rsplit(fullFirm, '-').map(utils.cleanStr);  // eslint-disable-line prefer-const
+    let [firm, fullLocation] = utils.rsplit(fullFirm, '-').map(utils.cleanStr);
     let city;
     let state;
 
@@ -65,17 +67,6 @@ function parseAttorneyNames(names) {
       return true;
     });
 }
-
-// parseAwards('1234.56');
-// parseAwards('Monetary Award: $3058.73 Attorney Fees: $17527.04 Non-Monetary Award: 8,880 in arbitration costs');
-// parseAwards(' Monetary Award: $96036.26 Attorney Fees: $130020 Non-Monetary Award: Costs: $ 3,558.53; Interest: $25,702.14');
-//
-// parseAttorneyNames(`Kevin M. Costello: Costello & Mains, P.C. - Mount Laurel, NJ;
-// Drake P. Bearden Jr.: Costello & Mains, P.C. - Mount Laurel, NJ;
-// Toni L. Telles: Costello & Mains, P.C. - Mount Laurel, NJ; `);
-// parseAttorneyNames(`Randall P. Crane:  - San Benito, TX;
-// Rey Gonzalez: L/O  Rey Gonzalez, Jr. - San Benito, TX; `);
-// parseAttorneyNames('Matthew E. Faler: Consumer Action Law Group, P.C. - Los Angeles, CA;; ');
 
 function lookupStateForCity(city) {
   switch (city) {
@@ -196,7 +187,7 @@ async function parseRow(row) {
   const caseData = {
     case_number: utils.cleanStr(REFNO),
     arbitration_board: 'JAMS',
-    initiating_party: INITIATED_BY,
+    initiating_party: utils.naOr(INITIATED_BY),
     source_of_authority: utils.naOr(ARB_CLAUSE_DESIGNATED_PROVIDER),
     dispute_type: utils.naOr(TYPE_OF_DISPUTE),
     dispute_subtype: null,
@@ -208,17 +199,20 @@ async function parseRow(row) {
     consumer_rep_state: attorneys.length && utils.naOr(attorneys[0].state),
     consumer_self_represented: !utils.bool(CONSUMER_PARTY_REP_BY_ATTY),
 
-    fee_allocation_consumer: allocation.CONSUMER,
+    claim_amount_business: utils.nonNaN(utils.money(utils.naOr(CLAIM_AMOUNT))),
     fee_allocation_business: allocation.NON_CONSUMER,
-    award_amount_consumer: utils.nonNaN((allocation.CONSUMER / 100) * awards[awardTypes.MONETARY_AWARD]),
+    fees_business: utils.money(utils.nonNaN(totalArbitratorFees * allocation.NON_CONSUMER)),
     award_amount_business: utils.nonNaN((allocation.NON_CONSUMER / 100) * awards[awardTypes.MONETARY_AWARD]),
-    attorney_fees_consumer: utils.nonNaN((allocation.CONSUMER / 100) * awards[awardTypes.ATTORNEY_FEES]),
     attorney_fees_business: utils.nonNaN((allocation.NON_CONSUMER / 100) * awards[awardTypes.ATTORNEY_FEES]),
-    other_relief_consumer: utils.nonNaN((allocation.CONSUMER > 0) ? awards[awardTypes.NON_MONETARY_AWARD] : null),
     other_relief_business: utils.nonNaN((allocation.NON_CONSUMER > 0) ? awards[awardTypes.NON_MONETARY_AWARD] : null),
 
-    business_fees: utils.nonNaN(totalArbitratorFees * allocation.NON_CONSUMER),
-    consumer_fees: utils.nonNaN(totalArbitratorFees * allocation.NON_CONSUMER),
+    claim_amount_consumer: utils.nonNaN(utils.money(utils.naOr(CLAIM_AMOUNT))),
+    fee_allocation_consumer: allocation.CONSUMER,
+    fees_consumer: utils.money(utils.nonNaN(totalArbitratorFees * allocation.NON_CONSUMER)),
+    award_amount_consumer: utils.nonNaN((allocation.CONSUMER / 100) * awards[awardTypes.MONETARY_AWARD]),
+    attorney_fees_consumer: utils.nonNaN((allocation.CONSUMER / 100) * awards[awardTypes.ATTORNEY_FEES]),
+    other_relief_consumer: utils.nonNaN((allocation.CONSUMER > 0) ? awards[awardTypes.NON_MONETARY_AWARD] : null),
+
     document_only_proceeding: null,
 
     type_of_hearing: utils.naOr(HEARING_TYPE),
@@ -227,9 +221,9 @@ async function parseRow(row) {
 
     arb_count: utils.integer(ARB_COUNT) || 0,
     med_count: utils.integer(MED_COUNT) || 0,
-    consumer_arb_count: utils.integer(CONSUMER_ARB_COUNT) || 0,
+    arb_or_cca_count: utils.integer(CONSUMER_ARB_COUNT) || 0,
   };
-
+  validateCaseData(caseData);
   const newCase = await Case.create(caseData);
 
   if (NONCONSUMER_PARTY) {

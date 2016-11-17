@@ -1,0 +1,18 @@
+@import '../../components/variables';
+@import '../layout';
+
+.queryRow {
+  text-align: center;
+}
+
+.searchIcon {
+font-size: 2em;
+}
+
+.searchField {
+  font-size: 1.5em;
+  padding: 8px;
+  width: 280px;
+  border: none;
+  border-bottom: 1.5px $accent-color solid;
+}

@@ -34,16 +34,18 @@ type case {
   filing_date: String
   close_date: String
   type_of_disposition: String
-  business_fees: String
-  consumer_fees: String
-  fee_allocation_consumer: String
+  claim_amount_business: String
   fee_allocation_business: String
-  award_amount_consumer: Int
+  fees_business: String
   award_amount_business: Int
-  other_relief_consumer: String
-  other_relief_business: String
-  attorney_fees_consumer: Int
   attorney_fees_business: Int
+  other_relief_business: String
+  claim_amount_consumer: String
+  fee_allocation_consumer: String
+  fees_consumer: String
+  award_amount_consumer: Int
+  attorney_fees_consumer: Int
+  other_relief_consumer: String
   consumer_rep_state: String
   consumer_self_represented: Boolean
   document_only_proceeding: Boolean
@@ -55,7 +57,7 @@ type case {
   hearing_zip: String
   arb_count: Int
   med_count: Int
-  consumer_arb_count: Int
+  arb_or_cca_count: Int
   adr_process: String
   createdAt: String!
   updatedAt: String!
@@ -123,6 +125,8 @@ type casesEdge {
   # A cursor for use in pagination
   cursor: String!
 }
+
+union document = case | Party
 
 # A connection to a list of items.
 type firmCasesConnection {
@@ -202,6 +206,8 @@ type Party {
 }
 
 type Query {
+  Summary: Summary
+  Search(limit: Int = 10, query: String!): [Search]
   Cases(
     limit: Int
     order: String
@@ -220,4 +226,18 @@ type Query {
   ): [Party]
   Case(id: ID!): case
   Party(id: ID, slug: String): Party
+}
+
+type Search {
+  type: String!
+  id: Int!
+  slug: String
+  document: document
+  vector: String
+  index: String
+}
+
+type Summary {
+  cases: Int
+  parties: Int
 }

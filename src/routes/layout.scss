@@ -1,0 +1,77 @@
+@import '../components/variables.scss';
+
+.root {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 20px 0 40px;
+  max-width: $max-content-width;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+}
+
+.col_quarter {
+  display: block;
+  flex: 3;
+  min-width: 25%;
+}
+
+.col_third {
+  display: block;
+  flex: 4;
+  min-width: 33.3333%;
+}
+
+.col_two_third {
+  display: block;
+  flex: 8;
+  min-width: 66.6666%;
+}
+
+.col_half {
+  display: block;
+  flex: 6;
+  /*min-width: 50%;*/
+}
+
+.table {
+  width: 100%;
+}
+
+.dl_horizontal {
+  margin: 0;
+  width: 100%;
+}
+
+.dl_horizontal dt {
+  margin: 0;
+  font-weight: 500;
+  width: 50%;
+  display: inline-block;
+  text-align: right;
+}
+
+.dl_horizontal dd {
+  margin-left: 2%;
+  display: inline-block;
+  width: 48%;
+}
+
+@media(max-width: $screen-xs-min) {
+  .row {
+    display: block;
+  }
+
+  .col_quarter,
+  .col_third,
+  .col_two_third,
+  .col_half {
+    width: 100%;
+  }
+}

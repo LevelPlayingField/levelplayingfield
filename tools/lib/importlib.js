@@ -3,7 +3,7 @@ import xlsx from 'xlsx';
 import slugify from '../../src/core/slugify';
 import models, { Party } from '../../src/data/models';
 
-const NA = new Set(['na', 'n/a', 'nan', 'none', 'null', 'undefined']);
+const NA = new Set(['na', 'n/a', 'nan', 'unknown', 'none', 'null', 'undefined']);
 
 const nonNaN = v => (isNaN(v) ? null : v);
 const nullOr = c => v => ((v === null || String(v).trim() === '') ? null : c(v));
@@ -29,13 +29,34 @@ const money = v => {
   let dec;
 
   if (typeof v === 'string') {
-    dec = decimal(ltrim('\\$')(v));
+    dec = decimal(ltrim('\\$')(v).replace(',', ''));
   } else {
     dec = decimal(v);
   }
 
   return Math.floor(dec * 100);
 };
+
+function isInvalidData(v) {
+  return (
+    ['na', 'n/a', 'nan', 'none', 'unknown'].indexOf(String(v).toLowerCase()) !== -1 ||
+    (typeof v === 'number' && isNaN(v))
+  );
+}
+
+function validateCaseData(caseData) {
+  const errors = [];
+
+  for (const k of Object.keys(caseData)) {
+    if (isInvalidData(caseData[k])) {
+      errors.push(`caseData["${k}"] -> "${caseData[k]}" is invalid`);
+    }
+  }
+
+  if (errors.length) {
+    throw new Error(`Validation Error on caseData\n${errors.join('\n')}`);
+  }
+}
 
 async function createParty(type, name) {
   const slug = slugify(`${type} ${name}`);
@@ -85,4 +106,5 @@ export default {
 export {
   runImport,
   createParty,
+  validateCaseData,
 };

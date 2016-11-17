@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Link from '../../components/Link';
-import s from './Party.css';
+import s from './Party.scss';
 
 function PartyItem({ party }) {
   return (
