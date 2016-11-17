@@ -11,7 +11,6 @@ import path from 'path';
 import webpack from 'webpack';
 import extend from 'extend';
 import AssetsPlugin from 'assets-webpack-plugin';
-import FlowBabelWebpackPlugin from 'flow-babel-webpack-plugin';
 
 const isDebug = !process.argv.includes('--release');
 const isVerbose = process.argv.includes('--verbose');
@@ -56,9 +55,11 @@ const config = {
             'stage-0',
           ],
           plugins: [
+            'syntax-flow',
             // Externalise references to helpers and builtins,
             // automatically polyfilling your code without polluting globals.
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime
+            'transform-flow-strip-types',
             'transform-runtime',
             ...isDebug ? [
               // Adds component stack to warning messages
@@ -239,7 +240,6 @@ const clientConfig = extend(true, {}, config, {
   target: 'web',
 
   plugins: [
-    new FlowBabelWebpackPlugin(),
     // Define free variables
     // https://webpack.github.io/docs/list-of-plugins.html#defineplugin
     new webpack.DefinePlugin({
