@@ -20,7 +20,23 @@ Search.refreshView = function refreshView() {
 Search.sync = async function sync(): Promise<*> {
   // language=PostgreSQL
   await sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
+CREATE OR REPLACE FUNCTION english_join(character varying[])
+  RETURNS character varying AS
+$BODY$
+DECLARE 
+	length INTEGER;
+BEGIN
+	length := array_length($1, 1);
+	IF length = 1 THEN
+		return ($1)[1];
+	ELSIF length = 2 THEN
+		return array_to_string($1, ' and ', 'Unknown');
+	ELSE
+		return array_to_string(($1)[1:length - 1], ', ', 'Unknown') || ', and ' || ($1)[length];
+	END IF;
+END $BODY$
+LANGUAGE plpgsql;
+  
 CREATE OR REPLACE VIEW case_search_view AS
   WITH parties AS (
     SELECT
