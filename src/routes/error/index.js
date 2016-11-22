@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -14,11 +15,11 @@ export default {
 
   path: '/error',
 
-  action({ error }) {
+  action({ error }: { error: Error }) {
     return {
       title: error.name,
       description: error.message,
-      component: <ErrorPage error={error} />,
+      component: <ErrorPage error={error}/>,
       status: error.status || 500,
     };
   },

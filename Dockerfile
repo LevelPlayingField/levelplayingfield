@@ -1,4 +1,6 @@
 FROM node:7-onbuild
 
-EXPOSE 3001
-ENTRYPOINT ["/usr/bin/env", "npm", "start", "--", "--release"]
+RUN npm run build -- --release
+
+EXPOSE 3000
+ENTRYPOINT ["/usr/bin/env", "node", "build/server.js"]

@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -25,7 +26,7 @@ export default {
         Parties {
           edges {
             node {
-              party_type
+              type
               party_name
             }
           }

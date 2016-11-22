@@ -1,8 +1,9 @@
+/* @flow */
 import { graphql } from 'graphql';
 import schema from '../../data/schema';
 
 
-export default (query) => (
+export default (query: string): any => (
   graphql(schema, query)
-    .then(json => json.data)
+    .then((json: { data: any }) => json.data)
 );

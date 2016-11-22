@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -28,7 +29,7 @@ class Link extends Component {
     onClick: PropTypes.func,
   };
 
-  handleClick = (event) => {
+  handleClick = (event: MouseEvent) => {
     if (this.props.onClick) {
       this.props.onClick(event);
     }

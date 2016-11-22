@@ -233,7 +233,8 @@ async function parseRow(row) {
       party_id: party.id,
       case_id: newCase.id,
       party_name: party.name,
-      party_type: party.type,
+      party_slug: party.slug,
+      type: party.type,
     });
   }
 
@@ -243,8 +244,9 @@ async function parseRow(row) {
     await CaseParty.create({
       party_id: party.id,
       case_id: newCase.id,
+      party_slug: party.slug,
       party_name: party.name,
-      party_type: party.type,
+      type: party.type,
       date: date === 'Invalid Date' ? null : date,
       fees,
     });
@@ -256,11 +258,14 @@ async function parseRow(row) {
 
     await firmParty.addAttorney(attorneyParty);
     await CaseParty.create({
+      type: attorneyParty.type,
       case_id: newCase.id,
       firm_id: firmParty.id,
       party_id: attorneyParty.id,
-      party_type: attorneyParty.type,
+      party_slug: attorneyParty.slug,
       party_name: attorneyParty.name,
+      firm_slug: firmParty.slug,
+      firm_name: firmParty.name,
     });
   }));
 }

@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -22,24 +23,28 @@ function renderAttorneys(attorneys) {
   }
 
   return (
-    <div className={s.row}>
-      {attorneys.map(attorney => (
-        <div key={`attorney_${attorney.Party.id}`} className={s.col_half}>
-          <h3 className={s.title}>
-            <Link to={`/party/${attorney.Party.slug}`}>
-              {attorney.Party.name}
-            </Link>
-          </h3>
+    <div>
+      <h4 style={{ paddingBottom: 0 }}>Represented By</h4>
+      <div className={s.row}>
 
-          { attorney.Firm && (
-            <div className={s.detail}>
-              <Link to={`/party/${attorney.Firm.slug}`}>
-                {attorney.Firm.name}
+        {attorneys.map(attorney => (
+          <div key={`attorney_${attorney.Party.id}`} className={s.col_half}>
+            <h3 className={s.title}>
+              <Link to={`/party/${attorney.Party.slug}`}>
+                {attorney.Party.name}
               </Link>
-            </div>
-          )}
-        </div>
-      ))}
+            </h3>
+
+            { attorney.Firm && (
+              <div className={s.detail}>
+                <Link to={`/party/${attorney.Firm.slug}`}>
+                  {attorney.Firm.name}
+                </Link>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -119,14 +124,18 @@ function Case({ case_ }) {
           <div className={s.row}>
             <div className={s.col_half}>
               {initiatedBy && <h2 className={s.subtitle}>Plaintiff</h2>}
-              <h3>{plaintiff.name}</h3>
+              {plaintiff.slug
+                ? (<h3><Link to={`/party/${plaintiff.slug}`}>{plaintiff.name}</Link></h3>)
+                : (<h3>{plaintiff.name}</h3>)}
 
               {plaintiff.attorneys && renderAttorneys(plaintiff.attorneys)}
             </div>
 
             <div className={s.col_half}>
               {initiatedBy && <h2 className={s.subtitle}>Defendant</h2>}
-              <h3>{defendant.name}</h3>
+              {defendant.slug
+                ? (<h3><Link to={`/party/${defendant.slug}`}>{defendant.name}</Link></h3>)
+                : (<h3>{defendant.name}</h3>)}
 
               {defendant.attorneys && renderAttorneys(defendant.attorneys)}
             </div>

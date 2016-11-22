@@ -1,10 +1,14 @@
-import React, { PropTypes } from 'react';
+/* @flow */
+
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Debug from '../../components/Debug';
 import s from './Party.scss';
 import CaseItem from './CaseItem';
-import Debug from '../../components/Debug';
 
-function GeneralPartyDetails({ party }) {
+import type { PartyType } from './';
+
+function GeneralPartyDetails({ party }: { party: PartyType }) {
   return (
     <div className={s.row}>
 
@@ -29,9 +33,5 @@ function GeneralPartyDetails({ party }) {
     </div>
   );
 }
-
-GeneralPartyDetails.propTypes = {
-  party: PropTypes.any.isRequired,
-};
 
 export default withStyles(s)(GeneralPartyDetails);

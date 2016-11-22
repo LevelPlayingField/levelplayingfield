@@ -19,8 +19,20 @@ class Search extends React.Component {
   props: Props;
   input: HTMLInputElement;
 
+  static contextTypes = {
+    history: React.PropTypes.any.isRequired,
+  };
+
   componentDidMount() {
-    this.input.focus();
+    if (!this.props.query) {
+      this.input.focus();
+    }
+  }
+
+  setUrl() {
+    const { history } = this.context;
+
+    history.push(`/search/${this.input.value}`);
   }
 
   render() {
@@ -34,15 +46,39 @@ class Search extends React.Component {
             <input
               className={s.searchField}
               onChange={e => onChange(e.target.value)}
+              onBlur={() => this.setUrl()}
+              onKeyDown={(e: KeyboardEvent) => e.keyCode === 13 && this.setUrl()}
               value={query}
               ref={input => { this.input = input; }}
             />
           </div>
-          <ul>
-            {results.map((result: Result) =>
-              <SearchResult result={result} key={`result_${result.type}_${result.id}`}/>
-            )}
-          </ul>
+
+          <div className={s.row}>
+            <table className={s.table}>
+              <thead>
+                <tr>
+                  <th className={s.cell1}>Case</th>
+                  <th className={s.cell2}>Plaintiff</th>
+                  <th className={s.cell3}>Defendant</th>
+                  <th className={s.cell4}/>
+                  <th className={s.cell5}>Disposition</th>
+                  <th className={s.cell6}>Filed</th>
+                </tr>
+                <tr>
+                  <th className={s.cell1}>Dispute Type</th>
+                  <th className={s.cell2}>Plaintiff Counsel</th>
+                  <th className={s.cell3}>Defendant Counsel</th>
+                  <th className={s.cell4}>Arbitrator</th>
+                  <th className={s.cell5}>Prevailing Party</th>
+                  <th className={s.cell6}>Closed</th>
+                </tr>
+              </thead>
+
+              {results.map((result: Result) =>
+                <SearchResult result={result} key={`result_${result.type}_${result.id}`}/>
+              )}
+            </table>
+          </div>
         </div>
       </Layout>
     );

@@ -1,4 +1,4 @@
-/**
+/** @flow
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
  * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
@@ -7,7 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import Layout from '../../components/Layout';
@@ -15,9 +15,9 @@ import Link from '../../components/Link';
 import s from './Cases.scss';
 import first from '../../core/first';
 
-function CaseRow({ case_ }) {
+function CaseRow({ case_ }: { case_: any }) {
   const nonConsumer = first(
-    case_.Parties.edges.filter(party => party.node.party_type === 'Non Consumer')
+    case_.Parties.edges.filter(party => party.node.type === 'Non Consumer')
   );
 
   return (
@@ -36,11 +36,8 @@ function CaseRow({ case_ }) {
     </tr>
   );
 }
-CaseRow.propTypes = {
-  case_: PropTypes.any,
-};
 
-function Cases({ cases }) {
+function Cases({ cases }: { cases: Array<any>, page: number }) {
   return (
     <Layout>
       <div className={s.root}>
@@ -49,14 +46,18 @@ function Cases({ cases }) {
           <table className={cx(s.table, s.cases)}>
             {cases.map(case_ => <CaseRow case_={case_} key={`case_${case_.id}`}/>)}
           </table>
+
+          <div className={s.row}>
+            <div className={s.col_half}>
+              {}
+              Previous
+            </div>
+            <div className={s.col_half}>Next</div>
+          </div>
         </div>
       </div>
     </Layout>
   );
 }
-
-Cases.propTypes = {
-  cases: PropTypes.arrayOf(PropTypes.any).isRequired,
-};
 
 export default withStyles(s)(Cases);

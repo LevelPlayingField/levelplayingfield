@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -9,25 +10,15 @@
 
 import React from 'react';
 import Home from './Home';
-import graphql from '../../core/graphql';
 
 export default {
 
   path: '/',
 
-  async action() {
-    const { summary } = await graphql(`
-      {
-        summary: Summary {
-          cases
-          parties
-        }
-      }
-    `);
-
+  action() {
     return {
       title: 'LevelPlayingField',
-      component: <Home cases={summary.cases} parties={summary.parties}/>,
+      component: <Home />,
     };
   },
 

@@ -1,3 +1,4 @@
+/* @flow */
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import MoneyCents from '../../components/MoneyCents';
@@ -5,7 +6,7 @@ import { partyType, CONSUMER, NON_CONSUMER } from './utils';
 import s from './Case.scss';
 
 
-function AwardsTable({ case_ }) {
+function AwardsTable({ case_ }: { case_: {[key: any]: any}}) {
   const initiatedBy = partyType(case_.initiating_party);
   const plaintiff = initiatedBy === NON_CONSUMER ? 'business' : 'consumer';
   const defendant = initiatedBy === CONSUMER ? 'business' : 'consumer';

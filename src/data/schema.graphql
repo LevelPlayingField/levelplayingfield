@@ -68,9 +68,9 @@ type CaseParty {
   type: String
   case_id: Int!
   party_id: Int!
-  party_name: String
-  party_type: String
   firm_id: Int
+  party_name: String
+  firm_name: String
   date: String
   fees: Int
   createdAt: String!
@@ -125,8 +125,6 @@ type casesEdge {
   # A cursor for use in pagination
   cursor: String!
 }
-
-union document = case | Party
 
 # A connection to a list of items.
 type firmCasesConnection {
@@ -207,7 +205,7 @@ type Party {
 
 type Query {
   Summary: Summary
-  Search(limit: Int = 10, query: String!): [Search]
+  Search(limit: Int = 10, query: String!, type: String): [Search]
   Cases(
     limit: Int
     order: String
@@ -232,7 +230,7 @@ type Search {
   type: String!
   id: Int!
   slug: String
-  document: document
+  document: JSON
   vector: String
   index: String
 }

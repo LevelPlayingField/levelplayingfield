@@ -1,3 +1,5 @@
+/* @flow */
+
 import sequelize from '../sequelize';
 import AttorneyFirms from './AttorneyFirms';
 import CaseParty from './CaseParty';
@@ -42,19 +44,8 @@ CaseParty.Firm = CaseParty.belongsTo(Party, {
   as: 'Firm',
 });
 
-async function sync(...args) {
-  for (const k of Object.keys(sequelize.models)) {
-    const model = sequelize.models[k];
-    if (!model.options.view) {
-      await model.sync(...args);
-    }
-  }
-  // for (const k of Object.keys(sequelize.models)) {
-  //   const model = sequelize.models[k];
-  //   if (model.options.view) {
-  //     await sequelize.query(model.options.viewExpression);
-  //   }
-  // }
+async function sync(options: any): Promise<*> {
+  return sequelize.sync(options);
 }
 
 export default { sync };

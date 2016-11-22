@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -11,7 +12,7 @@ import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ErrorPage.scss';
 
-function ErrorPage({ error }) {
+function ErrorPage({ error }: { error: Error }) {
   if (process.env.NODE_ENV !== 'production') {
     return (
       <div>

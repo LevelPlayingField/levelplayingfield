@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -22,7 +23,14 @@ function Footer() {
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/about-us">About Us</Link>
         <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/contact-us">Contact Us</Link>
+        <a
+          className={s.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          href="mailto:contact@lpf.io?subject=Hello, LPF!"
+        >
+          Contact Us
+        </a>
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/privacy">Privacy</Link>
       </div>

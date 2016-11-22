@@ -1,9 +1,12 @@
-import React, { PropTypes } from 'react';
+/* @flow */
+
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Link from '../../components/Link';
 import s from './Party.scss';
+import type { PartyType } from './';
 
-function PartyItem({ party }) {
+function PartyItem({ party }: { party: { node: PartyType }}) {
   return (
     <li className={s.partyItem}>
       <Link to={`/party/${party.node.slug}`}>
@@ -12,9 +15,5 @@ function PartyItem({ party }) {
     </li>
   );
 }
-
-PartyItem.propTypes = {
-  party: PropTypes.any.isRequired,
-};
 
 export default withStyles(s)(PartyItem);

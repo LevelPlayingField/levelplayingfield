@@ -11,6 +11,11 @@
  * Typography
  * ======================================================================== */
 $font-family-base: Roboto, 'Segoe UI', 'HelveticaNeue-Light', sans-serif;
+$font-size-base: 1em;
+$font-size-heading: 1.2 * $font-size-base;
+
+$line-height-base: 1.2 * $font-size-base;
+$line-height-heading: 1.2 * $font-size-heading;
 
 /*
  * Layout

@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -32,7 +33,7 @@ export default {
     require('./notFound').default,
   ],
 
-  async action({ next }) {
+  async action({ next }: any) {
     // Execute each child route until one of them return the result
     const route = await next();
 

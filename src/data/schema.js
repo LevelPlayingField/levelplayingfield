@@ -1,3 +1,4 @@
+/* @flow */
 /* eslint no-use-before-define: "off" */
 import {
   GraphQLSchema,
@@ -7,13 +8,14 @@ import {
   GraphQLNonNull,
   GraphQLInt,
   GraphQLID,
-  GraphQLUnionType,
 } from 'graphql';
 import Sequelize from 'sequelize';
 import { defaultListArgs, attributeFields, typeMapper, resolver, relay } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
+import { maskErrors } from 'graphql-errors';
 import sequelize from './sequelize';
-import { Case, Party, CaseParty, Search } from './models';
+import { Case, Party, CaseParty } from './models';
+import SearchSchema from './SearchSchema';
 
 typeMapper.mapType(t => (t instanceof Sequelize.JSON || t instanceof Sequelize.JSONB) && JSONType);
 
@@ -22,25 +24,6 @@ const SummaryType = new GraphQLObjectType({
   fields: () => ({
     cases: { type: GraphQLInt },
     parties: { type: GraphQLInt },
-  }),
-});
-
-const SearchType = new GraphQLObjectType({
-  name: 'Search',
-  fields: () => ({
-    ...attributeFields(Search),
-    document: {
-      type: new GraphQLUnionType({
-        name: 'document',
-        types: [CaseType, PartyType],
-        resolveType(value) {
-          if (value.case_number !== undefined) {
-            return CaseType;
-          }
-          return PartyType;
-        },
-      }),
-    },
   }),
 });
 
@@ -198,33 +181,7 @@ const schema = new GraphQLSchema({
           return data;
         },
       },
-      Search: {
-        type: new GraphQLList(SearchType),
-        resolve: resolver(Search, {
-          before: (options, args) => {
-            const filters = [];
-            filters.push();
-
-            return ({
-              ...options,
-              where: Sequelize.and(
-                options.where,
-                {
-                  $or: [
-                    ["vector @@ plainto_tsquery('english', ?)", [args.query]],
-                    ['index ILIKE ?', args.query.split().map(word => `${word}%`)],
-                  ],
-                }
-              ),
-              order: `ts_rank(vector, plainto_tsquery('english', '${args.query.replace("'", "''")}')) DESC`,
-            });
-          },
-        }),
-        args: {
-          limit: { type: GraphQLInt, defaultValue: 10 },
-          query: { type: new GraphQLNonNull(GraphQLString) },
-        },
-      },
+      ...SearchSchema.fields,
       Cases: {
         type: new GraphQLList(CaseType),
         resolve: resolver(Case),
@@ -259,5 +216,6 @@ const schema = new GraphQLSchema({
     }),
   }),
 });
+maskErrors(schema);
 
 export default schema;

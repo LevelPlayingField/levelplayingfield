@@ -11,7 +11,7 @@ addons:
     packages:
       - g++-4.8
 before_script:
-  - psql -U postgres -C 'create database levelplayingfield;'
+  - psql -U postgres -c 'create database levelplayingfield;'
 script:
   - npm run lint
   - npm run test

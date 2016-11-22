@@ -1,18 +1,45 @@
 @import '../../components/variables';
 @import '../layout';
 
+.container {
+  max-width: $screen-lg-min - 40;
+}
+
 .queryRow {
   text-align: center;
 }
 
 .searchIcon {
-font-size: 2em;
+  font-size: 2em;
+  color: $primary-color;
 }
 
 .searchField {
-  font-size: 1.5em;
+  font-size: 1.2em;
   padding: 8px;
-  width: 280px;
+  width: 90%;
+  max-width: 400px;
   border: none;
   border-bottom: 1.5px $accent-color solid;
+}
+
+.table {
+  border-spacing: 0;
+  font-size: 1em;
+}
+
+.resultRow tr:first-of-type td {
+  border-top: 1px black solid;
+}
+
+.resultRow tr td {
+  padding: 2px;
+}
+
+.cellLink {
+  text-decoration: none;
+}
+
+.cellLink:hover {
+  text-decoration: underline;
 }

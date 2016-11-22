@@ -1,6 +1,5 @@
 [ignore]
 .*/build
-.*/config
 .*/gulpfile.js
 .*/node_modules/xlsx/bower.json
 .*/node_modules/react-relay/lib/relayUnstableBatchedUpdates.native.js
@@ -15,4 +14,5 @@
 
 [options]
 module.name_mapper='.+\.s?css$' -> 'CSSModule'
+module.name_mapper='.+\.md$' -> 'MarkdownModule'
 module.system=haste

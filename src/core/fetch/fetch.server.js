@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -26,7 +27,7 @@ function localUrl(url) {
   return `http://${host}${url}`;
 }
 
-function localFetch(url, options) {
+function localFetch(url: string, options: { [key: string]: any }) {
   return fetch(localUrl(url), options);
 }
 

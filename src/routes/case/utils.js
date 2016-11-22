@@ -1,6 +1,8 @@
+/* @flow */
+
 const CONSUMER = 'Consumer';
 const NON_CONSUMER = 'Non Consumer';
-const days = date => date / 1000 / 60 / 60 / 24;
+const days = (date: number) => date / 1000 / 60 / 60 / 24;
 
 const ConsumerParty = {
   type: 'Consumer',
@@ -8,7 +10,7 @@ const ConsumerParty = {
 };
 
 
-function partyType(initiatingParty) {
+function partyType(initiatingParty: ?string) {
   switch (initiatingParty) {
     case 'Non Consumer':
     case 'Business':

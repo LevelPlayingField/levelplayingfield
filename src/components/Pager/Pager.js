@@ -1,3 +1,4 @@
+/* @flow */
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import queryString from 'query-string';
@@ -39,8 +40,8 @@ function Pager({ queryKey = 'page', pageInfo }, { history }) {
   );
 }
 
-function page(queryKey, limit = 10) {
-  return (query) => {
+function page(queryKey: string, limit: number = 10) {
+  return (query: { [key: string]: string }) => {
     const beforeKey = `before${queryKey}`;
     const afterKey = `after${queryKey}`;
 

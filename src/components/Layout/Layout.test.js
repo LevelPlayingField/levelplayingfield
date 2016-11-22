@@ -17,12 +17,11 @@ import App from '../App';
 import Layout from './Layout';
 
 describe('Layout', () => {
-
   it('renders children correctly', () => {
     const wrapper = render(
       <App context={{ insertCss: () => {} }}>
         <Layout>
-          <div className="child" />
+          <div className="child"/>
         </Layout>
       </App>
     );

@@ -1,3 +1,4 @@
+/* @flow */
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 

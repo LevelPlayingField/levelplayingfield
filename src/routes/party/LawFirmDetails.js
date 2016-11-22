@@ -1,10 +1,13 @@
-import React, { PropTypes } from 'react';
+/* @flow */
+
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Party.scss';
 import CaseItem from './CaseItem';
 import PartyItem from './PartyItem';
+import type { PartyType } from './';
 
-function LawFirmDetails({ party }) {
+function LawFirmDetails({ party }: {party: PartyType}) {
   return (
     <div className={s.row}>
       <div className={s.col_half}>
@@ -12,7 +15,7 @@ function LawFirmDetails({ party }) {
 
         <ul className={s.parties}>
           {party.Attorneys.edges.map(attorney =>
-            <PartyItem party={attorney} key={`attorney_${attorney.node.id}`} />
+            <PartyItem party={attorney} key={`attorney_${attorney.node.id}`}/>
           )}
         </ul>
       </div>
@@ -21,16 +24,12 @@ function LawFirmDetails({ party }) {
 
         <ul className={s.cases}>
           {party.FirmCases.edges.map(case_ =>
-            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`} />
+            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`}/>
           )}
         </ul>
       </div>
     </div>
   );
 }
-
-LawFirmDetails.propTypes = {
-  party: PropTypes.any.isRequired,
-};
 
 export default withStyles(s)(LawFirmDetails);

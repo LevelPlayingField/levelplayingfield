@@ -45,20 +45,22 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
-.search {
-  @extend .link;
-  display: none;
+.searchField {
+  color: $accent-color;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px $accent-color solid;
+  font-size: $font-size-heading;
+  line-height: $line-height-heading;
 }
 
 .searchIcon {
-  color: rgba(255, 255, 255, 0.6);
+  color: $accent-color;
+  font-size: $font-size-heading * 1.4;
+  line-height: $line-height-heading;
 }
 
-.searchText {
-  display: inline;
-}
-
-@media(max-width: $screen-xs-min) {
+@media (max-width: $screen-xs-min) {
   .root {
     display: flex;
     flex-direction: row;

@@ -12,5 +12,5 @@ export default (query: string): any => (
       'Content-Type': 'application/json',
     },
   }).then(resp => resp.json())
-    .then(json => json.data)
+    .then((json: { data: any }) => json.data)
 );

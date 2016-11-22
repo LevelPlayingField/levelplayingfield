@@ -1,11 +1,16 @@
-import React, { PropTypes } from 'react';
+/* @flow */
+
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Pager from '../../components/Pager';
 import s from './Party.scss';
 import CaseItem from './CaseItem';
 import PartyItem from './PartyItem';
 
-function AttorneyDetails({ party }) {
+import type { PartyType } from './';
+
+
+function AttorneyDetails({ party }: {party: PartyType }) {
   return (
     <div className={s.row}>
       <div className={s.col_half}>
@@ -13,7 +18,7 @@ function AttorneyDetails({ party }) {
 
         <ul className={s.parties}>
           {party.Firms.edges.map(firm => (
-            <PartyItem party={firm} key={`firm_${firm.node.party_id}`}/>
+            <PartyItem party={firm} key={`firm_${firm.node.id}`}/>
           ))}
         </ul>
       </div>
@@ -30,9 +35,5 @@ function AttorneyDetails({ party }) {
     </div>
   );
 }
-
-AttorneyDetails.propTypes = {
-  party: PropTypes.any.isRequired,
-};
 
 export default withStyles(s)(AttorneyDetails);

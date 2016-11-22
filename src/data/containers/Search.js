@@ -39,12 +39,27 @@ export type CaseType = {
   med_count: number,
   arb_or_cca_count: number,
   adr_process: string,
+  party_names: Array<string>,
+  parties: Array<{
+    type: string,
+    case_id: number,
+    party_id: number,
+    firm_id: number,
+    party_name: string,
+    firm_name: string,
+    fees: ?number,
+    date: string,
+    createdAt: string,
+    updatedAt: string,
+  }>,
 }
 export type PartyType = {
   id: number,
   slug: string,
   type: string,
   name: string,
+  firms: Array<PartyType>,
+  attorneys: Array<PartyType>,
 }
 export type Result = {
   id: number,
@@ -58,6 +73,7 @@ type childProps = {
 }
 type Props = {
   Component: ReactClass<childProps>,
+  term: ?string,
 };
 type State = {
   query: string,
@@ -72,17 +88,23 @@ export default class SearchContainer extends React.Component {
     super(props);
 
     this.state = {
-      query: '',
+      query: props.term || '',
       results: [],
     };
   }
 
   componentDidMount() {
-
+    if (this.state.query) {
+      this.searchFor(this.state.query);
+    }
   }
 
-  componentWillUnmount() {
-
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.term && nextProps.term !== this.props.term) {
+      this.setState({ query: nextProps.term }, () => {
+        this.searchFor(this.state.query);
+      });
+    }
   }
 
   handleQueryChange(query: string) {
@@ -92,71 +114,13 @@ export default class SearchContainer extends React.Component {
   }
 
   async searchFor(query: string) {
-    const results = await graphql(`
-    fragment PartyFields on Party {
-      id
-      slug
-      type
-      name
-    }
-    
-    fragment CaseFields on case {
-      id
-      case_number
-      arbitration_board
-      initiating_party
-      source_of_authority
-      dispute_type
-      dispute_subtype
-      salary_range
-      prevailing_party
-      filing_date
-      close_date
-      type_of_disposition
-      claim_amount_business
-      fee_allocation_business
-      fees_business
-      award_amount_business
-      attorney_fees_business
-      other_relief_business
-      claim_amount_consumer
-      fee_allocation_consumer
-      fees_consumer
-      award_amount_consumer
-      attorney_fees_consumer
-      other_relief_consumer
-      consumer_rep_state
-      consumer_self_represented
-      document_only_proceeding
-      type_of_hearing
-      hearing_addr1
-      hearing_addr2
-      hearing_city
-      hearing_state
-      hearing_zip
-      arb_count
-      med_count
-      arb_or_cca_count
-      adr_process
-    }
-    
+    const results = await graphql(`    
     {
       Search(query: "${query}") {
         id
         type
         slug
-        document {
-          ... on case {
-            ...CaseFields
-          }
-          ... on Party {
-            ...PartyFields
-          }
-        }
-      }
-      Summary {
-        cases
-        parties
+        document 
       }
     }
     `);

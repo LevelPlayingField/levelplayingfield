@@ -140,6 +140,10 @@ const config = {
           name: isDebug ? '[path][name].[ext]?[hash]' : '[hash].[ext]',
         },
       },
+      {
+        test: /\.md$/,
+        loader: 'html!markdown?gfm=true',
+      },
     ],
   },
 

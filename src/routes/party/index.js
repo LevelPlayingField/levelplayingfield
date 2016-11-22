@@ -1,22 +1,62 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
+/* @flow */
 
 import React from 'react';
 import Party from './Party';
 import graphql from '../../core/graphql';
 import { page } from '../../components/Pager';
 
+type PageInfo = {
+  hasNextPage: bool,
+  hasPreviousPage: bool,
+  startCursor: string,
+  endCursor: string,
+};
+type PartyFields = {
+  id: number,
+  slug: string,
+  type: string,
+  name: string,
+}
+export type CaseType = {
+  case_id: number,
+  Case: {
+    case_number: string,
+    initiating_party: string,
+
+    Parties: {
+      edges: Array<{
+        node: {
+          type: string,
+          party_name: string,
+        }
+      }>
+    }
+  }
+}
+export type PartyType = PartyFields & {
+  Cases: {
+    pageInfo: PageInfo,
+    edges: Array<{
+      cursor: string,
+      node: CaseType,
+    }>,
+  },
+  FirmCases: {
+    pageInfo: PageInfo,
+    edges: Array<{
+      cursor: string,
+      node: CaseType,
+    }>,
+  },
+  Attorneys: { edges: Array<{node: PartyFields}>},
+  Firms: { edges: Array<{node: PartyFields}>},
+};
+
 export default {
 
   path: '/party/:slug',
 
-  async action({ params, query }) {
+  async action({ params, query }: any) {
     const data = await graphql(`
 fragment pageInfo on PageInfo {
   hasNextPage
@@ -40,7 +80,7 @@ fragment CasePartyFields on CaseParty {
     Parties {
       edges {
         node {
-          party_type
+          type
           party_name
         }
       }

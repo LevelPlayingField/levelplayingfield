@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -15,7 +16,7 @@ export default {
 
   path: '/case/:caseID',
 
-  async action({ params }) {
+  async action({ params }: any) {
     const data = await graphql(`
     fragment PartyFields on Party {
       id

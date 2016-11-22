@@ -37,7 +37,8 @@
 .col_half {
   display: block;
   flex: 6;
-  /*min-width: 50%;*/
+
+  /* min-width: 50%; */
 }
 
 .table {
@@ -63,7 +64,7 @@
   width: 48%;
 }
 
-@media(max-width: $screen-xs-min) {
+@media (max-width: $screen-xs-min) {
   .row {
     display: block;
   }

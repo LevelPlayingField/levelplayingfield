@@ -16,27 +16,7 @@
 .container {
   margin: 0 auto;
   padding: 0 0 40px;
+  font-size: 1em;
   max-width: $max-content-width;
-}
-
-.title {
-  color: $primary-color;
-  font-weight: 700;
-}
-
-.marketing {
-  display: block;
-}
-
-.marketing_inline {
-  display: run-in;
-}
-
-.row {
-  display: block;
-
-}
-
-.image {
-  display: inline;
+  //text-indent: 1em;
 }

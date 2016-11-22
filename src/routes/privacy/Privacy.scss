@@ -19,14 +19,24 @@
   max-width: $max-content-width;
 }
 
-.title {
-  color: $primary-color;
-  font-weight: 700;
+h2 {
+  font-size: 1.6em;
 }
 
-.marketing {
+h3 {
+  font-size: 1.4em;
 }
 
-.hightlight {
-  font-weight: 400;
+p,
+ol,
+li {
+  font-size: 1em;
+}
+
+ol:first-of-type {
+  list-style-type: upper-alpha;
+
+  li ol {
+    list-style-type: lower-roman;
+  }
 }

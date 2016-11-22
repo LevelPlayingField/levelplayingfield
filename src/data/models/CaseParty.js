@@ -1,3 +1,4 @@
+/* @flow */
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 
@@ -5,9 +6,11 @@ export default sequelize.define('case_party', {
   type: Sequelize.STRING(32),
   case_id: { type: Sequelize.INTEGER, primaryKey: true },
   party_id: { type: Sequelize.INTEGER, primaryKey: true },
-  party_name: Sequelize.STRING(255),
-  party_type: Sequelize.STRING(32),
   firm_id: Sequelize.INTEGER,
+  party_name: Sequelize.STRING(255),
+  firm_name: Sequelize.STRING(255),
+  party_slug: Sequelize.STRING(255),
+  firm_slug: Sequelize.STRING(255),
 
   date: Sequelize.DATE,
   fees: Sequelize.INTEGER,
