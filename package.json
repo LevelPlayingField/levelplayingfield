@@ -43,6 +43,7 @@
     "query-string": "4.2.3",
     "react": "15.3.2",
     "react-dom": "15.3.2",
+    "react-ga": "^2.1.2",
     "react-icons": "^2.2.1",
     "react-intl": "^2.1.5",
     "react-tap-event-plugin": "^1.0.0",

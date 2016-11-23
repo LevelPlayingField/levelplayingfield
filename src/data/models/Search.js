@@ -24,16 +24,16 @@ CREATE OR REPLACE FUNCTION english_join(character varying[])
   RETURNS character varying AS
 $BODY$
 DECLARE 
-	length INTEGER;
+  length INTEGER;
 BEGIN
-	length := array_length($1, 1);
-	IF length = 1 THEN
-		return ($1)[1];
-	ELSIF length = 2 THEN
-		return array_to_string($1, ' and ', 'Unknown');
-	ELSE
-		return array_to_string(($1)[1:length - 1], ', ', 'Unknown') || ', and ' || ($1)[length];
-	END IF;
+  length := array_length($1, 1);
+  IF length = 1 THEN
+    return ($1)[1];
+  ELSIF length = 2 THEN
+    return array_to_string($1, ' and ', 'Unknown');
+  ELSE
+    return array_to_string(($1)[1:length - 1], ', ', 'Unknown') || ', and ' || ($1)[length];
+  END IF;
 END $BODY$
 LANGUAGE plpgsql;
   

@@ -9,6 +9,7 @@
 
 import 'babel-polyfill';
 import React from 'react';
+import ReactGA from 'react-ga';
 import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import UniversalRouter from 'universal-router';
@@ -17,6 +18,9 @@ import { createPath } from 'history/PathUtils';
 import createBrowserHistory from 'history/createBrowserHistory';
 import App from './components/App';
 import { ErrorReporter, deepForceUpdate } from './core/devUtils';
+import { analytics } from './config';
+
+ReactGA.initialize(analytics.google);
 
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
@@ -27,7 +31,9 @@ const context = {
   insertCss: (...styles) => {
     // eslint-disable-next-line no-underscore-dangle
     const removeCss = styles.map(x => x._insertCss());
-    return () => { removeCss.forEach(f => f()); };
+    return () => {
+      removeCss.forEach(f => f());
+    };
   },
   history,
 };
@@ -98,12 +104,6 @@ let onRenderComplete = function initialRenderComplete() {
     // or scroll to the given #hash anchor
     // or scroll to top of the page
     window.scrollTo(scrollX, scrollY);
-
-    // Google Analytics tracking. Don't send 'pageview' event after
-    // the initial rendering, as it was already sent
-    if (window.ga) {
-      window.ga('send', 'pageview', createPath(location));
-    }
   };
 };
 
@@ -127,6 +127,7 @@ async function onLocationChange(location) {
     delete scrollPositionsHistory[location.key];
   }
   currentLocation = location;
+  ReactGA.pageview(location.pathname);
 
   try {
     // Traverses the list of routes in the order they are defined until
@@ -154,6 +155,7 @@ async function onLocationChange(location) {
     );
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
+    ReactGA.exception({ description: error.message });
 
     // Current url has been changed during navigation process, do nothing
     if (currentLocation.key !== location.key) {
@@ -164,7 +166,7 @@ async function onLocationChange(location) {
     if (process.env.NODE_ENV !== 'production') {
       appInstance = null;
       document.title = `Error: ${error.message}`;
-      ReactDOM.render(<ErrorReporter error={error} />, container);
+      ReactDOM.render(<ErrorReporter error={error}/>, container);
       return;
     }
 
@@ -190,7 +192,7 @@ if (module.hot) {
       } catch (error) {
         appInstance = null;
         document.title = `Hot Update Error: ${error.message}`;
-        ReactDOM.render(<ErrorReporter error={error} />, container);
+        ReactDOM.render(<ErrorReporter error={error}/>, container);
         return;
       }
     }
