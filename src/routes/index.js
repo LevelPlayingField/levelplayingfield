@@ -24,9 +24,6 @@ export default {
 
     require('./search').default,
 
-    require('./cases').default,
-    require('./parties').default,
-
     require('./case').default,
     require('./party').default,
 
