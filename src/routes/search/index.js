@@ -4,10 +4,10 @@ import React from 'react';
 import Search from '../../data/containers/Search';
 import Component from './Search';
 
-function action({ params } : { params: { term: ?string }}) {
+async function action({ params: { term } } : { params: { term: ?string }}) {
   return {
     title: 'Search',
-    component: <Search Component={Component} term={params.term}/>,
+    component: <Search Component={Component} term={term}/>,
   };
 }
 

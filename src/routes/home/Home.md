@@ -1,6 +1,6 @@
 # Mission Statement
 
-Level Playing Field is a searchable database of {cases} consumer arbitration cases. We
+Level Playing Field is a searchable database of consumer arbitration cases. We
 were formed as a 501(c)(3) so monetary donations are charitable tax deductions.
 
 Use the [search](/search) to find specific parties or cases, or to just browse. The next

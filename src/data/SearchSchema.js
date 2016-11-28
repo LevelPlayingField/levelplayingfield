@@ -7,15 +7,31 @@ import {
   GraphQLNonNull,
   GraphQLInt,
 } from 'graphql';
+import Sequelize from 'sequelize';
+import SqlString from 'sequelize/lib/sql-string';
 import { attributeFields, resolver } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import searchQuery from 'search-query-parser';
 import { Search } from './models';
 
+(function patchEscape() {
+  const origEscape = SqlString.escape;
+  const newEscape = function escape(val, ...args) {
+    if (typeof val === 'object' && val.val != null) {
+      return val.val;
+    }
+
+    return origEscape(val, ...args);
+  };
+
+  SqlString.escape = newEscape;
+}());
+
 const searchOptions = {
   keywords: [
     'is',
     'board',
+    'party',
   ],
   groups: {
     is: [
@@ -83,14 +99,14 @@ const convertIs = (vals: string | Array<string>) => {
     }, {});
 
   for (const key of Object.keys(is)) {
-    filters.push({ $or: is[key].map(v => [key, [v]]) });
+    filters.push({ $or: is[key].map(v => [key, v]) });
   }
 
   return filters;
 };
 const filterRange = (field, { from, to }) => {
   if (from != null && to != null) {
-    return [`${field} BETWEEN ? AND ?`, [from], [to]];
+    return [`${field} BETWEEN ? AND ?`, from, to];
   }
 
   if (from != null) {
@@ -98,10 +114,10 @@ const filterRange = (field, { from, to }) => {
       const op = from.substr(0, 1);
       const val = from.substr(1);
 
-      return [`${field} ${op}= ?`, [val]];
+      return [`${field} ${op}= ?`, val];
     }
 
-    return [`${field} = ?`, [from]];
+    return [`${field} = ?`, from];
   }
 
   return [];
@@ -127,6 +143,7 @@ type ParsedType = string | {
   board: ?KeywordType,
   closed: ?RangeType,
   filed: ?RangeType,
+  party: ?string,
 };
 
 export default {
@@ -154,7 +171,7 @@ export default {
                 where,
                 {
                   $or: [
-                    ["vector @@ plainto_tsquery('english', ?)", [term]],
+                    ["vector @@ plainto_tsquery('english', ?)", term],
                     { $and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]]) },
                   ],
                 },
@@ -164,7 +181,10 @@ export default {
 
           if (typeof parsed !== 'string') {
             if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
-              where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", [b]]) }] };
+              where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
+            }
+            if (parsed.party != null) {
+              where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
             }
             if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
               where = { $and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)] };
@@ -176,7 +196,7 @@ export default {
               where = { $and: [where, convertIs(parsed.is)] };
             }
           }
-
+          console.log(JSON.stringify(where, null, 2));
           return { ...options, where, order };
         },
       }),

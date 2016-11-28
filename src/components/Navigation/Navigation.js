@@ -61,8 +61,8 @@ class Navigation extends React.Component {
 
     return (
       <div className={cx(s.root, className)} role="navigation">
-        <Link className={s.link} to="/cases">Cases</Link>
-        <Link className={s.link} to="/parties">Parties</Link>
+        <Link className={s.link} to="/search/is:case">Cases</Link>
+        <Link className={s.link} to="/search/is:party">Parties</Link>
 
         <label htmlFor="search">
           <input

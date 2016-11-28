@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import Promise from 'bluebird';
 import graphql from '../../core/graphql';
 
 export type CaseType = {
@@ -77,7 +78,8 @@ type Props = {
 };
 type State = {
   query: string,
-  results: Array<Result>
+  results: Array<Result>,
+  loading: bool,
 };
 
 export default class SearchContainer extends React.Component {
@@ -90,6 +92,7 @@ export default class SearchContainer extends React.Component {
     this.state = {
       query: props.term || '',
       results: [],
+      loading: false,
     };
   }
 
@@ -114,9 +117,11 @@ export default class SearchContainer extends React.Component {
   }
 
   async searchFor(query: string) {
+    await new Promise((resolve) => this.setState({ loading: true }, resolve));
+
     const results = await graphql(`    
     {
-      Search(query: "${query}") {
+      Search(query: ${JSON.stringify(query)}) {
         id
         type
         slug
@@ -125,7 +130,7 @@ export default class SearchContainer extends React.Component {
     }
     `);
 
-    this.setState({ results: results.Search });
+    this.setState({ results: results.Search, loading: false });
   }
 
   render() {
