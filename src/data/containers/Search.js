@@ -75,9 +75,12 @@ type childProps = {
 type Props = {
   Component: ReactClass<childProps>,
   term: ?string,
+  page: ?number,
 };
 type State = {
   query: string,
+  page: number,
+  pages: number,
   results: Array<Result>,
   loading: bool,
 };
@@ -91,6 +94,8 @@ export default class SearchContainer extends React.Component {
 
     this.state = {
       query: props.term || '',
+      page: props.page || 1,
+      pages: 0,
       results: [],
       loading: false,
     };
@@ -98,39 +103,65 @@ export default class SearchContainer extends React.Component {
 
   componentDidMount() {
     if (this.state.query) {
-      this.searchFor(this.state.query);
+      this.searchFor(this.state.query, this.state.page);
     }
   }
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.term && nextProps.term !== this.props.term) {
-      this.setState({ query: nextProps.term }, () => {
-        this.searchFor(this.state.query);
+      this.setState({ query: nextProps.term, page: 1 }, () => {
+        this.updateResults();
       });
+    } else if (nextProps.page && nextProps.page !== this.props.page) {
+      this.searchFor(this.state.query, nextProps.page);
     }
   }
 
-  handleQueryChange(query: string) {
-    this.setState({ query }, () => {
-      this.searchFor(query);
-    });
+  handlePageChange(page: number) {
+    this.setState({ page }, () => { this.updateResults(); });
   }
 
-  async searchFor(query: string) {
+  handleQueryChange(query: string) {
+    this.setState({ query, page: 1 }, () => { this.updateResults(); });
+  }
+
+  updateResults() {
+    const { query, page } = this.state;
+
+    this.searchFor(query, page);
+  }
+
+  async searchFor(query: string, page: number = 1) {
     await new Promise((resolve) => this.setState({ loading: true }, resolve));
 
-    const results = await graphql(`    
+    const { Search: { Results }} = await graphql(`
     {
       Search(query: ${JSON.stringify(query)}) {
-        id
-        type
-        slug
-        document 
+        Results(page: ${page}, perPage: 10) {
+          page
+          pages
+          total
+          
+          edges {
+            node {
+              id
+              type
+              slug
+              document
+            }
+          }
+        }
       }
     }
     `);
 
-    this.setState({ results: results.Search, loading: false });
+    this.setState({
+      results: Results.edges.map(edge => edge.node),
+      page: Results.page,
+      pages: Results.pages,
+      total: Results.total,
+      loading: false,
+    });
   }
 
   render() {
@@ -139,6 +170,7 @@ export default class SearchContainer extends React.Component {
     return (
       <Component
         {...this.state}
+        onPageChange={page => this.handlePageChange(page)}
         onChange={query => this.handleQueryChange(query)}
       />
     );
