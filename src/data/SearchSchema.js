@@ -3,31 +3,21 @@
 import {
   GraphQLList,
   GraphQLString,
+  GraphQLBoolean,
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLInt,
 } from 'graphql';
 import Sequelize from 'sequelize';
-import SqlString from 'sequelize/lib/sql-string';
 import { attributeFields, resolver } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import searchQuery from 'search-query-parser';
 import { Search } from './models';
+import patchEscapeLiteral from './sequelizePatchLiteral';
 
-(function patchEscape() {
-  const origEscape = SqlString.escape;
-  const newEscape = function escape(val, ...args) {
-    if (typeof val === 'object' && val.val != null) {
-      return val.val;
-    }
+patchEscapeLiteral();
 
-    return origEscape(val, ...args);
-  };
-
-  SqlString.escape = newEscape;
-}());
-
-const searchOptions = {
+export const searchOptions = {
   keywords: [
     'is',
     'board',
@@ -123,12 +113,130 @@ const filterRange = (field, { from, to }) => {
   return [];
 };
 
-
 export const SearchType = new GraphQLObjectType({
   name: 'Search',
   fields: () => ({
-    ...attributeFields(Search),
-    document: { type: JSONType },
+    query: { type: GraphQLString },
+    Results: {
+      type: ResultsType,
+      args: {
+        page: { type: GraphQLInt, defaultValue: 1 },
+        perPage: { type: GraphQLInt, defaultValue: 20 },
+      },
+      async resolve({ query }, { page, perPage }) {
+        const parsed: ParsedType = searchQuery.parse(query, searchOptions);
+
+        let where = {};
+        let order = null;
+
+        if (typeof parsed === 'string' || typeof parsed.text === 'string') {
+          let term: string = '';
+          if (typeof parsed === 'string') {
+            term = parsed;
+          }
+          if (typeof parsed.text === 'string') {
+            term = parsed.text;
+          }
+
+          if (order == null) {
+            order = `ts_rank(vector, plainto_tsquery('english', '${term.replace("'", "''")}')) DESC`;
+          }
+          where = {
+            $and: [
+              where,
+              {
+                $or: [
+                  ["vector @@ plainto_tsquery('english', ?)", term],
+                  { $and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]]) },
+                ],
+              },
+            ],
+          };
+        }
+
+        if (typeof parsed !== 'string') {
+          if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
+            where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
+          }
+          if (parsed.party != null) {
+            where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
+          }
+          if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
+            where = { $and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)] };
+          }
+          if (parsed.closed != null && validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
+            where = { $and: [where, filterRange("(document->>'close_date')::DATE", parsed.closed)] };
+          }
+          if (parsed.is != null) {
+            where = { $and: [where, convertIs(parsed.is)] };
+          }
+        }
+
+        if (order == null) {
+          order = 'id asc';
+        }
+
+        const results = await Search.findAndCount({
+          where,
+          limit: perPage,
+          offset: (page - 1) * perPage,
+        });
+
+        return {
+          query,
+          page,
+          pages: Math.ceil(results.count / perPage),
+          perPage,
+          where,
+          order,
+          total: results.count,
+          edges: results.rows.map(result => ({
+            cursor: `${result.type}:${result.id}`,
+            node: result,
+          })),
+        };
+
+      },
+    },
+  }),
+});
+
+export const ResultsType = new GraphQLObjectType({
+  name: 'Results',
+  fields: () => ({
+    total: { type: GraphQLInt },
+    page: { type: GraphQLInt },
+    pages: { type: GraphQLInt },
+    perPage: { type: GraphQLInt },
+    hasPrevPage: {
+      type: GraphQLBoolean,
+      resolve({ page }) {
+        return page > 1;
+      },
+    },
+    hasNextPage: {
+      type: GraphQLBoolean,
+      resolve({ total, page, perPage }) {
+        return (page * perPage) < total;
+      },
+    },
+    edges: {
+      type: new GraphQLList(new GraphQLObjectType({
+        name: 'ResultEdge',
+        fields: () => ({
+          cursor: { type: GraphQLString },
+          node: {
+            type: new GraphQLObjectType({
+              name: 'ResultNode',
+              fields: () => ({
+                ...attributeFields(Search),
+                document: { type: JSONType },
+              }),
+            }),
+          },
+        }),
+      })),
+    },
   }),
 });
 
@@ -149,62 +257,12 @@ type ParsedType = string | {
 export default {
   fields: {
     Search: {
-      type: new GraphQLList(SearchType),
-      resolve: resolver(Search, {
-        before: (options, args) => {
-          const parsed: ParsedType = searchQuery.parse(args.query, searchOptions);
-          let where = options.where || {};
-          let order = null;
-
-          if (typeof parsed === 'string' || typeof parsed.text === 'string') {
-            let term: string = '';
-            if (typeof parsed === 'string') {
-              term = parsed;
-            }
-            if (typeof parsed.text === 'string') {
-              term = parsed.text;
-            }
-
-            order = `ts_rank(vector, plainto_tsquery('english', '${term.replace("'", "''")}')) DESC`;
-            where = {
-              $and: [
-                where,
-                {
-                  $or: [
-                    ["vector @@ plainto_tsquery('english', ?)", term],
-                    { $and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]]) },
-                  ],
-                },
-              ],
-            };
-          }
-
-          if (typeof parsed !== 'string') {
-            if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
-              where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
-            }
-            if (parsed.party != null) {
-              where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
-            }
-            if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
-              where = { $and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)] };
-            }
-            if (parsed.closed != null && validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
-              where = { $and: [where, filterRange("(document->>'close_date')::DATE", parsed.closed)] };
-            }
-            if (parsed.is != null) {
-              where = { $and: [where, convertIs(parsed.is)] };
-            }
-          }
-          console.log(JSON.stringify(where, null, 2));
-          return { ...options, where, order };
-        },
-      }),
+      type: SearchType,
+      resolve(context: any, { query }: { query: string }) {
+        return { query };
+      },
       args: {
-        limit: { type: GraphQLInt, defaultValue: 10 },
-        offset: { type: GraphQLInt, defaultValue: 0 },
         query: { type: new GraphQLNonNull(GraphQLString) },
-        type: { type: GraphQLString },
       },
     },
   },

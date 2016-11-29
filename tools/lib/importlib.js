@@ -1,7 +1,7 @@
 import pace from 'awesome-progress';
 import xlsx from 'xlsx';
 import slugify from '../../src/core/slugify';
-import models, { Party } from '../../src/data/models';
+import models, { Party, Search } from '../../src/data/models';
 
 const NA = new Set(['na', 'n/a', 'nan', 'unknown', 'none', 'null', 'undefined']);
 
@@ -86,6 +86,9 @@ async function runImport(parseRow) {
       pb.op({ errors: 1 });
     }
   }
+
+  await Party.updateAggregateData();
+  await Search.refreshView();
 }
 
 export default {

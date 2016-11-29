@@ -62,6 +62,7 @@ CREATE OR REPLACE VIEW case_search_view AS
     || to_tsvector('english', results.prevailing_party)
     || to_tsvector('english', results.type_of_disposition)
     || to_tsvector('english', results.arbitration_board)
+    || to_tsvector('english', results.dispute_type)
     || to_tsvector('english', english_join(results.names)) AS vector,
     row_to_json(results) :: JSONB                          AS document
   FROM results;

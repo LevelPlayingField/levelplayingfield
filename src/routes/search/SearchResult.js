@@ -13,7 +13,7 @@ import first from '../../core/first';
 function cell(url) {
   return withStyles(s)(
     ({ children, ...props }: { children: Array<any> }) => (
-      <td {...props}><Link className={s.cellLink} to={url}>{children}</Link></td>
+      <td {...props}><Link className={s.cellLink} to={url} title={children}>{children}</Link></td>
     )
   );
 }
@@ -46,28 +46,28 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
   return (
     <tbody className={s.resultRow}>
       <tr>
-        <C>{Case.case_number}</C>
-        <C>{plaintiff.party_name}</C>
-        <C>{defendant.party_name}</C>
-        <C>{Case.arbitration_board}</C>
-        <C>{Case.type_of_disposition}</C>
-        <C>{new Date(Case.filing_date).toLocaleDateString()}</C>
+        <C className={s.cell1}>{Case.case_number}</C>
+        <C className={s.cell2}>{plaintiff.party_name}</C>
+        <C className={s.cell3}>{defendant.party_name}</C>
+        <C className={s.cell4}>{Case.arbitration_board}</C>
+        <C className={s.cell5}>{Case.type_of_disposition}</C>
+        <C className={s.cell6}>{new Date(Case.filing_date).toLocaleDateString()}</C>
       </tr>
       <tr>
-        <C>{Case.dispute_type}</C>
-        <C>
+        <C className={s.cell1}>{Case.dispute_type}</C>
+        <C className={s.cell2}>
           {plaintiff.attorneys && plaintiff.attorneys.length
             ? plaintiff.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
             : '---'}
         </C>
-        <C>
+        <C className={s.cell3}>
           {defendant.attorneys
             ? defendant.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
             : '---'}
         </C>
-        <C>{arbitrators.map(p => p.party_name).join(', ')}</C>
-        <C>{Case.prevailing_party}</C>
-        <C>{new Date(Case.close_date).toLocaleDateString()}</C>
+        <C className={s.cell4}>{arbitrators.map(p => p.party_name).join(', ')}</C>
+        <C className={s.cell5}>{Case.prevailing_party}</C>
+        <C className={s.cell6}>{new Date(Case.close_date).toLocaleDateString()}</C>
       </tr>
     </tbody>
   );

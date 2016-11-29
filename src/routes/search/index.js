@@ -1,18 +1,27 @@
 /* @flow */
 
 import React from 'react';
-import Search from '../../data/containers/Search';
+import SearchContainer from '../../data/containers/Search';
 import Component from './Search';
 
-async function action({ params: { term } } : { params: { term: ?string }}) {
-  return {
-    title: 'Search',
-    component: <Search Component={Component} term={term}/>,
-  };
-}
+type ActionParams = {
+  params: {
+    term: ?string,
+  },
+  query: {
+    page: ?number,
+  },
+};
 
 export default {
   path: '/search/:term*',
 
-  action,
+  action(args: ActionParams) {
+    const { params: { term }, query: { page } } = args;
+
+    return {
+      title: 'Search',
+      component: <SearchContainer Component={Component} term={term} page={page}/>,
+    };
+  }
 };

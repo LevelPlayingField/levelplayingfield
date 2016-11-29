@@ -24,8 +24,26 @@
 }
 
 .table {
+  margin-top: 20px;
   border-spacing: 0;
   font-size: 1em;
+}
+
+.table thead tr th {
+  text-align: left;
+}
+
+.table tbody {
+  font-size: 0.9em;
+}
+
+@media (min-width: $screen-lg-min) {
+  td {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .resultRow tr:first-of-type td {
@@ -42,4 +60,36 @@
 
 .cellLink:hover {
   text-decoration: underline;
+}
+
+.pagination {
+  list-style: none;
+
+  $border-radius: 5px;
+
+  li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 1px lightgray solid;
+    border-left: none;
+
+    &:first-of-type {
+      border-left: 1px lightgray solid;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
+    a,
+    span {
+      text-decoration: none;
+      display: inline-block;
+      padding: 10px;
+    }
+  }
 }

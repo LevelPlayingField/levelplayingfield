@@ -3,7 +3,9 @@
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import MDSearch from 'react-icons/lib/md/search';
+import searchQuery from 'search-query-parser';
 import Layout from '../../components/Layout';
+import Link from '../../components/Link';
 import s from './Search.scss';
 import SearchResult from './SearchResult';
 
@@ -14,6 +16,8 @@ type Props = {
   query: string,
   results: Array<Result>,
   loading: bool,
+  page: number,
+  pages: number,
 }
 class Search extends React.Component {
   props: Props;
@@ -35,8 +39,31 @@ class Search extends React.Component {
     history.push(`/search/${this.input.value}`);
   }
 
+  handleChange(e) {
+    const { onChange } = this.props;
+    const value = e.target.value;
+    const parsed = searchQuery.parse(value, {
+      keywords: [
+        'is',
+        'board',
+        'party',
+      ],
+      groups: {
+        is: [
+          ['case', 'party'],
+        ],
+      },
+      ranges: [
+        'filed',
+        'closed',
+      ],
+    });
+
+    onChange(value);
+  }
+
   render() {
-    const { onChange, query, results, loading } = this.props;
+    const { page, pages, query, results, loading } = this.props;
 
     return (
       <Layout>
@@ -45,7 +72,7 @@ class Search extends React.Component {
             <MDSearch className={s.searchIcon}/>
             <input
               className={s.searchField}
-              onChange={e => onChange(e.target.value)}
+              onChange={e => this.handleChange(e)}
               onBlur={() => this.setUrl()}
               onKeyDown={(e: KeyboardEvent) => e.keyCode === 13 && this.setUrl()}
               value={query}
@@ -69,7 +96,7 @@ class Search extends React.Component {
                   <th className={s.cell2}>Plaintiff Counsel</th>
                   <th className={s.cell3}>Defendant Counsel</th>
                   <th className={s.cell4}>Arbitrator</th>
-                  <th className={s.cell5}>Prevailing Party</th>
+                  <th className={s.cell5}>Awardee</th>
                   <th className={s.cell6}>Closed</th>
                 </tr>
               </thead>
@@ -85,6 +112,31 @@ class Search extends React.Component {
               {results.map((result: Result) =>
                 <SearchResult result={result} key={`result_${result.type}_${result.id}`}/>
               )}
+
+              <tfoot>
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center' }}>
+                    <ul className={s.pagination}>
+                      {/* Page 1, if gt page 1 */}
+                      {page > 1 && <li><Link to={`/search/${query}?page=1`}>1</Link></li>}
+
+                      {/* At most 5 previous pages and 10 next pages */}
+                      {Array.from(new Array(15).keys())
+                        .map(v => (v - 5) + page)
+                        .filter(v => v >= 1 && v <= pages)
+                        .map(v => (
+                          v === page
+                            ? <li><span>{v}</span></li>
+                            : <li><Link to={`/search/${query}?page=${v}`}>{v}</Link></li>
+                        ))}
+
+                      {page < pages && (
+                        <li><Link to={`/search/${query}?page=${pages}`}>{pages}</Link></li>
+                      )}
+                    </ul>
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
