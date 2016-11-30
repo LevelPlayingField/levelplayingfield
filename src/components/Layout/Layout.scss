@@ -6,11 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-
 @import '../../../node_modules/normalize.css/normalize.css';
-
-/*! React Starter Kit | MIT License | https://www.reactstarterkit.com/ */
-
 @import '../variables.scss';
 
 /*
@@ -23,6 +19,11 @@ html {
   font-size: 1em; /* ~16px; */
   font-family: $font-family-base;
   line-height: 1.375; /* ~22px */
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 a {

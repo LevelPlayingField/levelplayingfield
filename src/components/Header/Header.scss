@@ -58,7 +58,7 @@
   margin: 0;
 }
 
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-md-min) {
   .container {
     display: flex;
     flex-direction: column-reverse;

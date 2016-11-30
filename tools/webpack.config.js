@@ -95,6 +95,7 @@ const config = {
             localIdentName: isDebug ? '[name]-[local]-[hash:base64:5]' : '[hash:base64:5]',
             // CSS Nano http://cssnano.co/options/
             minimize: !isDebug,
+            camelCase: true,
           })}`,
           'postcss-loader?pack=default',
         ],
@@ -112,6 +113,7 @@ const config = {
             localIdentName: isDebug ? '[name]-[local]-[hash:base64:5]' : '[hash:base64:5]',
             // CSS Nano http://cssnano.co/options/
             minimize: !isDebug,
+            camelCase: true,
           })}`,
           'postcss-loader?pack=sass',
           'sass-loader',

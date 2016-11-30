@@ -14,7 +14,6 @@ import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import UniversalRouter from 'universal-router';
 import queryString from 'query-string';
-import { createPath } from 'history/PathUtils';
 import createBrowserHistory from 'history/createBrowserHistory';
 import App from './components/App';
 import { ErrorReporter, deepForceUpdate } from './core/devUtils';

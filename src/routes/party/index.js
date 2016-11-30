@@ -3,19 +3,24 @@
 import React from 'react';
 import Party from './Party';
 import graphql from '../../core/graphql';
-import { page } from '../../components/Pager';
 
-type PageInfo = {
-  hasNextPage: bool,
-  hasPreviousPage: bool,
-  startCursor: string,
-  endCursor: string,
-};
 type PartyFields = {
   id: number,
   slug: string,
   type: string,
   name: string,
+  aggregate_data: {
+    awards: {
+      [key: string]: {
+        [key: string]: number,
+      },
+    },
+    dispositions: {
+      [key: string]: {
+        [key: string]: number,
+      }
+    }
+  }
 }
 export type CaseType = {
   case_id: number,
@@ -34,20 +39,6 @@ export type CaseType = {
   }
 }
 export type PartyType = PartyFields & {
-  Cases: {
-    pageInfo: PageInfo,
-    edges: Array<{
-      cursor: string,
-      node: CaseType,
-    }>,
-  },
-  FirmCases: {
-    pageInfo: PageInfo,
-    edges: Array<{
-      cursor: string,
-      node: CaseType,
-    }>,
-  },
   Attorneys: { edges: Array<{node: PartyFields}>},
   Firms: { edges: Array<{node: PartyFields}>},
 };
@@ -56,7 +47,7 @@ export default {
 
   path: '/party/:slug',
 
-  async action({ params, query }: any) {
+  async action({ params }: any) {
     const data = await graphql(`
 fragment pageInfo on PageInfo {
   hasNextPage
@@ -70,49 +61,12 @@ fragment PartyFields on Party {
   slug
   type
   name
-}
-
-fragment CasePartyFields on CaseParty {
-  case_id
-  Case {
-    case_number
-    initiating_party
-    Parties {
-      edges {
-        node {
-          type
-          party_name
-        }
-      }
-    }
-  }
+  aggregate_data
 }
 
 {
   party: Party(slug: "${params.slug}") {
     ...PartyFields
-    Cases(${page('Case')(query, 5)}) {
-      pageInfo {
-          ...pageInfo
-      }
-      edges {
-        cursor
-        node {
-          ...CasePartyFields
-        }
-      }
-    }
-    FirmCases(${page('Case')(query, 5)}) {
-      pageInfo {
-          ...pageInfo
-      }      
-      edges {
-        cursor
-        node {
-          ...CasePartyFields
-        }
-      }
-    }
     Firms {
       edges {
         node {

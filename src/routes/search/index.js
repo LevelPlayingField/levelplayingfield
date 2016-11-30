@@ -23,5 +23,5 @@ export default {
       title: 'Search',
       component: <SearchContainer Component={Component} term={term} page={page}/>,
     };
-  }
+  },
 };

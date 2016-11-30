@@ -1,6 +1,6 @@
 {
-  "name": "Pager",
+  "name": "Grid",
   "version": "0.0.0",
   "private": true,
-  "main": "./Pager.js"
+  "main": "./Grid.js"
 }

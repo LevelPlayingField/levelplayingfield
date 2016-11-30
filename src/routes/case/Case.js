@@ -12,40 +12,49 @@ import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
+import { Container, Row, Col } from '../../components/Grid';
 import s from './Case.scss';
 import first from '../../core/first';
 import AwardsTable from './AwardsTable';
 import { days, partyType, CONSUMER, NON_CONSUMER, ConsumerParty } from './utils';
 
 function renderAttorneys(attorneys) {
-  if (!attorneys) {
-    return null;
-  }
-
   return (
-    <div>
-      <h4 style={{ paddingBottom: 0 }}>Represented By</h4>
-      <div className={s.row}>
+    <Row>
+      <Col>
+        <Row>
+          <Col>
+            <h4 className={s.heading}>Represented By</h4>
+          </Col>
+        </Row>
 
-        {attorneys.map(attorney => (
-          <div key={`attorney_${attorney.Party.id}`} className={s.col_half}>
-            <h3 className={s.title}>
-              <Link to={`/party/${attorney.Party.slug}`}>
-                {attorney.Party.name}
-              </Link>
-            </h3>
-
-            { attorney.Firm && (
-              <div className={s.detail}>
-                <Link to={`/party/${attorney.Firm.slug}`}>
-                  {attorney.Firm.name}
+        {attorneys ? attorneys.map(attorney => (
+          <Row key={`attorney_${attorney.Party.id}`}>
+            <Col>
+              <strong className={s.title}>
+                <Link to={`/party/${attorney.Party.slug}`}>
+                  {attorney.Party.name}
                 </Link>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+              </strong>
+
+              { attorney.Firm && (
+                <div className={s.detail}>
+                  <Link to={`/party/${attorney.Firm.slug}`}>
+                    {attorney.Firm.name}
+                  </Link>
+                </div>
+              )}
+            </Col>
+          </Row>
+        )) : (
+          <Row>
+            <Col>
+              <strong>Unknown</strong>
+            </Col>
+          </Row>
+        )}
+      </Col>
+    </Row>
   );
 }
 
@@ -62,149 +71,178 @@ function Case({ case_ }) {
 
   return (
     <Layout>
-      <div className={s.root}>
-        <div className={s.container}>
-          <div className={s.row}>
-            <div className={s.col_third}>
-              <dl className={s.dl_horizontal}>
-                <dt>Forum</dt>
-                <dd>{case_.arbitration_board}</dd>
-                {/* TODO: Fix */}
+      <Container>
+        <Row>
+          <Col md={4} lg={4}>
+            <Row>
+              <Col><strong>Forum </strong> {case_.arbitration_board}</Col>
+            </Row>
 
-                <dt>Case ID</dt>
-                <dd>{case_.case_number}</dd>
-              </dl>
-            </div>
-            <div className={s.col_third}>
-              <dl className={s.dl_horizontal}>
-                <dt>Filed</dt>
-                <dd>{new Date(case_.filing_date).toLocaleDateString()}</dd>
-                <dt>Closed</dt>
-                <dd>{new Date(case_.close_date).toLocaleDateString()}</dd>
-                <dt>Open</dt>
-                <dd>{days(new Date(case_.close_date) - new Date(case_.filing_date))} Days</dd>
-              </dl>
-            </div>
-            <div className={s.col_third}>
-              {firstArbitrator !== null ? (
-                <dl className={s.dl_horizontal}>
-                  <dt>Filing to appointment</dt>
-                  <dd>{days(new Date(firstArbitrator.date) - new Date(case_.filing_date))} Days
-                  </dd>
-                  <dt>Appointment to close</dt>
-                  <dd>{days(new Date(case_.close_date) - new Date(firstArbitrator.date))} Days</dd>
-                </dl>
-              ) : (
-                <span>&nbsp;</span>
-              )}
-            </div>
-          </div>
+            <Row>
+              <Col><strong>Case ID</strong> {case_.case_number}</Col>
+            </Row>
 
-          <h2 className={s.title}>{arbitrators.length === 1 ? 'Arbitrator' : 'Arbitrators'}</h2>
-          <div className={s.row}>
 
-            {arbitrators.length > 0 ? arbitrators.map(arbitrator =>
-              <div className={s.col_third} key={`arbitrator_${arbitrator.Party.id}`}>
-                <h3 className={s.title}>
-                  <Link to={`/party/${arbitrator.Party.slug}`}>
-                    {arbitrator.Party.name}
-                  </Link>
-                </h3>
-                <p className={s.details}>
-                  Appointed {new Date(arbitrator.date).toLocaleDateString()}
-                </p>
+            {case_.dispute_type && (
+              <Row>
+                <Col><strong>Type</strong> {case_.dispute_type}</Col>
+              </Row>
+            )}
+
+
+            {case_.dispute_subtype && (
+              <Row>
+                <Col><strong>Subtype</strong> {case_.dispute_subtype}</Col>
+              </Row>
+            )}
+
+
+            {case_.salary_range && (
+              <Row>
+                <Col><strong>Salary Range</strong> {case_.salary_range}</Col>
+              </Row>
+            )}
+          </Col>
+          <Col md={4} lg={4}>
+            <Row>
+              <Col>
+                <strong>Filed</strong>&nbsp;
+                {new Date(case_.filing_date).toLocaleDateString()}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <strong>Closed</strong>&nbsp;
+                {new Date(case_.close_date).toLocaleDateString()}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <strong>Open</strong>&nbsp;
+                {days(new Date(case_.close_date) - new Date(case_.filing_date))} Days
+              </Col>
+            </Row>
+          </Col>
+          <Col md={4} lg={4}>
+            {firstArbitrator !== null ? (
+              <div>
+                <Row>
+                  <Col>
+                    <strong>Filing to appointment</strong>&nbsp;
+                    {days(new Date(firstArbitrator.date) - new Date(case_.filing_date))} Days
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <strong>Appointment to close</strong>&nbsp;
+                    {days(new Date(case_.close_date) - new Date(firstArbitrator.date))} Days
+                  </Col>
+                </Row>
               </div>
             ) : (
-              <div className={s.col_full}>
-                <h3 className={s.title}>Unknown</h3>
-              </div>
+              <span>&nbsp;</span>
             )}
-          </div>
+          </Col>
+        </Row>
 
-          <div className={s.row}>
-            <div className={s.col_half}>
-              {initiatedBy && <h2 className={s.subtitle}>Plaintiff</h2>}
-              {plaintiff.slug
-                ? (<h3><Link to={`/party/${plaintiff.slug}`}>{plaintiff.name}</Link></h3>)
-                : (<h3>{plaintiff.name}</h3>)}
+        <Row className={s.rowSpaced}>
+          <Col md={4} lg={4}>
+            <h4 className={s.subtitle}>Disposition</h4>
+            <p className={s.details}>{case_.type_of_disposition}</p>
+          </Col>
+          <Col md={4} lg={4}>
+            <h4 className={s.subtitle}>Prevailing Party</h4>
+            <p className={s.details}>{case_.prevailing_party}</p>
+          </Col>
+          <Col md={4} lg={4}/>
+        </Row>
 
-              {plaintiff.attorneys && renderAttorneys(plaintiff.attorneys)}
-            </div>
+        <Row className={s.rowSpaced}>
+          <Col>
+            {initiatedBy && <h2 className={s.subtitle}>Plaintiff</h2>}
+            {plaintiff.slug
+              ? (<h3><Link to={`/party/${plaintiff.slug}`}>{plaintiff.name}</Link></h3>)
+              : (<h3>{plaintiff.name}</h3>)}
 
-            <div className={s.col_half}>
-              {initiatedBy && <h2 className={s.subtitle}>Defendant</h2>}
-              {defendant.slug
-                ? (<h3><Link to={`/party/${defendant.slug}`}>{defendant.name}</Link></h3>)
-                : (<h3>{defendant.name}</h3>)}
+            {renderAttorneys(plaintiff.attorneys)}
+          </Col>
 
-              {defendant.attorneys && renderAttorneys(defendant.attorneys)}
-            </div>
-          </div>
+          <Col>
+            {initiatedBy && <h2 className={s.subtitle}>Defendant</h2>}
+            {defendant.slug
+              ? (<h3><Link to={`/party/${defendant.slug}`}>{defendant.name}</Link></h3>)
+              : (<h3>{defendant.name}</h3>)}
 
-          <div className={s.row}>
-            <div className={s.col_third}>
-              <h4 className={s.subtitle}>Type of Dispute</h4>
-              {case_.dispute_type && (
-                <p className={s.details}>{case_.dispute_type}</p>
-              )}
-              {case_.dispute_subtype && (
-                <p className={s.details}>{case_.dispute_subtype}</p>
-              )}
-              {case_.salary_range && (
-                <p className={s.details}>{case_.salary_range}</p>
-              )}
-            </div>
-            <div className={s.col_third}>
-              <h4 className={s.subtitle}>Disposition</h4>
-              <p className={s.details}>{case_.type_of_disposition}</p>
-            </div>
-            <div className={s.col_third}>
-              <h4 className={s.subtitle}>Prevailing Party</h4>
-              <p className={s.details}>{case_.prevailing_party}</p>
-            </div>
-          </div>
-          <div className={s.row}>
-            <div className={s.col_half}>
-              <AwardsTable case_={case_}/>
-            </div>
-          </div>
+            {renderAttorneys(defendant.attorneys)}
+          </Col>
 
-          <div className={s.row}>
-            <div className={s.col_third}>
-              <h4 className={s.subtitle}>Arbitration Details</h4>
-              <dl className={s.dl_horizontal}>
-                <dt>Hearing</dt>
-                <dd>{case_.type_of_hearing ? 'Yes' : 'No'}</dd>
-                {case_.type_of_hearing && [
-                  <dt>Hearing Type</dt>,
-                  <dd>{case_.type_of_hearing}</dd>,
-                ]}
-                {case_.document_only_proceeding && [
-                  <dt>Documents Only</dt>,
-                  <dd>{case_.document_only_proceeding}</dd>,
-                ]}
-                {case_.hearing_state && [
-                  <dt>Hearing Location</dt>,
-                  <dd>{`${case_.hearing_city}, ${case_.hearing_state}`}</dd>,
-                ]}
-              </dl>
-            </div>
-            <div className={s.col_two_third}>
-              <h4 className={s.subtitle}>Other Data</h4>
-              <dl className={s.dl_horizontal}>
-                <dt>Consumer Cases Involving Business</dt>
-                <dd>{case_.arb_count}</dd>
-                <dt>Mediated Cases Involving Business</dt>
-                <dd>{case_.med_count}</dd>
-                <dt>Arbitrations Involving Business</dt>
-                <dd>{case_.arb_or_cca_count}</dd>
-                <dt>Source of Authority</dt>
-                <dd>{case_.source_of_authority}</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-      </div>
+          <Col>
+            <h2 className={s.subtitle}>
+              {arbitrators.length === 1 ? 'Arbitrator' : 'Arbitrators'}
+            </h2>
+            {arbitrators.length > 0 ? arbitrators.map(arbitrator =>
+              <Row>
+                <Col key={`arbitrator_${arbitrator.Party.id}`}>
+                  <h3>
+                    <Link to={`/party/${arbitrator.Party.slug}`}>
+                      {arbitrator.Party.name}
+                    </Link>
+                  </h3>
+                  <p className={s.details}>
+                    Appointed {new Date(arbitrator.date).toLocaleDateString()}
+                  </p>
+                </Col>
+              </Row>
+            ) : (
+              <Row>
+                <Col>
+                  <h3 className={s.title}>Unknown</h3>
+                </Col>
+              </Row>
+            )}
+          </Col>
+        </Row>
+
+        <Row className={s.rowSpaced}>
+          <Col md={6} lg={6}>
+            <AwardsTable case_={case_}/>
+          </Col>
+
+          <Col md={6} lg={6}>
+            <dl className={s.dl_horizontal}>
+              <dt>Arbitration Details</dt>
+              <dd/>
+              <dt>Hearing</dt>
+              <dd>{case_.type_of_hearing ? 'Yes' : 'No Hearing'}</dd>
+              {case_.type_of_hearing && [
+                <dt>Hearing Type</dt>,
+                <dd>{case_.type_of_hearing}</dd>,
+              ]}
+              {case_.document_only_proceeding && [
+                <dt>Documents Only</dt>,
+                <dd>{case_.document_only_proceeding}</dd>,
+              ]}
+              {case_.hearing_state && [
+                <dt>Hearing Location</dt>,
+                <dd>{`${case_.hearing_city}, ${case_.hearing_state}`}</dd>,
+              ]}
+            </dl>
+
+            <dl className={s.dl_horizontal}>
+              <dt>Other Data</dt>
+              <dd/>
+              <dt>Consumer Cases Involving Business</dt>
+              <dd>{case_.arb_count}</dd>
+              <dt>Mediated Cases Involving Business</dt>
+              <dd>{case_.med_count}</dd>
+              <dt>Arbitrations Involving Business</dt>
+              <dd>{case_.arb_or_cca_count}</dd>
+              <dt>Source of Authority</dt>
+              <dd>{case_.source_of_authority}</dd>
+            </dl>
+          </Col>
+        </Row>
+      </Container>
     </Layout>
   );
 }

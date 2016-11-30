@@ -60,7 +60,7 @@
   line-height: $line-height-heading;
 }
 
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-md-min) {
   .root {
     display: flex;
     flex-direction: row;
@@ -71,7 +71,6 @@
   }
 
   .search {
-    flex: 1;
-    display: block;
+    display: none;
   }
 }

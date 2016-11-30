@@ -10,6 +10,8 @@ import type { Result, PartyType, CaseType } from '../../data/containers/Search';
 import { NON_CONSUMER, partyType } from '../case/utils';
 import first from '../../core/first';
 
+const isEmpty = (val: ?Array<any>): bool => (val == null || val.length === 0);
+
 function cell(url) {
   return withStyles(s)(
     ({ children, ...props }: { children: Array<any> }) => (
@@ -46,28 +48,32 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
   return (
     <tbody className={s.resultRow}>
       <tr>
-        <C className={s.cell1}>{Case.case_number}</C>
-        <C className={s.cell2}>{plaintiff.party_name}</C>
-        <C className={s.cell3}>{defendant.party_name}</C>
-        <C className={s.cell4}>{Case.arbitration_board}</C>
-        <C className={s.cell5}>{Case.type_of_disposition}</C>
-        <C className={s.cell6}>{new Date(Case.filing_date).toLocaleDateString()}</C>
+        <C className={s.cell1} title="Case #">{Case.case_number}</C>
+        <C className={s.cell2} title="Plaintiff">{plaintiff.party_name}</C>
+        <C className={s.cell3} title="Defendant">{defendant.party_name}</C>
+        <C className={s.cell4} title="Arbitration Board">{Case.arbitration_board}</C>
+        <C className={s.cell5} title="Disposition">{Case.type_of_disposition}</C>
+        <C className={s.cell6} title="Filed">{new Date(Case.filing_date).toLocaleDateString()}</C>
       </tr>
       <tr>
-        <C className={s.cell1}>{Case.dispute_type}</C>
-        <C className={s.cell2}>
+        <C className={s.cell1} title="Dispute Type">{Case.dispute_type}</C>
+        <C className={s.cell2} title={isEmpty(plaintiff.attorneys) ? null : 'Plaintiff Attorneys'}>
           {plaintiff.attorneys && plaintiff.attorneys.length
             ? plaintiff.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
             : '---'}
         </C>
-        <C className={s.cell3}>
+        <C className={s.cell3} title={isEmpty(defendant.attorneys) ? null : 'Defendant Attorneys'}>
           {defendant.attorneys
             ? defendant.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
             : '---'}
         </C>
-        <C className={s.cell4}>{arbitrators.map(p => p.party_name).join(', ')}</C>
-        <C className={s.cell5}>{Case.prevailing_party}</C>
-        <C className={s.cell6}>{new Date(Case.close_date).toLocaleDateString()}</C>
+        <C className={s.cell4} title={isEmpty(arbitrators) ? null : 'Arbitrators'}>
+          {arbitrators.map(p => p.party_name).join(', ')}
+        </C>
+        <C className={s.cell5} title={Case.prevailing_party === '---' ? null : 'Awardee'}>
+          {Case.prevailing_party}
+        </C>
+        <C className={s.cell6} title="Closed">{new Date(Case.close_date).toLocaleDateString()}</C>
       </tr>
     </tbody>
   );
@@ -79,11 +85,11 @@ function PartyResult({ url, Party }: { url: string, Party: PartyType }) {
   return (
     <tbody className={s.resultRow}>
       <tr>
-        <C>{Party.type}</C>
-        <C>{Party.name}</C>
-        <C colSpan={4}>{
-          (Party.firms && `Firms: ${Party.firms.map(firm => firm.name).join(', ')}`) ||
-          (Party.attorneys && `Attorneys: ${Party.attorneys.map(attorney => attorney.name).join(', ')}`) ||
+        <C title="Type">{Party.type}</C>
+        <C title="Name">{Party.name}</C>
+        <C colSpan={4} title={(Party.firms && 'Firms') || (Party.attorneys && 'Attorneys')}>{
+          (Party.firms && `${Party.firms.map(firm => firm.name).join(', ')}`) ||
+          (Party.attorneys && `${Party.attorneys.map(attorney => attorney.name).join(', ')}`) ||
           null}
         </C>
       </tr>

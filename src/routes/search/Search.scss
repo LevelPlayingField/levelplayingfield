@@ -17,7 +17,7 @@
 .searchField {
   font-size: 1.2em;
   padding: 8px;
-  width: 90%;
+  width: calc(90% - 8px - 8px - 1em);
   max-width: 400px;
   border: none;
   border-bottom: 1.5px $accent-color solid;
@@ -35,6 +35,16 @@
 
 .table tbody {
   font-size: 0.9em;
+
+  tr td {
+    transition: background-color 0.5s;
+  }
+
+  &:hover {
+    tr td {
+      background-color: darken(white, 5%);
+    }
+  }
 }
 
 @media (min-width: $screen-lg-min) {
@@ -47,7 +57,7 @@
 }
 
 .resultRow tr:first-of-type td {
-  border-top: 1px black solid;
+  border-top: 1px gray solid;
 }
 
 .resultRow tr td {
@@ -56,16 +66,19 @@
 
 .cellLink {
   text-decoration: none;
-}
+  display: block;
 
-.cellLink:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .pagination {
-  list-style: none;
-
   $border-radius: 5px;
+
+  list-style: none;
+  display: flex;
+  justify-content: center;
 
   li {
     display: inline;
@@ -90,6 +103,61 @@
       text-decoration: none;
       display: inline-block;
       padding: 10px;
+    }
+  }
+}
+
+@media all and (max-width: $screen-md-min) {
+  .searchIcon {
+    display: none;
+  }
+
+  .searchField {
+    width: calc(100% - 8px * 2);
+  }
+
+  .table {
+    display: block;
+
+    thead {
+      display: none;
+    }
+
+    tbody.resultRow {
+      display: flex;
+      flex-direction: column;
+
+      &:not(:first-of-type) {
+        border-top: 1px lightgray solid;
+      }
+
+      tr {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        td {
+          border-top: none !important;
+
+          &:not([title]) {
+            display: none;
+          }
+
+          &::before {
+            content: attr(title);
+            width: calc(45% - 1em);
+            text-align: right;
+            padding-right: 1em;
+            font-weight: 600;
+            display: inline-block;
+          }
+
+          .cellLink {
+            display: inline-block;
+            width: 55%;
+          }
+        }
+      }
     }
   }
 }

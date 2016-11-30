@@ -2,35 +2,14 @@
 
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import Debug from '../../components/Debug';
+import { Row, Col } from '../../components/Grid';
 import s from './Party.scss';
-import CaseItem from './CaseItem';
 
-import type { PartyType } from './';
-
-function GeneralPartyDetails({ party }: { party: PartyType }) {
+function GeneralPartyDetails() {
   return (
-    <div className={s.row}>
-
-      <div className={s.col_half}>
-        <h4 className={s.subtitle}>Known Cases</h4>
-
-        <ul className={s.cases}>
-          {party.Cases.edges.map(case_ =>
-            <CaseItem party={party} case_={case_} key={`case_${case_.node.case_id}`}/>
-          )}
-        </ul>
-        <ul className={s.pagination}>
-          {party.Cases.pageInfo.hasPreviousPage && <li className={s.prev}>&lt;</li>}
-          {party.Cases.pageInfo.hasNextPage && <li className={s.next}>&gt;</li>}
-        </ul>
-      </div>
-      <div className={s.col_half}>
-        <Debug>
-          <pre>{JSON.stringify(party, null, 2)}</pre>
-        </Debug>
-      </div>
-    </div>
+    <Row>
+      <Col md={6} lg={6}/>
+    </Row>
   );
 }
 

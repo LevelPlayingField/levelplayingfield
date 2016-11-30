@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-
 @import '../variables.scss';
 
 .root {
@@ -48,4 +47,15 @@
 
 .link:hover {
   color: rgba(255, 255, 255, 1);
+}
+
+@media all and (max-width: $screen-md-min) {
+  .spacer {
+    display: none;
+  }
+
+  .text,
+  .link {
+    display: block;
+  }
 }

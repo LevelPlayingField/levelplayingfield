@@ -81,6 +81,7 @@ type State = {
   query: string,
   page: number,
   pages: number,
+  total: number,
   results: Array<Result>,
   loading: bool,
 };
@@ -96,6 +97,7 @@ export default class SearchContainer extends React.Component {
       query: props.term || '',
       page: props.page || 1,
       pages: 0,
+      total: 0,
       results: [],
       loading: false,
     };
@@ -134,7 +136,7 @@ export default class SearchContainer extends React.Component {
   async searchFor(query: string, page: number = 1) {
     await new Promise((resolve) => this.setState({ loading: true }, resolve));
 
-    const { Search: { Results }} = await graphql(`
+    const { Search: { Results } } = await graphql(`
     {
       Search(query: ${JSON.stringify(query)}) {
         Results(page: ${page}, perPage: 10) {

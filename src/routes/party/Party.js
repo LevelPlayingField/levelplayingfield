@@ -3,24 +3,40 @@
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
+import { Container, Row, Col } from '../../components/Grid';
+import Link from '../../components/Link';
 import s from './Party.scss';
 import PartyDetails from './PartyDetails';
+import PartySummary from './PartySummary';
 
 import type { PartyType } from './';
 
 function Party({ party }: { party: PartyType }) {
   return (
     <Layout>
-      <div className={s.root}>
-        <div className={s.container}>
-          <h1 className={s.title}>
-            {party.name}
-            <small className={s.titleMuted}>{party.type}</small>
-          </h1>
+      <Container>
+        <Row>
+          <Col>
+            <h1 className={s.title}>
+              <Link to={`/search/is:case%20party:${JSON.stringify(party.name)}`}>
+                {party.name}
+              </Link>
+              <small className={s.titleMuted}>{party.type}</small>
+            </h1>
 
-          <PartyDetails party={party}/>
-        </div>
-      </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <PartySummary party={party}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <PartyDetails party={party}/>
+          </Col>
+        </Row>
+      </Container>
     </Layout>
   );
 }

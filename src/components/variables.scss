@@ -25,10 +25,20 @@ $max-content-width: 1100px;
 /*
  * Media queries breakpoints
  * ======================================================================== */
-$screen-xs-min: 480px; /* Extra small screen / phone */
-$screen-sm-min: 768px; /* Small screen / tablet */
-$screen-md-min: 992px; /* Medium screen / desktop */
-$screen-lg-min: 1200px; /* Large screen / wide desktop */
+$screen-sm-min: 370px; /* Extra small screen / phone */
+$screen-md-min: 768px; /* Small screen / tablet */
+$screen-lg-min: 1180px; /* Large screen / wide desktop */
 
 $primary-color: #373277;
 $accent-color: #61dafb;
+
+/*
+ * Flex Grid and Breakpoints
+ * ======================================================================== */
+$grid-columns: 12;
+$gutter-width: 8px;
+$outer-margin: 8px;
+$breakpoints:
+  sm $screen-sm-min ($screen-sm-min - 16px),
+  md $screen-md-min ($screen-md-min - 64px),
+  lg $screen-lg-min ($screen-lg-min - 64px);

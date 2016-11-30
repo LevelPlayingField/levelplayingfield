@@ -9,7 +9,6 @@
  */
 
 import React from 'react';
-import { analytics } from '../config';
 
 type Props = {
   title: string,

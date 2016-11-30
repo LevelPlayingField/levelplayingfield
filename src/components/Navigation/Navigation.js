@@ -64,7 +64,7 @@ class Navigation extends React.Component {
         <Link className={s.link} to="/search/is:case">Cases</Link>
         <Link className={s.link} to="/search/is:party">Parties</Link>
 
-        <label htmlFor="search">
+        <label htmlFor="search" className={s.search}>
           <input
             type="search"
             name="search"

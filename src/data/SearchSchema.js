@@ -9,7 +9,7 @@ import {
   GraphQLInt,
 } from 'graphql';
 import Sequelize from 'sequelize';
-import { attributeFields, resolver } from 'graphql-sequelize';
+import { attributeFields } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import searchQuery from 'search-query-parser';
 import { Search } from './models';
@@ -195,7 +195,6 @@ export const SearchType = new GraphQLObjectType({
             node: result,
           })),
         };
-
       },
     },
   }),

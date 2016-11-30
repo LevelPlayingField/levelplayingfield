@@ -20,28 +20,35 @@ Search.refreshView = function refreshView() {
 Search.sync = async function sync(): Promise<*> {
   // language=PostgreSQL
   await sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE OR REPLACE FUNCTION english_join(character varying[])
-  RETURNS character varying AS
+CREATE OR REPLACE FUNCTION english_join(CHARACTER VARYING [])
+  RETURNS CHARACTER VARYING AS
 $BODY$
-DECLARE 
+DECLARE
   length INTEGER;
 BEGIN
   length := array_length($1, 1);
-  IF length = 1 THEN
-    return ($1)[1];
-  ELSIF length = 2 THEN
-    return array_to_string($1, ' and ', 'Unknown');
+  IF length = 1
+  THEN
+    RETURN ($1) [1];
+  ELSIF length = 2
+    THEN
+      RETURN array_to_string($1, ' and ', 'Unknown');
   ELSE
-    return array_to_string(($1)[1:length - 1], ', ', 'Unknown') || ', and ' || ($1)[length];
+    RETURN array_to_string(($1) [1 :length - 1], ', ', 'Unknown') || ', and ' || ($1) [length];
   END IF;
 END $BODY$
 LANGUAGE plpgsql;
-  
+
 CREATE OR REPLACE VIEW case_search_view AS
   WITH parties AS (
     SELECT
       case_party.case_id                                AS id,
-      array_agg(case_party.party_name)                  AS names,
+      (SELECT array_agg(a)
+       FROM unnest(array_agg(case_party.party_name)) a
+       WHERE a IS NOT NULL) ||
+      (SELECT array_agg(a)
+       FROM unnest(array_agg(case_party.firm_name)) a
+       WHERE a IS NOT NULL)                             AS names,
       array_to_json(array_agg(row_to_json(case_party))) AS parties
     FROM case_party
     GROUP BY "case_party".case_id
@@ -124,9 +131,8 @@ CREATE INDEX IF NOT EXISTS search_view_index
   ON search_view USING GIN (vector);
 CREATE INDEX IF NOT EXISTS search_view_plain_index
   ON search_view USING GIST (index gist_trgm_ops);
-CREATE INDEX IF NOT EXISTS search_view_document 
-  ON search_view USING GIN (document);
-`);
+CREATE INDEX IF NOT EXISTS search_view_document
+  ON search_view USING GIN (document);`);
 };
 
 export default Search;

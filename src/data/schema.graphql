@@ -197,6 +197,7 @@ type Party {
   type: String
   name: String
   slug: String
+  aggregate_data: JSON
   createdAt: String!
   updatedAt: String!
   Cases(after: String, first: Int, before: String, last: Int, orderBy: [casesConnectionOrder]): casesConnection
@@ -207,7 +208,7 @@ type Party {
 
 type Query {
   Summary: Summary
-  Search(limit: Int = 10, offset: Int = 0, query: String!, type: String): [Search]
+  Search(query: String!): Search
   Cases(
     limit: Int
     order: String
@@ -228,13 +229,33 @@ type Query {
   Party(id: ID, slug: String): Party
 }
 
-type Search {
+type ResultEdge {
+  cursor: String
+  node: ResultNode
+}
+
+type ResultNode {
   type: String!
   id: Int!
   slug: String
   document: JSON
   vector: String
   index: String
+}
+
+type Results {
+  total: Int
+  page: Int
+  pages: Int
+  perPage: Int
+  hasPrevPage: Boolean
+  hasNextPage: Boolean
+  edges: [ResultEdge]
+}
+
+type Search {
+  query: String
+  Results(page: Int = 1, perPage: Int = 20): Results
 }
 
 type Summary {
