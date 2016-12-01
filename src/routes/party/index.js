@@ -49,13 +49,6 @@ export default {
 
   async action({ params }: any) {
     const data = await graphql(`
-fragment pageInfo on PageInfo {
-  hasNextPage
-  hasPreviousPage
-  startCursor
-  endCursor
-}
-
 fragment PartyFields on Party {
   id
   slug
