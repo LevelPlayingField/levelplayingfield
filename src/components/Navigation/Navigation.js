@@ -61,6 +61,8 @@ class Navigation extends React.Component {
 
     return (
       <div className={cx(s.root, className)} role="navigation">
+        <a className={s.link} href="https://lpf.dntly.com/#/donate" target="_blank noopener">Donate</a>
+        {/* <Link className={s.link} to="/donate">Donate</Link> */}
         <Link className={s.link} to="/search/is:case">Cases</Link>
         <Link className={s.link} to="/search/is:party">Parties</Link>
 
