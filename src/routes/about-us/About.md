@@ -2,7 +2,7 @@
 
 We're problem solvers. Sometimes we find problems and other times they find us. This is a case of the latter.
 
-The ultimate question is: if consumer arbitration is fair, shouldn't the distribution of arbitration outcomes be comparable to that of the public court system?
+The ultimate question we want to answer is: if consumer arbitration is fair, shouldn't the distribution of arbitration outcomes be comparable to that of the public court system?
 
 The studies we've reviewed indicate otherwise, and significantly so.
 
