@@ -1,6 +1,7 @@
 /* @flow */
 
 import React from 'react';
+import Container from './Container';
 import Search from './Search';
 import graphql from '../../core/graphql';
 
@@ -18,7 +19,7 @@ export default {
   path: '/search/:term*',
 
   async action(args: ActionParams) {
-    const { params: { term }, query: { page = 1, perPage = 10 } } = args;
+    const { params: { term }, query: { page = 1, perPage = 20 } } = args;
     const { Search: { Results } } = await graphql(`
     {
       Search(query: ${JSON.stringify(term)}) {
@@ -43,14 +44,15 @@ export default {
     return {
       title: 'Search',
       component: (
-        <Search
+        <Container
+          Component={Search}
           results={Results.edges.map(e => e.node)}
           page={Results.page}
           pages={Results.pages}
           perPage={perPage}
           query={term}
         />
-      )
+      ),
     };
   },
 };

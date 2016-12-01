@@ -5,10 +5,10 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Link from '../../components/Link';
 import s from './Search.scss';
-
-import type { Result, PartyType, CaseType } from '../../data/containers/Search';
 import { NON_CONSUMER, partyType } from '../case/utils';
 import first from '../../core/first';
+
+import type { Result, PartyType, CaseType } from './Types';
 
 const isEmpty = (val: ?Array<any>): bool => (val == null || val.length === 0);
 
