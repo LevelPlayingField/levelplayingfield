@@ -255,7 +255,12 @@ type Results {
 
 type Search {
   query: String
-  Results(page: Int = 1, perPage: Int = 20): Results
+  Results(page: Int = 1, perPage: Int = 20, sortBy: String, sortDir: SortDir = ASC): Results
+}
+
+enum SortDir {
+  ASC
+  DESC
 }
 
 type Summary {

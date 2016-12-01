@@ -126,7 +126,7 @@ async function onLocationChange(location) {
     delete scrollPositionsHistory[location.key];
   }
   currentLocation = location;
-  ReactGA.pageview(location.pathname);
+  ReactGA.pageview(location.pathname + location.search);
 
   try {
     // Traverses the list of routes in the order they are defined until
