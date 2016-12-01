@@ -2,8 +2,6 @@
 
 We're problem solvers. Sometimes we find problems and other times they find us. This is a case of the latter.
 
-You can read a high-level overview of Daniel's arbitration nightmare here: http://www.cbsnews.com/news/one-mans-100000-journey-through-arbitration/
-
 The ultimate question is: if consumer arbitration is fair, shouldn't the distribution of arbitration outcomes be comparable to that of the public court system?
 
 The studies we've reviewed indicate otherwise, and significantly so.
@@ -24,4 +22,4 @@ This database is the first step. We have formed Level Playing Field as a 501(c)(
 
 A transparent justice system is important.  
 
-
+One of our co-founders is Daniel.  You can read a high-level of his consumer arbitration nightmare here: http://www.cbsnews.com/news/one-mans-100000-journey-through-arbitration/
