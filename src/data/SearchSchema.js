@@ -3,6 +3,7 @@
 import {
   GraphQLList,
   GraphQLString,
+  GraphQLEnumType,
   GraphQLBoolean,
   GraphQLObjectType,
   GraphQLNonNull,
@@ -122,12 +123,27 @@ export const SearchType = new GraphQLObjectType({
       args: {
         page: { type: GraphQLInt, defaultValue: 1 },
         perPage: { type: GraphQLInt, defaultValue: 20 },
+        sortBy: { type: GraphQLString },
+        sortDir: {
+          type: new GraphQLEnumType({
+            name: 'SortDir',
+            values: {
+              ASC: { value: 'ASC' },
+              DESC: { value: 'DESC' },
+            },
+          }),
+          defaultValue: 'ASC'
+        },
       },
-      async resolve({ query }, { page, perPage }) {
+      async resolve({ query }, { sortBy, sortDir, page, perPage }) {
         const parsed: ParsedType = searchQuery.parse(query, searchOptions);
 
+        const order = [];
         let where = {};
-        let order = null;
+
+        if (sortBy) {
+          order.push([Sequelize.literal(`document->>'${sortBy.replace("'", "''")}'`), sortDir]);
+        }
 
         if (typeof parsed === 'string' || typeof parsed.text === 'string') {
           let term: string = '';
@@ -138,9 +154,7 @@ export const SearchType = new GraphQLObjectType({
             term = parsed.text;
           }
 
-          if (order == null) {
-            order = `ts_rank(vector, plainto_tsquery('english', '${term.replace("'", "''")}')) DESC`;
-          }
+          order.push(Sequelize.literal(`ts_rank(vector, plainto_tsquery('english', '${term.replace("'", "''")}')) DESC`));
           where = {
             $and: [
               where,
@@ -172,12 +186,12 @@ export const SearchType = new GraphQLObjectType({
           }
         }
 
-        if (order == null) {
-          order = 'id asc';
-        }
-
+        // Fallback sorting to make sure we get some semblance of deterministic sort
+        order.push(['id', 'asc']);
+        console.log(order);
         const results = await Search.findAndCount({
           where,
+          order,
           limit: perPage,
           offset: (page - 1) * perPage,
         });

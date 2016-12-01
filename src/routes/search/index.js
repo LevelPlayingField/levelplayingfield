@@ -1,27 +1,56 @@
 /* @flow */
 
 import React from 'react';
-import SearchContainer from '../../data/containers/Search';
-import Component from './Search';
+import Search from './Search';
+import graphql from '../../core/graphql';
 
 type ActionParams = {
   params: {
-    term: ?string,
+    term?: string,
   },
   query: {
-    page: ?number,
+    page?: number,
+    perPage?: number,
   },
 };
 
 export default {
   path: '/search/:term*',
 
-  action(args: ActionParams) {
-    const { params: { term }, query: { page } } = args;
+  async action(args: ActionParams) {
+    const { params: { term }, query: { page = 1, perPage = 10 } } = args;
+    const { Search: { Results } } = await graphql(`
+    {
+      Search(query: ${JSON.stringify(term)}) {
+        Results(page: ${page}, perPage: ${perPage}) {
+          page
+          pages
+          total
+          
+          edges {
+            node {
+              id
+              type
+              slug
+              document
+            }
+          }
+        }
+      }
+    }
+    `);
 
     return {
       title: 'Search',
-      component: <SearchContainer Component={Component} term={term} page={page}/>,
+      component: (
+        <Search
+          results={Results.edges.map(e => e.node)}
+          page={Results.page}
+          pages={Results.pages}
+          perPage={perPage}
+          query={term}
+        />
+      )
     };
   },
 };

@@ -9,23 +9,104 @@ import { Container, Row, Col } from '../../components/Grid';
 import s from './Search.scss';
 import SearchResult from './SearchResult';
 
-import type { Result } from '../../data/containers/Search';
-
+type CaseType = {
+  case_number: string,
+  arbitration_board: string,
+  initiating_party: string,
+  source_of_authority: string,
+  dispute_type: string,
+  dispute_subtype: string,
+  salary_range: string,
+  prevailing_party: string,
+  filing_date: Date,
+  close_date: Date,
+  type_of_disposition: string,
+  claim_amount_business: number,
+  fee_allocation_business: number,
+  fees_business: number,
+  award_amount_business: number,
+  attorney_fees_business: number,
+  other_relief_business: string,
+  claim_amount_consumer: number,
+  fee_allocation_consumer: number,
+  fees_consumer: number,
+  award_amount_consumer: number,
+  attorney_fees_consumer: number,
+  other_relief_consumer: string,
+  consumer_rep_state: string,
+  consumer_self_represented: bool,
+  document_only_proceeding: bool,
+  type_of_hearing: string,
+  hearing_addr1: string,
+  hearing_addr2: string,
+  hearing_city: string,
+  hearing_state: string,
+  hearing_zip: string,
+  arb_count: number,
+  med_count: number,
+  arb_or_cca_count: number,
+  adr_process: string,
+  party_names: Array<string>,
+  parties: Array<{
+    type: string,
+    case_id: number,
+    party_id: number,
+    firm_id: number,
+    party_name: string,
+    firm_name: string,
+    fees: ?number,
+    date: string,
+    createdAt: string,
+    updatedAt: string,
+  }>,
+}
+type PartyType = {
+  id: number,
+  slug: string,
+  type: string,
+  name: string,
+  firms: Array<PartyType>,
+  attorneys: Array<PartyType>,
+}
+type Result = {
+  id: number,
+  type: string,
+  slug: string,
+  document: CaseType & PartyType,
+}
 type Props = {
-  onChange: (query: string) => null,
   query: string,
   results: Array<Result>,
   loading: bool,
   page: number,
+  perPage: number,
   pages: number,
 }
+type State = {
+  query: string,
+};
 class Search extends React.Component {
   props: Props;
+  state: State;
   input: HTMLInputElement;
 
   static contextTypes = {
     history: React.PropTypes.any.isRequired,
   };
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      query: props.query,
+    };
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.query !== nextProps.query) {
+      this.setState({ query: nextProps.query });
+    }
+  }
 
   componentDidMount() {
     if (!this.props.query) {
@@ -39,15 +120,9 @@ class Search extends React.Component {
     history.push(`/search/${this.input.value}`);
   }
 
-  handleChange(e) {
-    const { onChange } = this.props;
-    const value = e.target.value;
-
-    onChange(value);
-  }
-
   render() {
-    const { page, pages, query, results, loading } = this.props;
+    const { query } = this.state;
+    const { page, pages, results, loading } = this.props;
 
     return (
       <Layout>
@@ -57,7 +132,7 @@ class Search extends React.Component {
               <MDSearch className={s.searchIcon}/>
               <input
                 className={s.searchField}
-                onChange={e => this.handleChange(e)}
+                onChange={e => this.setState({ query: e.target.value })}
                 onBlur={() => this.setUrl()}
                 onKeyDown={(e: KeyboardEvent) => e.keyCode === 13 && this.setUrl()}
                 value={query}
@@ -71,20 +146,42 @@ class Search extends React.Component {
               <table className={s.table}>
                 <thead>
                   <tr>
-                    <th className={s.cell1}>Case</th>
-                    <th className={s.cell2}>Plaintiff</th>
-                    <th className={s.cell3}>Defendant</th>
+                    <th className={s.cell1}>
+                      Case
+                    </th>
+                    <th className={s.cell2}>
+                      Plaintiff
+                    </th>
+                    <th className={s.cell3}>
+                      Defendant
+                    </th>
                     <th className={s.cell4}/>
-                    <th className={s.cell5}>Disposition</th>
-                    <th className={s.cell6}>Filed</th>
+                    <th className={s.cell5}>
+                      Disposition
+                    </th>
+                    <th className={s.cell6}>
+                      Filed
+                    </th>
                   </tr>
                   <tr>
-                    <th className={s.cell1}>Dispute Type</th>
-                    <th className={s.cell2}>Plaintiff Counsel</th>
-                    <th className={s.cell3}>Defendant Counsel</th>
-                    <th className={s.cell4}>Arbitrator</th>
-                    <th className={s.cell5}>Awardee</th>
-                    <th className={s.cell6}>Closed</th>
+                    <th className={s.cell1}>
+                      Dispute Type
+                    </th>
+                    <th className={s.cell2}>
+                      Plaintiff Counsel
+                    </th>
+                    <th className={s.cell3}>
+                      Defendant Counsel
+                    </th>
+                    <th className={s.cell4}>
+                      Arbitrator
+                    </th>
+                    <th className={s.cell5}>
+                      Awardee
+                    </th>
+                    <th className={s.cell6}>
+                      Closed
+                    </th>
                   </tr>
                 </thead>
 
@@ -96,7 +193,7 @@ class Search extends React.Component {
                   </tbody>
                 )}
 
-                {results.map((result: Result) =>
+                {results && results.map((result: Result) =>
                   <SearchResult result={result} key={`result_${result.type}_${result.id}`}/>
                 )}
               </table>
