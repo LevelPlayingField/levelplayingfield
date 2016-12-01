@@ -10,19 +10,20 @@ type ActionParams = {
     term?: string,
   },
   query: {
+    q?: string,
     page?: number,
     perPage?: number,
   },
 };
 
 export default {
-  path: '/search/:term*',
+  path: '/search',
 
   async action(args: ActionParams) {
-    const { params: { term }, query: { page = 1, perPage = 20 } } = args;
+    const { query: { q = '', page = 1, perPage = 20 } } = args;
     const { Search: { Results } } = await graphql(`
     {
-      Search(query: ${JSON.stringify(term)}) {
+      Search(query: ${JSON.stringify(q)}) {
         Results(page: ${page}, perPage: ${perPage}) {
           page
           pages
@@ -50,7 +51,7 @@ export default {
           page={Results.page}
           pages={Results.pages}
           perPage={perPage}
-          query={term}
+          query={q}
         />
       ),
     };

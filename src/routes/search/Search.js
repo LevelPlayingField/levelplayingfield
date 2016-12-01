@@ -37,7 +37,7 @@ class Search extends React.Component {
   setUrl() {
     const { history } = this.context;
 
-    history.push(`/search/${this.input.value}`);
+    history.push(`/search?q=${encodeURIComponent(this.input.value)}`);
   }
 
   render() {
@@ -124,7 +124,9 @@ class Search extends React.Component {
                 {/* Page 1, if gt page 1 */}
                 <li>
                   {page > 1 ? (
-                    <Link to={`/search/${query}?page=${page - 1}`}>Last {perPage}</Link>
+                    <Link to={`/search?q=${encodeURIComponent(query)}&page=${page - 1}`}>
+                      Last {perPage}
+                    </Link>
                   ) : (
                     <span>Last {perPage}</span>
                   )}
@@ -134,7 +136,9 @@ class Search extends React.Component {
 
                 <li>
                   {page < pages ? (
-                    <Link to={`/search/${query}?page=${page + 1}`}>Next {perPage}</Link>
+                    <Link to={`/search?q=${encodeURIComponent(query)}&page=${page + 1}`}>
+                      Next {perPage}
+                    </Link>
                   ) : (
                     <span>Next {perPage}</span>
                   )}

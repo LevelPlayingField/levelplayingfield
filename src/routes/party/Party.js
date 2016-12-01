@@ -18,7 +18,7 @@ function Party({ party }: { party: PartyType }) {
         <Row>
           <Col>
             <h1 className={s.title}>
-              <Link to={`/search/is:case%20party:${JSON.stringify(party.name)}`}>
+              <Link to={`/search?q=${encodeURIComponent(`is:case party:${JSON.stringify(party.name)}`)}`}>
                 {party.name}
               </Link>
               <small className={s.titleMuted}>{party.type}</small>

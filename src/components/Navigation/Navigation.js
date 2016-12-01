@@ -53,7 +53,7 @@ class Navigation extends React.Component {
   pushUrl() {
     const { history } = this.context;
 
-    history.push(`/search/${this.state.query}`, { search_query: this.state.query });
+    history.push(`/search?q=${encodeURIComponent(this.state.query)}`, { search_query: this.state.query });
   }
 
   render() {
@@ -63,8 +63,8 @@ class Navigation extends React.Component {
       <div className={cx(s.root, className)} role="navigation">
         <a className={s.link} href="https://lpf.dntly.com/#/donate" target="_blank noopener">Donate</a>
         {/* <Link className={s.link} to="/donate">Donate</Link> */}
-        <Link className={s.link} to="/search/is:case">Cases</Link>
-        <Link className={s.link} to="/search/is:party">Parties</Link>
+        <Link className={s.link} to="/search?q=is:case">Cases</Link>
+        <Link className={s.link} to="/search?q=is:party">Parties</Link>
 
         <label htmlFor="search" className={s.search}>
           <input
