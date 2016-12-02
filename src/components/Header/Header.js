@@ -13,7 +13,6 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.scss';
 import Link from '../Link';
 import Navigation from '../Navigation';
-import logoUrl from './logo-small.png';
 
 function Header() {
   return (
@@ -21,8 +20,7 @@ function Header() {
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
-            <img src={logoUrl} width="38" height="38" alt="React"/>
-            {/* <span className={s.brandTxt}>lpf.io</span>*/}
+            <span className={s.brandTxt}>lpf.io</span>
           </Link>
           <Navigation className={s.nav}/>
         </div>

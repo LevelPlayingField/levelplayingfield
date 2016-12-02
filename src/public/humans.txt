@@ -3,13 +3,10 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
-
-# THANKS
-
-    <name>
+    Franklyn Tackitt -- Developer -- @kageurufu
+    Daniel Dempsey   -- Board     -- @dempseydans
 
 # TECHNOLOGY COLOPHON
 
     CSS3, HTML5, JavaScript
-    React, Flux, SuperAgent
+    React, Flux, Babel

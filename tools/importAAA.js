@@ -59,23 +59,23 @@ async function parseRow(row) {
     prevailing_party: PREVAILING_PARTY,
     type_of_disposition: TYPE_OF_DISPOSITION,
 
-    arb_count: utils.integer(NO_OF_CASES_INVOLVING_BUSINESS),
-    med_count: utils.integer(NO_OF_MEDCASES_NONCONS),
-    arb_or_cca_count: utils.integer(NO_OF_ARBORCCACASES_NONCONS),
+    arb_count: utils.nonNaN(utils.integer(NO_OF_CASES_INVOLVING_BUSINESS)),
+    med_count: utils.nonNaN(utils.integer(NO_OF_MEDCASES_NONCONS)),
+    arb_or_cca_count: utils.nonNaN(utils.integer(NO_OF_ARBORCCACASES_NONCONS)),
 
     filing_date: utils.date(FILING_DATE),
     close_date: utils.date(CLOSEDATE),
 
     claim_amount_business: utils.money(CLAIM_AMT_BUSINESS),
     fee_allocation_business: utils.percent(utils.naOr(FEEALLOCATION_BUSINESS)),
-    fees_business: utils.nonNaN(utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_BUSINESS)),
+    fees_business: utils.nonNaN((utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_BUSINESS)) / 100),
     award_amount_business: utils.money(AWARD_AMT_BUSINESS),
     attorney_fees_business: utils.money(ATTORNEYFEE_BUSINESS),
     other_relief_business: OTHERRELIEF_BUSINESS,
 
     claim_amount_consumer: utils.money(CLAIM_AMT_CONSUMER),
     fee_allocation_consumer: utils.percent(utils.naOr(FEEALLOCATION_CONSUMER)),
-    fees_consumer: utils.nonNaN(utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_CONSUMER)),
+    fees_consumer: utils.nonNaN((utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_CONSUMER)) / 100),
     award_amount_consumer: utils.money(AWARD_AMT_CONSUMER),
     attorney_fees_consumer: utils.money(ATTORNEYFEE_CONSUMER),
     other_relief_consumer: OTHERRELIEF_CONSUMER,

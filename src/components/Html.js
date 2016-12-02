@@ -30,6 +30,7 @@ function Html({ title, description, style, script, chunk, children }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"/>
+        <link rel="author" href="humans.txt"/>
         {style && <style id="css" dangerouslySetInnerHTML={{ __html: style }}/>}
       </head>
       <body>
