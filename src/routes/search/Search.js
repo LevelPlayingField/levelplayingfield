@@ -2,7 +2,7 @@
 
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import MDSearch from 'react-icons/lib/md/search';
+import MDSearch from 'react-icons/lib/io/android-search';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
 import { Container, Row, Col } from '../../components/Grid';

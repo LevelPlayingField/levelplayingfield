@@ -82,26 +82,9 @@ function Case({ case_ }) {
               <Col><strong>Case ID</strong> {case_.case_number}</Col>
             </Row>
 
-
-            {case_.dispute_type && (
-              <Row>
-                <Col><strong>Type</strong> {case_.dispute_type}</Col>
-              </Row>
-            )}
-
-
-            {case_.dispute_subtype && (
-              <Row>
-                <Col><strong>Subtype</strong> {case_.dispute_subtype}</Col>
-              </Row>
-            )}
-
-
-            {case_.salary_range && (
-              <Row>
-                <Col><strong>Salary Range</strong> {case_.salary_range}</Col>
-              </Row>
-            )}
+            <Row>
+              <Col><strong>State</strong> {case_.consumer_rep_state || 'Unknown'}</Col>
+            </Row>
           </Col>
           <Col md={4} lg={4}>
             <Row>
@@ -144,7 +127,19 @@ function Case({ case_ }) {
             )}
           </Col>
         </Row>
+        <Row>
+          {case_.dispute_type && (
+            <Col md={4} lg={4}><strong>Type</strong> {case_.dispute_type}</Col>
+          )}
 
+          {case_.dispute_subtype && (
+            <Col md={4} lg={4}><strong>Subtype</strong> {case_.dispute_subtype}</Col>
+          )}
+
+          {case_.salary_range && (
+            <Col md={4} lg={4}><strong>Salary Range</strong> {case_.salary_range}</Col>
+          )}
+        </Row>
         <Row className={s.rowSpaced}>
           <Col md={4} lg={4}>
             <h4 className={s.subtitle}>Disposition</h4>

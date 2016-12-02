@@ -14,17 +14,14 @@ import { defaultListArgs, attributeFields, typeMapper, resolver, relay } from 'g
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import { maskErrors } from 'graphql-errors';
 import sequelize from './sequelize';
-import { Case, Party, CaseParty } from './models';
+import { Case, Party, CaseParty, Summary } from './models';
 import SearchSchema from './SearchSchema';
 
 typeMapper.mapType(t => (t instanceof Sequelize.JSON || t instanceof Sequelize.JSONB) && JSONType);
 
 const SummaryType = new GraphQLObjectType({
   name: 'Summary',
-  fields: () => ({
-    cases: { type: GraphQLInt },
-    parties: { type: GraphQLInt },
-  }),
+  fields: () => attributeFields(Summary),
 });
 
 const CasePartyType = new GraphQLObjectType({
@@ -165,20 +162,9 @@ const schema = new GraphQLSchema({
     fields: () => ({
       Summary: {
         type: SummaryType,
-        resolve: async() => {
-          const [[data]] = await sequelize.query(`
-            WITH cases AS (
-              SELECT COUNT(*) FROM "case"
-            ), parties AS (
-              SELECT COUNT(*) FROM "party"
-            )
-            SELECT
-              cases.count AS cases,
-              parties.count AS parties
-            FROM cases, parties
-          `);
-
-          return data;
+        resolve: resolver(Summary),
+        args: {
+          name: { type: new GraphQLNonNull(GraphQLString) },
         },
       },
       ...SearchSchema.fields,

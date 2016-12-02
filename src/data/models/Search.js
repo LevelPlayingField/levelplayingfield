@@ -17,9 +17,9 @@ const Search = sequelize.define('search_view', {
 Search.refreshView = function refreshView() {
   return sequelize.query('REFRESH MATERIALIZED VIEW search_view;');
 };
-Search.sync = async function sync(): Promise<*> {
+Search.sync = function sync() {
   // language=PostgreSQL
-  await sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  return sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE OR REPLACE FUNCTION english_join(CHARACTER VARYING [])
   RETURNS CHARACTER VARYING AS
 $BODY$

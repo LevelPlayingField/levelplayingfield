@@ -35,29 +35,3 @@
   display: inline-block;
   width: 48%;
 }
-
-.summaryTable {
-  border-spacing: 0;
-
-  caption {
-    font-weight: 600;
-    text-decoration: underline;
-  }
-
-  th,
-  td {
-    margin: 0;
-    padding: 4px;
-    border-right: 1px lightgray solid;
-    border-bottom: 1px lightgray solid;
-  }
-
-  thead th {
-    text-align: left;
-  }
-
-  tbody th {
-    text-align: right;
-  }
-}
-

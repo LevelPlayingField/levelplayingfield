@@ -6,6 +6,7 @@ import CaseParty from './CaseParty';
 import Case from './Case';
 import Party from './Party';
 import Search from './Search';
+import Summary from './Summary';
 
 Case.Parties = Case.hasMany(CaseParty, {
   foreignKey: 'case_id',
@@ -55,4 +56,5 @@ export {
   CaseParty,
   Party,
   Search,
+  Summary,
 };

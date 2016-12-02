@@ -11,7 +11,7 @@
 import React from 'react';
 import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import MDSearch from 'react-icons/lib/md/search';
+import MDSearch from 'react-icons/lib/io/android-search';
 import s from './Navigation.scss';
 import Link from '../Link';
 
@@ -61,7 +61,14 @@ class Navigation extends React.Component {
 
     return (
       <div className={cx(s.root, className)} role="navigation">
-        <a className={s.link} href="https://lpf.dntly.com/#/donate" target="_blank noopener">Donate</a>
+        <a
+          className={s.link}
+          href="https://lpf.dntly.com/#/donate"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Donate
+        </a>
         {/* <Link className={s.link} to="/donate">Donate</Link> */}
         <Link className={s.link} to="/search?q=is:case">Cases</Link>
         <Link className={s.link} to="/search?q=is:party">Parties</Link>
