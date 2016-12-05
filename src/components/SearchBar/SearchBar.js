@@ -15,6 +15,7 @@ type Props = {
   className: ?string,
 };
 type State = {
+  hideField: boolean,
   query: string,
 };
 
@@ -30,6 +31,7 @@ class SearchBar extends React.Component {
     super(props);
 
     this.state = {
+      hideField: false,
       query: '',
     };
   }
@@ -46,14 +48,14 @@ class SearchBar extends React.Component {
   }
 
   handleLocation(location: FullLocation) {
-    if (location.pathname !== '/search') {
-      return;
-    }
+    this.setState({ hideField: location.pathname === '/search' });
 
-    if (location.state && location.state.search_query) {
-      this.setState({ query: location.state.search_query });
-    } else {
-      this.setState({ query: querystring.parse(location.search).q });
+    if (location.pathname === '/search') {
+      if (location.state && location.state.search_query) {
+        this.setState({ query: location.state.search_query });
+      } else {
+        this.setState({ query: querystring.parse(location.search).q });
+      }
     }
   }
 
@@ -70,7 +72,7 @@ class SearchBar extends React.Component {
 
     return (
       <div className={cx(s.root, className)} role="navigation">
-        {this.state.query ? null : (
+        {this.state.hideField ? null : (
           <label htmlFor="search" className={s.search}>
             <input
               type="search"

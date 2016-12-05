@@ -29,6 +29,7 @@
 
 .brand {
   @extend .section;
+
   color: lighten($accent-color, 10);
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
@@ -51,20 +52,21 @@
 
 @media (max-width: $screen-md-min) {
   .container {
-    display: flex;
-    flex-direction: column-reverse;
     padding: 0;
   }
 
   .sections {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .brand {
-    display: none;
+    order: 1;
+    font-size: 2.4em;
+    text-align: center;
   }
 
   .nav {
+    order: 2;
     text-align: center;
     font-size: 1.5em;
     display: flex;
@@ -72,6 +74,6 @@
   }
 
   .search {
-    display: none;
+    order: 3;
   }
 }
