@@ -23,7 +23,12 @@
   display: flex;
 }
 
+.section {
+  flex: 1;
+}
+
 .brand {
+  @extend .section;
   color: lighten($accent-color, 10);
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
@@ -34,28 +39,14 @@
 }
 
 .nav {
-  flex: 1;
+  @extend .section;
+
   text-align: right;
   margin-top: 6px;
 }
 
-.banner {
-  text-align: center;
-}
-
-.bannerTitle {
-  margin: 0;
-  padding: 10px;
-  font-weight: normal;
-  font-size: 4em;
-  line-height: 1em;
-}
-
-.bannerDesc {
-  padding: 0;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.25em;
-  margin: 0;
+.search {
+  @extend .section;
 }
 
 @media (max-width: $screen-md-min) {
@@ -71,11 +62,6 @@
 
   .brand {
     display: none;
-  }
-
-  .bannerTitle {
-    font-size: 2.5em;
-    //padding: 0;
   }
 
   .nav {

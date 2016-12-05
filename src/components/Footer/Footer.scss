@@ -14,7 +14,7 @@
 }
 
 .container {
-  margin: 0 auto;
+  margin: 2em auto 0;
   padding: 20px 15px;
   max-width: $max-content-width;
   text-align: center;
@@ -36,6 +36,14 @@
 .link {
   padding: 2px 5px;
   font-size: 1em;
+}
+
+.icon {
+  padding: 0 5px;
+}
+
+.icon svg {
+  margin-top: -2px;
 }
 
 .link,

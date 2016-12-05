@@ -1,0 +1,77 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+@import '../variables';
+
+.root {
+  margin: 0;
+}
+
+.link {
+  display: inline-block;
+  padding: 3px 8px;
+  text-decoration: none;
+  font-size: 1.2em; /* ~18px */
+}
+
+.link,
+.link:active,
+.link:visited {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.highlight {
+  margin-right: 8px;
+  margin-left: 8px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+}
+
+.highlight:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.spacer {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.searchField {
+  color: $accent-color;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px $accent-color solid;
+  font-size: $font-size-heading;
+  line-height: $line-height-heading;
+  width: calc(100% - 1.4em);
+}
+
+.searchIcon {
+  color: $accent-color;
+  font-size: $font-size-heading * 1.4;
+  line-height: $line-height-heading;
+}
+
+@media (max-width: $screen-md-min) {
+  .root {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .link {
+    flex: 2;
+  }
+
+  .search {
+    display: none;
+  }
+}

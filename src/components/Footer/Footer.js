@@ -9,41 +9,53 @@
  */
 
 import React from 'react';
+import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import Twitter from 'react-icons/lib/io/social-twitter';
+import {
+  IoEmail as Email,
+  IoSocialFacebook as Facebook,
+  IoSocialTwitter as Twitter,
+} from 'react-icons/lib/io';
 import s from './Footer.scss';
 import Link from '../Link';
 
+const ICON_SIZE = 20;
 function Footer() {
   return (
     <div className={s.root}>
       <div className={s.container}>
-        <span className={s.text}>© LevelPlayingField.io | lpf.io</span>
+        <span className={s.text}>© Level Playing Field</span>
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/">Home</Link>
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/about-us">About Us</Link>
         <span className={s.spacer}>·</span>
+        <Link className={s.link} to="/privacy">Privacy</Link>
+        <span className={s.spacer}>·</span>
         <a
-          className={s.link}
+          className={cx(s.link, s.icon)}
           target="_blank"
           rel="noopener noreferrer"
           href="mailto:contact@lpf.io?subject=Hello, LPF!"
         >
-          Contact Us
+          <Email size={ICON_SIZE}/>
         </a>
-        <span className={s.spacer}>·</span>
         <a
-          className={s.link}
+          className={cx(s.link, s.icon)}
           target="_blank"
           rel="noopener noreferrer"
           href="https://twitter.com/lpf_dot_io"
         >
-          <Twitter/>
-          lpf_dot_io
+          <Twitter size={ICON_SIZE}/>
         </a>
-        <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/privacy">Privacy</Link>
+        <a
+          className={cx(s.link, s.icon)}
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.facebook.com/levelplayingfieldio/"
+        >
+          <Facebook size={ICON_SIZE}/>
+        </a>
       </div>
     </div>
   );

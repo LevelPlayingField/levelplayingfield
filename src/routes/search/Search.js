@@ -37,7 +37,9 @@ class Search extends React.Component {
   setUrl() {
     const { history } = this.context;
 
-    history.push(`/search?q=${encodeURIComponent(this.input.value)}`);
+    history.push(`/search?q=${encodeURIComponent(this.input.value)}`, {
+      search_query: this.input.value,
+    });
   }
 
   render() {
@@ -47,8 +49,7 @@ class Search extends React.Component {
       <Layout>
         <Container>
           <Row centerMd centerLg>
-            <Col sm={12} md={6} lg={4}>
-              <MDSearch className={s.searchIcon}/>
+            <Col sm={12} md={8} lg={6}>
               <input
                 className={s.searchField}
                 onChange={e => this.props.updateQuery(e.target.value)}
@@ -57,6 +58,7 @@ class Search extends React.Component {
                 value={query}
                 ref={input => { this.input = input; }}
               />
+              <MDSearch className={s.searchIcon}/>
             </Col>
           </Row>
 

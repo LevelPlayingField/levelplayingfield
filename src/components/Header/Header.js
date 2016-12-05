@@ -13,6 +13,8 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.scss';
 import Link from '../Link';
 import Navigation from '../Navigation';
+import SearchBar from '../SearchBar';
+
 
 function Header() {
   return (
@@ -20,15 +22,10 @@ function Header() {
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
-            <span className={s.brandTxt}>lpf.io</span>
+            <span className={s.brandTxt}>Level Playing Field</span>
           </Link>
+          <SearchBar className={s.search}/>
           <Navigation className={s.nav}/>
-        </div>
-        <div className={s.banner}>
-          <h1 className={s.bannerTitle}>Level Playing Field</h1>
-          {/*
-            <p className={s.bannerDesc}>Leveling the playing field for consumer arbitration</p>
-          */}
         </div>
       </div>
     </div>

@@ -49,9 +49,11 @@ class Container extends React.Component {
   }
 
   handleQueryChange(query: string) {
-    this.setState({ query, page: 1 }, () => {
-      this.updateResults();
-    });
+    if (this.state.query !== query) {
+      this.setState({ query, page: 1 }, () => {
+        this.updateResults();
+      });
+    }
   }
 
   updateResults() {
