@@ -207,7 +207,7 @@ type Party {
 }
 
 type Query {
-  Summary: Summary
+  Summary(name: String!): Summary
   Search(query: String!): Search
   Cases(
     limit: Int
@@ -264,6 +264,6 @@ enum SortDir {
 }
 
 type Summary {
-  cases: Int
-  parties: Int
+  name: String!
+  data: JSON
 }
