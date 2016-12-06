@@ -11,6 +11,13 @@ import SearchResult from './SearchResult';
 
 import type { Result } from './Types';
 
+const suggestedQueries = [
+  'is:case',
+  'filed:9/1/2010-9/30/2010',
+  'is:attorney',
+  'state:CA',
+  'party:"Citibank, N.A."',
+];
 type Props = {
   query: string,
   results: Array<Result>,
@@ -59,6 +66,20 @@ class Search extends React.Component {
                 ref={input => { this.input = input; }}
               />
               <MDSearch className={s.searchIcon}/>
+            </Col>
+          </Row>
+          <Row centerMd centerLg sm={12} md={8} lg={6}>
+            <Col>
+              <small>
+                Try these useful search queries:
+                {suggestedQueries.map((q, i) => (
+                  <span key={q}>
+                    &nbsp;
+                    <Link to={`/search?q=${encodeURIComponent(q)}`}>{q}</Link>
+                    {i < suggestedQueries.length - 1 && ','}
+                  </span>
+                ))}
+              </small>
             </Col>
           </Row>
 

@@ -23,6 +23,7 @@ export const searchOptions = {
     'is',
     'board',
     'party',
+    'state',
   ],
   groups: {
     is: [
@@ -68,11 +69,11 @@ const isTypes = {
   case: 'type = ?',
   party: 'type = ?',
 
-  'law firm': "lower(document->>'type') ILIKE ?",
-  'non consumer': "lower(document->>'type') ILIKE ?",
-  attorney: "lower(document->>'type') ILIKE ?",
-  arbitrator: "lower(document->>'type') ILIKE ?",
-  consumer: "lower(document->>'type') ILIKE ?",
+  'law firm': "document->>'type' ILIKE ?",
+  'non consumer': "document->>'type' ILIKE ?",
+  attorney: "document->>'type' ILIKE ?",
+  arbitrator: "document->>'type' ILIKE ?",
+  consumer: "document->>'type' ILIKE ?",
 };
 const convertIs = (vals: string | Array<string>) => {
   const filters = [];
@@ -142,8 +143,11 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
   }
 
   if (typeof parsed !== 'string') {
+    if (parsed.state != null) {
+      where = { $and: [where, { $or: safeMap(parsed.state, s => ["document->>'consumer_rep_state' ILIKE ?", s]) }] };
+    }
     if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
-      where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
+      where = { $and: [where, { $or: safeMap(parsed.board, b => ["document->>'arbitration_board' ILIKE ?", b]) }] };
     }
     if (parsed.party != null) {
       where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
