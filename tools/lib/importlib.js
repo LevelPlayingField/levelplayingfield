@@ -67,7 +67,7 @@ async function createParty(type, name) {
 }
 
 function buildUniqueValue(caseNumber: string, ...partyNames: Array<string>) {
-  return [caseNumber, ...partyNames].join(',');
+  return [caseNumber, ...partyNames.filter(v => !!v).map(slugify)].join(',');
 }
 
 async function runImport(parseRow) {
