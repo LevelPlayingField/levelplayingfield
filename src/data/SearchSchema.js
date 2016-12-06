@@ -114,6 +114,56 @@ const filterRange = (field, { from, to }) => {
   return [];
 };
 
+function buildQuery(parsed: ParsedType): [any, Array<any>] {
+  let where = {};
+  const order = [];
+
+  if (typeof parsed === 'string' || typeof parsed.text === 'string') {
+    let term: string = '';
+    if (typeof parsed === 'string') {
+      term = parsed;
+    }
+    if (typeof parsed.text === 'string') {
+      term = parsed.text;
+    }
+
+    order.push(Sequelize.literal(`ts_rank(vector, plainto_tsquery('simple', '${term.replace("'", "''")}')) DESC`));
+    where = {
+      $and: [
+        where,
+        {
+          $or: [
+            ["vector @@ plainto_tsquery('simple', ?)", term],
+            { $and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]]) },
+          ],
+        },
+      ],
+    };
+  }
+
+  if (typeof parsed !== 'string') {
+    if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
+      where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
+    }
+    if (parsed.party != null) {
+      where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
+    }
+    if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
+      where = { $and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)] };
+    }
+    if (parsed.closed != null && validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
+      where = { $and: [where, filterRange("(document->>'close_date')::DATE", parsed.closed)] };
+    }
+    if (parsed.is != null) {
+      where = { $and: [where, convertIs(parsed.is)] };
+    }
+  }
+
+  if (parsed.exclude != null) {
+
+  }
+  return [where, order];
+}
 export const SearchType = new GraphQLObjectType({
   name: 'Search',
   fields: () => ({
@@ -132,63 +182,21 @@ export const SearchType = new GraphQLObjectType({
               DESC: { value: 'DESC' },
             },
           }),
-          defaultValue: 'ASC'
+          defaultValue: 'ASC',
         },
       },
       async resolve({ query }, { sortBy, sortDir, page, perPage }) {
         const parsed: ParsedType = searchQuery.parse(query, searchOptions);
-
-        const order = [];
-        let where = {};
-
-        if (sortBy) {
-          order.push([Sequelize.literal(`document->>'${sortBy.replace("'", "''")}'`), sortDir]);
-        }
-
-        if (typeof parsed === 'string' || typeof parsed.text === 'string') {
-          let term: string = '';
-          if (typeof parsed === 'string') {
-            term = parsed;
-          }
-          if (typeof parsed.text === 'string') {
-            term = parsed.text;
-          }
-
-          order.push(Sequelize.literal(`ts_rank(vector, plainto_tsquery('english', '${term.replace("'", "''")}')) DESC`));
-          where = {
-            $and: [
-              where,
-              {
-                $or: [
-                  ["vector @@ plainto_tsquery('english', ?)", term],
-                  { $and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]]) },
-                ],
-              },
-            ],
-          };
-        }
-
-        if (typeof parsed !== 'string') {
-          if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
-            where = { $and: [where, { $or: safeMap(parsed.board, b => ["lower(document->>'arbitration_board') = lower(?)", b]) }] };
-          }
-          if (parsed.party != null) {
-            where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
-          }
-          if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
-            where = { $and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)] };
-          }
-          if (parsed.closed != null && validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
-            where = { $and: [where, filterRange("(document->>'close_date')::DATE", parsed.closed)] };
-          }
-          if (parsed.is != null) {
-            where = { $and: [where, convertIs(parsed.is)] };
-          }
-        }
+        const [where, order] = buildQuery(parsed);
 
         // Fallback sorting to make sure we get some semblance of deterministic sort
         order.push(['id', 'asc']);
-        console.log(order);
+
+        // If user specific a sort, order by that first
+        if (sortBy) {
+          order.unshift([Sequelize.literal(`document->>'${sortBy.replace("'", "''")}'`), sortDir]);
+        }
+
         const results = await Search.findAndCount({
           where,
           order,
@@ -259,12 +267,13 @@ type RangeType = {
   to: ?string
 };
 type ParsedType = string | {
-  text: ?string,
-  is: ?KeywordType,
-  board: ?KeywordType,
-  closed: ?RangeType,
-  filed: ?RangeType,
-  party: ?string,
+  text?: string,
+  is?: KeywordType,
+  board?: KeywordType,
+  closed?: RangeType,
+  filed?: RangeType,
+  party?: string,
+  exclude?: ParsedType,
 };
 
 export default {

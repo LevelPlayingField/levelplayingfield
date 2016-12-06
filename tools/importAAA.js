@@ -1,7 +1,8 @@
 import { Case, Party, CaseParty } from '../src/data/models';
-import utils, { createParty, runImport, validateCaseData } from './lib/importlib';
+import utils, { buildUniqueValue, createParty, runImport, validateCaseData } from './lib/importlib';
 
-async function parseRow(row) {
+async function parseRow(row, deleteOldCase = false) {
+  let retValue = true;
   const {
     CASE_ID,
     NONCONSUMER,
@@ -47,8 +48,23 @@ async function parseRow(row) {
     NAME_CONSUMER_ATTORNEY,
     CONSUMER_ATTORNEY_FIRM,
   } = row;
-
+  const attorneyFirmName = (
+    (
+      CONSUMER_ATTORNEY_FIRM != null &&
+      utils.cleanStr(CONSUMER_ATTORNEY_FIRM) !== '' &&
+      utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() !== 'attorney at law'
+    ) ? utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
+      : `${utils.cleanStr(CONSUMER_ATTORNEY_FIRM)}, Attorney at Law`
+  );
+  const uniqueValue = buildUniqueValue(
+    CASE_ID,
+    utils.cleanStr(ARBITRATOR_NAME),
+    utils.cleanStr(NAME_CONSUMER_ATTORNEY),
+    attorneyFirmName,
+    utils.cleanStr(NONCONSUMER),
+  );
   const caseData = {
+    unique_value: uniqueValue,
     case_number: CASE_ID,
     arbitration_board: 'AAA',
     initiating_party: INITIATING_PARTY,
@@ -95,6 +111,16 @@ async function parseRow(row) {
   };
   validateCaseData(caseData);
 
+  if (deleteOldCase) {
+    retValue = !(await Case.destroy({ where: { unique_value: uniqueValue } }));
+  } else {
+    const caseExists = await Case.count({ where: { unique_value: uniqueValue } });
+
+    if (caseExists) {
+      return false;
+    }
+  }
+
   const newCase = await Case.create(caseData);
 
   if (ARBITRATOR_NAME) {
@@ -115,12 +141,7 @@ async function parseRow(row) {
     const attorney = await createParty(Party.ATTORNEY, utils.cleanStr(NAME_CONSUMER_ATTORNEY));
     const firm = await createParty(
       Party.LAW_FIRM,
-      (
-        CONSUMER_ATTORNEY_FIRM != null &&
-        utils.cleanStr(CONSUMER_ATTORNEY_FIRM) !== '' &&
-        utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() !== 'attorney at law'
-      ) ? utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
-        : `${attorney.name}, Attorney at Law`
+      attorneyFirmName,
     );
     await firm.addAttorney(attorney);
 
@@ -146,6 +167,8 @@ async function parseRow(row) {
       case_id: newCase.id,
     });
   }
+
+  return retValue;
 }
 
 export default async function importAAA() {

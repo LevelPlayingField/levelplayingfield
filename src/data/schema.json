@@ -671,6 +671,18 @@
               "deprecationReason": null
             },
             {
+              "name": "unique_value",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "case_number",
               "description": null,
               "args": [],

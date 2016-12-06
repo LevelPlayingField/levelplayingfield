@@ -65,12 +65,12 @@ CREATE OR REPLACE VIEW case_search_view AS
     NULL :: VARCHAR                                        AS slug,
     'Case #' || results.case_number
     || ' involving ' || english_join(results.names)        AS index,
-    to_tsvector('english', results.case_number)
-    || to_tsvector('english', results.prevailing_party)
-    || to_tsvector('english', results.type_of_disposition)
-    || to_tsvector('english', results.arbitration_board)
-    || to_tsvector('english', results.dispute_type)
-    || to_tsvector('english', english_join(results.names)) AS vector,
+    to_tsvector('simple', results.case_number)
+    || to_tsvector('simple', results.prevailing_party)
+    || to_tsvector('simple', results.type_of_disposition)
+    || to_tsvector('simple', results.arbitration_board)
+    || to_tsvector('simple', results.dispute_type)
+    || to_tsvector('simple', english_join(results.names)) AS vector,
     row_to_json(results) :: JSONB                          AS document
   FROM results;
 
@@ -89,21 +89,29 @@ CREATE OR REPLACE VIEW party_search_view AS
     FROM attorney_firms, party AS attorney
     WHERE attorney_firms.party_id = attorney.id
     GROUP BY attorney_firms.firm_id
+  ), case_count AS (
+    SELECT 
+      party_id, 
+      count(case_id) AS count 
+    FROM case_party 
+    GROUP BY party_id
   ), results AS (
     SELECT
       party.*,
       firms.firms,
-      attorneys.attorneys
+      attorneys.attorneys,
+      case_count.count AS case_count
     FROM party
       LEFT JOIN firms ON party.id = firms.party_id
       LEFT JOIN attorneys ON party.id = attorneys.firm_id
+      LEFT JOIN case_count ON party.id = case_count.party_id
   )
   SELECT
     results.id                              AS id,
     results.slug                            AS slug,
     results.type || ' ' || results.name     AS index,
-    to_tsvector('english', results.type)
-    || to_tsvector('english', results.name) AS vector,
+    to_tsvector('simple', results.type)
+    || to_tsvector('simple', results.name) AS vector,
     row_to_json(results) :: JSONB           AS document
   FROM results;
 
@@ -124,7 +132,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS search_view (
     'party' :: VARCHAR AS type,
     *
   FROM party_search_view
-WITH DATA;
+WITH NO DATA;
 
 CREATE UNIQUE INDEX ON search_view (type, id);
 CREATE INDEX IF NOT EXISTS search_view_index

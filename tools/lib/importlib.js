@@ -66,18 +66,31 @@ async function createParty(type, name) {
   }).spread(p => p);
 }
 
+function buildUniqueValue(caseNumber: string, ...partyNames: Array<string>) {
+  return [caseNumber, ...partyNames].join(',');
+}
+
 async function runImport(parseRow) {
   const workbook = xlsx.readFile(process.argv[process.argv.length - 1]);
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
+  const deleteOldCases = process.argv.includes('--deleteOldCases');
   const rows = xlsx.utils.sheet_to_row_object_array(worksheet);
   const pb = pace(rows.length);
 
   await models.sync({ logging: false });
 
+  let created = 0;
+  let skipped = 0;
+
   for (const row of rows) {
     try {
-      await parseRow(row);
+      if (await parseRow(row, deleteOldCases)) {
+        created += 1;
+      } else {
+        skipped += 1;
+      }
+
       pb.op();
     } catch (e) {
       console.log('\n\n\n\n');
@@ -86,6 +99,9 @@ async function runImport(parseRow) {
       pb.op({ errors: 1 });
     }
   }
+
+  console.log('Added', created);
+  console.log(deleteOldCases ? 'Deleted' : 'Skipped', skipped);
 
   await Party.updateAggregateData();
   await Search.refreshView();
@@ -108,6 +124,7 @@ export default {
 };
 export {
   runImport,
+  buildUniqueValue,
   createParty,
   validateCaseData,
 };

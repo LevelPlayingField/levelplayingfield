@@ -3,6 +3,7 @@ import DataType from 'sequelize';
 import sequelize from '../sequelize';
 
 export default sequelize.define('case', {
+  unique_value: DataType.STRING,
   case_number: DataType.STRING(24),
   arbitration_board: DataType.STRING,
   initiating_party: DataType.STRING,

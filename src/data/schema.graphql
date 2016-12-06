@@ -23,6 +23,7 @@ type attorneysEdge {
 
 type case {
   id: Int!
+  unique_value: String
   case_number: String
   arbitration_board: String
   initiating_party: String
