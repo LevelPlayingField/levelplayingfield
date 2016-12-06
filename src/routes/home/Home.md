@@ -1,3 +1,5 @@
+####Mission Statement
+
 Level Playing Field is a searchable database of consumer arbitration cases. We
 were formed as a 501(c)(3) so monetary donations are charitable tax deductions.
 
