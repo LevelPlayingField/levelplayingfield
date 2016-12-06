@@ -1,17 +1,13 @@
-### Mission Statement
-
 Level Playing Field is a searchable database of consumer arbitration cases. We
 were formed as a 501(c)(3) so monetary donations are charitable tax deductions.
 
-Use the [search](/search) to find specific parties or cases, or to just browse. The next
-steps are to provide summary data on each party and on arbitration overall as well as
-allowing parties to a case to share more information about their case. e.g. what was
-claimed, the outcome, feedback on the arbitrator, etc.
+Use the [search](/search) to find specific parties or cases. Or click on "Cases" 
+or "Parties" in top right to browse (sorting is forthcoming). For example, type 
+"Citibank" in the search box above and hit enter. Or search for a specific 
+arbitrator by typing part of their name.
 
-One of the biggest impediments to a fair arbitration process is the lack of
-transparency.
+We will continue to add useful features as well as summary data on parties and 
+arbitration overall. e.g., allowing parties to a case to share more information
+about their case: what was claimed, the outcome, feedback on the arbitrator, etc.
 
-We are doing this in our spare time as a community service. Our code base is open
-source, you can find us on [GitHub](https://github.com/levelplayingfield/levelplayingfield).
-To help us incorporate cool features, you can contribute some new code, or donate to
-help fund our time.
+To help us work on this full-time and incorporate cool features, please [donate](https://lpf.dntly.com/#/donate).
