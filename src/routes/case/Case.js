@@ -176,8 +176,8 @@ function Case({ case_ }) {
               {arbitrators.length === 1 ? 'Arbitrator' : 'Arbitrators'}
             </h2>
             {arbitrators.length > 0 ? arbitrators.map(arbitrator =>
-              <Row>
-                <Col key={`arbitrator_${arbitrator.Party.id}`}>
+              <Row key={`arbitrator_${arbitrator.Party.id}`}>
+                <Col>
                   <h3>
                     <Link to={`/party/${arbitrator.Party.slug}`}>
                       {arbitrator.Party.name}

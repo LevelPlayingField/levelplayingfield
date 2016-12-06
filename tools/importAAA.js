@@ -54,7 +54,7 @@ async function parseRow(row, deleteOldCase = false) {
       utils.cleanStr(CONSUMER_ATTORNEY_FIRM) !== '' &&
       utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() !== 'attorney at law'
     ) ? utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
-      : `${utils.cleanStr(CONSUMER_ATTORNEY_FIRM)}, Attorney at Law`
+      : `${utils.cleanStr(NAME_CONSUMER_ATTORNEY)}, Attorney at Law`
   );
   const uniqueValue = buildUniqueValue(
     CASE_ID,
