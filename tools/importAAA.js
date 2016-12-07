@@ -1,7 +1,9 @@
+/* @flow */
+
 import { Case, Party, CaseParty } from '../src/data/models';
 import utils, { buildUniqueValue, createParty, runImport, validateCaseData } from './lib/importlib';
 
-async function parseRow(row, deleteOldCase = false) {
+async function parseRow(row: {[key: string]: any}, deleteOldCase: bool = false): any {
   let retValue = true;
   const {
     CASE_ID,
@@ -48,20 +50,21 @@ async function parseRow(row, deleteOldCase = false) {
     NAME_CONSUMER_ATTORNEY,
     CONSUMER_ATTORNEY_FIRM,
   } = row;
+  const cleanConsumerAttorneyFirm = utils.cleanStr(CONSUMER_ATTORNEY_FIRM);
   const attorneyFirmName = (
     (
-      CONSUMER_ATTORNEY_FIRM != null &&
-      utils.cleanStr(CONSUMER_ATTORNEY_FIRM) !== '' &&
-      utils.cleanStr(CONSUMER_ATTORNEY_FIRM).toLowerCase() !== 'attorney at law'
-    ) ? utils.cleanStr(CONSUMER_ATTORNEY_FIRM)
-      : `${utils.cleanStr(NAME_CONSUMER_ATTORNEY)}, Attorney at Law`
+      cleanConsumerAttorneyFirm != null &&
+      cleanConsumerAttorneyFirm !== '' &&
+      cleanConsumerAttorneyFirm.toLowerCase() !== 'attorney at law'
+    ) ? cleanConsumerAttorneyFirm
+      : `${String(utils.fixName(NAME_CONSUMER_ATTORNEY))}, Attorney at Law`
   );
   const uniqueValue = buildUniqueValue(
     CASE_ID,
-    utils.cleanStr(ARBITRATOR_NAME),
-    utils.cleanStr(NAME_CONSUMER_ATTORNEY),
+    utils.fixName(ARBITRATOR_NAME),
+    utils.fixName(NAME_CONSUMER_ATTORNEY),
     attorneyFirmName,
-    utils.cleanStr(NONCONSUMER),
+    utils.fixName(NONCONSUMER),
   );
   const caseData = {
     unique_value: uniqueValue,
@@ -84,14 +87,14 @@ async function parseRow(row, deleteOldCase = false) {
 
     claim_amount_business: utils.money(CLAIM_AMT_BUSINESS),
     fee_allocation_business: utils.percent(utils.naOr(FEEALLOCATION_BUSINESS)),
-    fees_business: utils.nonNaN((utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_BUSINESS)) / 100),
+    fees_business: utils.nonNaN(((utils.money(TOTAL_FEE) || 0) * (utils.percent(FEEALLOCATION_BUSINESS) || 0)) / 100),
     award_amount_business: utils.money(AWARD_AMT_BUSINESS),
     attorney_fees_business: utils.money(ATTORNEYFEE_BUSINESS),
     other_relief_business: OTHERRELIEF_BUSINESS,
 
     claim_amount_consumer: utils.money(CLAIM_AMT_CONSUMER),
     fee_allocation_consumer: utils.percent(utils.naOr(FEEALLOCATION_CONSUMER)),
-    fees_consumer: utils.nonNaN((utils.money(TOTAL_FEE) * utils.percent(FEEALLOCATION_CONSUMER)) / 100),
+    fees_consumer: utils.nonNaN(((utils.money(TOTAL_FEE) || 0) * (utils.percent(FEEALLOCATION_CONSUMER) || 0)) / 100),
     award_amount_consumer: utils.money(AWARD_AMT_CONSUMER),
     attorney_fees_consumer: utils.money(ATTORNEYFEE_CONSUMER),
     other_relief_consumer: OTHERRELIEF_CONSUMER,
@@ -124,7 +127,7 @@ async function parseRow(row, deleteOldCase = false) {
   const newCase = await Case.create(caseData);
 
   if (ARBITRATOR_NAME) {
-    const arbitrator = await createParty(Party.ARBITRATOR, utils.cleanStr(ARBITRATOR_NAME));
+    const arbitrator = await createParty(Party.ARBITRATOR, utils.fixName(ARBITRATOR_NAME));
 
     await CaseParty.create({
       party_id: arbitrator.id,
@@ -137,10 +140,10 @@ async function parseRow(row, deleteOldCase = false) {
     });
   }
 
-  const isSelfRepresented = utils.cleanStr(NAME_CONSUMER_ATTORNEY) != null;
+  const isSelfRepresented = utils.fixName(NAME_CONSUMER_ATTORNEY) != null;
   const attorney = await createParty(
     Party.ATTORNEY,
-    isSelfRepresented ? utils.cleanStr(NAME_CONSUMER_ATTORNEY) : 'Self Represented'
+    isSelfRepresented ? utils.fixName(NAME_CONSUMER_ATTORNEY) : 'Self Represented'
   );
   const firm = await createParty(
     Party.LAW_FIRM,
@@ -159,7 +162,7 @@ async function parseRow(row, deleteOldCase = false) {
   });
 
   if (NONCONSUMER) {
-    const nonConsumer = await createParty(Party.NON_CONSUMER, utils.cleanStr(NONCONSUMER));
+    const nonConsumer = await createParty(Party.NON_CONSUMER, utils.fixName(NONCONSUMER));
 
     await CaseParty.create({
       party_name: nonConsumer.name,
@@ -170,7 +173,7 @@ async function parseRow(row, deleteOldCase = false) {
     });
   }
 
-  return retValue;
+  return Boolean(retValue);
 }
 
 export default async function importAAA() {

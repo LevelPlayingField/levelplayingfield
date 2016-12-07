@@ -1,3 +1,5 @@
+/* @flow */
+
 import pace from 'awesome-progress';
 import xlsx from 'xlsx';
 import slugify from '../../src/core/slugify';
@@ -5,15 +7,15 @@ import models, { Party, Search, Summary } from '../../src/data/models';
 
 const NA = new Set(['na', 'n/a', 'nan', 'unknown', 'none', 'null', 'undefined']);
 
-const nonNaN = v => (isNaN(v) ? null : v);
-const nullOr = c => v => ((v == null || String(v).trim() === '') ? null : c(v));
-const date = v => new Date(v);
-const integer = v => parseInt(v, 10);
-const decimal = v => parseFloat(v);
+const nonNaN = (v: any) => (isNaN(v) ? null : v);
+const nullOr = (c: (v: any) => any) => (v: any) => ((v == null || String(v).trim() === '') ? null : c(v));
+const date = (v: any) => new Date(v);
+const integer = (v: any) => parseInt(v, 10);
+const decimal = (v: any) => parseFloat(v);
 const rtrim = c => v => v.replace(new RegExp(`${c}+$`), '');
 const ltrim = c => v => v.replace(new RegExp(`^${c}+`), '');
-const rsplit = (v, c) => {
-  if (v === null) {
+const rsplit = (v: ?string, c: string) => {
+  if (v == null) {
     return null;
   }
   const parts = v.split(c);
@@ -21,8 +23,8 @@ const rsplit = (v, c) => {
   return [parts.join(c), right];
 };
 const cleanStr = str => String(str).replace(/\s+/, ' ').trim();
-const lookupValue = table => str => table[str];
-const naOr = (str, v = null) => (NA.has(String(str).toLowerCase()) ? v : str);
+const lookupValue = (table: {[key: string]: string}) => (str: string) => table[str];
+const naOr = (str: string, v: ?string = null) => (NA.has(String(str).toLowerCase()) ? v : str);
 const percent = v => ((typeof v === 'string') ? decimal(rtrim('%')(v)) : decimal(v));
 const bool = v => ['true', 't', 'yes', 'y'].indexOf(v.toString().toLowerCase()) !== -1;
 const money = v => {
@@ -36,6 +38,14 @@ const money = v => {
 
   return Math.floor(dec * 100);
 };
+const fixName = (name: string): string => {
+  switch (cleanStr(name)) {
+    case 'AT&T*':
+      return 'AT&T';
+    default:
+      return cleanStr(name);
+  }
+}
 
 function isInvalidData(v) {
   return (
@@ -44,7 +54,7 @@ function isInvalidData(v) {
   );
 }
 
-function validateCaseData(caseData) {
+function validateCaseData(caseData: {[key:string]: any}) {
   const errors = [];
 
   for (const k of Object.keys(caseData)) {
@@ -58,7 +68,7 @@ function validateCaseData(caseData) {
   }
 }
 
-async function createParty(type, name) {
+async function createParty(type: string, name: any) {
   const slug = slugify(`${type} ${name}`);
   return await Party.findOrCreate({
     where: { slug },
@@ -66,11 +76,11 @@ async function createParty(type, name) {
   }).spread(p => p);
 }
 
-function buildUniqueValue(caseNumber: string, ...partyNames: Array<string>) {
-  return [caseNumber, ...partyNames.filter(v => !!v).map(slugify)].join(',');
+function buildUniqueValue(caseNumber: string, ...partyNames: Array<?string>) {
+  return [caseNumber, ...partyNames.filter(v => v != null).map(nullOr(slugify))].join(',');
 }
 
-async function runImport(parseRow) {
+async function runImport(parseRow: (row: {[key:string]: any}) => bool) {
   const workbook = xlsx.readFile(process.argv[process.argv.length - 1]);
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
@@ -111,7 +121,7 @@ async function runImport(parseRow) {
 export default {
   date: nullOr(date),
   integer: nullOr(integer),
-  decimal: nullOr(nonNaN(decimal)),
+  decimal: nullOr((v) => nonNaN(decimal(v))),
   rtrim: nullOr(rtrim),
   ltrim: nullOr(ltrim),
   cleanStr: nullOr(cleanStr),
@@ -119,6 +129,7 @@ export default {
   percent: nullOr(percent),
   money: nullOr(money),
   bool: nullOr(bool),
+  fixName: nullOr(fixName),
   nonNaN,
   naOr,
   rsplit,
