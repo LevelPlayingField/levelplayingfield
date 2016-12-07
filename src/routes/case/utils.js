@@ -2,7 +2,7 @@
 
 const CONSUMER = 'Consumer';
 const NON_CONSUMER = 'Non Consumer';
-const days = (date: number) => date / 1000 / 60 / 60 / 24;
+const days = (date: number) => Math.floor(date / 1000 / 60 / 60 / 24);
 
 const ConsumerParty = {
   type: 'Consumer',
