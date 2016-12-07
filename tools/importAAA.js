@@ -137,24 +137,26 @@ async function parseRow(row, deleteOldCase = false) {
     });
   }
 
-  if (NAME_CONSUMER_ATTORNEY) {
-    const attorney = await createParty(Party.ATTORNEY, utils.cleanStr(NAME_CONSUMER_ATTORNEY));
-    const firm = await createParty(
-      Party.LAW_FIRM,
-      attorneyFirmName,
-    );
-    await firm.addAttorney(attorney);
+  const isSelfRepresented = utils.cleanStr(NAME_CONSUMER_ATTORNEY) != null;
+  const attorney = await createParty(
+    Party.ATTORNEY,
+    isSelfRepresented ? utils.cleanStr(NAME_CONSUMER_ATTORNEY) : 'Self Represented'
+  );
+  const firm = await createParty(
+    Party.LAW_FIRM,
+    isSelfRepresented ? attorneyFirmName : 'Self Represented',
+  );
+  await firm.addAttorney(attorney);
 
-    await CaseParty.create({
-      type: attorney.type,
-      case_id: newCase.id,
-      party_id: attorney.id,
-      party_name: attorney.name,
-      firm_id: firm.id,
-      firm_slug: firm.slug,
-      firm_name: firm.name,
-    });
-  }
+  await CaseParty.create({
+    type: attorney.type,
+    case_id: newCase.id,
+    party_id: attorney.id,
+    party_name: attorney.name,
+    firm_id: firm.id,
+    firm_slug: firm.slug,
+    firm_name: firm.name,
+  });
 
   if (NONCONSUMER) {
     const nonConsumer = await createParty(Party.NON_CONSUMER, utils.cleanStr(NONCONSUMER));

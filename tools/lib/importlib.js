@@ -6,7 +6,7 @@ import models, { Party, Search, Summary } from '../../src/data/models';
 const NA = new Set(['na', 'n/a', 'nan', 'unknown', 'none', 'null', 'undefined']);
 
 const nonNaN = v => (isNaN(v) ? null : v);
-const nullOr = c => v => ((v === null || String(v).trim() === '') ? null : c(v));
+const nullOr = c => v => ((v == null || String(v).trim() === '') ? null : c(v));
 const date = v => new Date(v);
 const integer = v => parseInt(v, 10);
 const decimal = v => parseFloat(v);
