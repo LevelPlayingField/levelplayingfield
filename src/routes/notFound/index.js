@@ -17,7 +17,7 @@ export default {
 
   action() {
     return {
-      component: <NotFound title={title} />,
+      component: <NotFound />,
       status: 404,
     };
   },

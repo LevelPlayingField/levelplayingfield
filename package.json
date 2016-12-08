@@ -227,6 +227,7 @@
     "serve": "babel-node tools/run runServer",
     "start": "babel-node tools/run start",
     "updateSchema": "babel-node tools/run updateSchema",
+    "updateSitemap": "babel-node tools/run updateSitemap",
     "updateSearch": "babel-node tools/run updateSearch",
     "cleanDB": "babel-node tools/run cleanDB",
     "importJAMS": "babel-node tools/run importJAMS",

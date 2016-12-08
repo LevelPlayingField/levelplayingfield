@@ -1,6 +1,7 @@
 FROM node:7-onbuild
+ENV WEBSITE_HOSTNAME levelplayingfield.io
 
 RUN npm run build -- --release
 
 EXPOSE 3000
-ENTRYPOINT ["/usr/bin/env", "node", "build/server.js"]
+ENTRYPOINT ["/bin/bash", "./tools/docker-run.sh"]

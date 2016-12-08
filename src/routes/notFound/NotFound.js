@@ -8,27 +8,23 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import Layout from '../../components/Layout';
 import s from './NotFound.scss';
 
-function NotFound({ title }) {
+function NotFound() {
   return (
     <Layout full={false}>
       <Helmet title="Page Not Found" style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <div className={s.root}>
         <div className={s.container}>
-          <h1>{title}</h1>
+          <h1>Page Not Found</h1>
           <p>Sorry, the page you were trying to view does not exist.</p>
         </div>
       </div>
     </Layout>
   );
 }
-
-NotFound.propTypes = {
-  title: PropTypes.string.isRequired,
-};
 
 export default NotFound;
