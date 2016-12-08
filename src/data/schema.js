@@ -181,7 +181,7 @@ const schema = new GraphQLSchema({
       Case: {
         type: CaseType,
         resolve: resolver(Case, {
-          before: () => ({ order: [['import_date', 'DESC']] }),
+          before: ({ ...args }) => ({ ...args, order: [['import_date', 'DESC']] }),
         }),
         args: {
           case_id: { type: new GraphQLNonNull(GraphQLID) },
