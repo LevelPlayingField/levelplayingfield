@@ -12,7 +12,7 @@ import Sequelize from 'sequelize';
 import { databaseUrl } from '../config';
 
 const sequelize = new Sequelize(databaseUrl, {
-  logging: console.log,
+  logging: false,
   define: {
     underscored: true,
     underscoredAll: true,
