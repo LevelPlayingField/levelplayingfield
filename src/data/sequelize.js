@@ -12,9 +12,10 @@ import Sequelize from 'sequelize';
 import { databaseUrl } from '../config';
 
 const sequelize = new Sequelize(databaseUrl, {
-  logging: false,
+  logging: console.log,
   define: {
-    freezeTableName: true,
+    underscored: true,
+    underscoredAll: true,
   },
 });
 

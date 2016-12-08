@@ -116,7 +116,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "case",
+                  "name": "Case",
                   "ofType": null
                 }
               },
@@ -201,7 +201,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "case",
+                "name": "Case",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -651,7 +651,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "case",
+          "name": "Case",
           "description": null,
           "fields": [
             {
@@ -663,9 +663,33 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
+                  "name": "String",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "case_id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "import_date",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -1115,7 +1139,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createdAt",
+              "name": "created_at",
               "description": null,
               "args": [],
               "type": {
@@ -1131,7 +1155,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updatedAt",
+              "name": "updated_at",
               "description": null,
               "args": [],
               "type": {
@@ -1423,7 +1447,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Int",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -1531,7 +1555,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createdAt",
+              "name": "created_at",
               "description": null,
               "args": [],
               "type": {
@@ -1547,7 +1571,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updatedAt",
+              "name": "updated_at",
               "description": null,
               "args": [],
               "type": {
@@ -1568,7 +1592,7 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "case",
+                "name": "Case",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1674,7 +1698,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createdAt",
+              "name": "created_at",
               "description": null,
               "args": [],
               "type": {
@@ -1690,7 +1714,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updatedAt",
+              "name": "updated_at",
               "description": null,
               "args": [],
               "type": {

@@ -4,7 +4,6 @@ import { Case, Party, CaseParty } from '../src/data/models';
 import utils, { buildUniqueValue, createParty, runImport, validateCaseData } from './lib/importlib';
 
 async function parseRow(row: {[key: string]: any}, importDate: string): any {
-  let retValue = true;
   const {
     CASE_ID,
     NONCONSUMER,

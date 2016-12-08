@@ -180,9 +180,11 @@ const schema = new GraphQLSchema({
       },
       Case: {
         type: CaseType,
-        resolve: resolver(Case),
+        resolve: resolver(Case, {
+          before: () => ({ order: [['import_date', 'DESC']] }),
+        }),
         args: {
-          id: { type: new GraphQLNonNull(GraphQLID) },
+          case_id: { type: new GraphQLNonNull(GraphQLID) },
         },
       },
       Party: {

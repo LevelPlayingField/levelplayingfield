@@ -19,10 +19,14 @@ function Home({ awards, dispositions }) {
         </Row>
         <Row>
           <Col md={6} lg={6}>
-            <SummaryTable heading="Case Dispositions by Closing Date" data={dispositions}/>
+            {dispositions &&
+              <SummaryTable heading="Case Dispositions by Closing Date" data={dispositions}/>
+            }
           </Col>
           <Col md={6} lg={6}>
-            <SummaryTable heading="Awarded Parties by Closing Date" data={awards}/>
+            {awards &&
+              <SummaryTable heading="Awarded Parties by Closing Date" data={awards}/>
+            }
           </Col>
         </Row>
       </Container>

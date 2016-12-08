@@ -2,17 +2,18 @@
 import DataType from 'sequelize';
 import sequelize from '../sequelize';
 
-export default sequelize.define('case', {
+export default sequelize.define('Case', {
   id: {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   case_id: {
-    type: DataType.INTEGER, autoIncrement: true
+    type: DataType.INTEGER,
+    autoIncrement: true,
   },
   import_date: {
-    type: DataType.DATE
+    type: DataType.DATE,
   },
 
   unique_value: DataType.STRING,

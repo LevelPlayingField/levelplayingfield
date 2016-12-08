@@ -21,8 +21,10 @@ type attorneysEdge {
   cursor: String!
 }
 
-type case {
-  id: Int!
+type Case {
+  id: String!
+  case_id: Int
+  import_date: String
   unique_value: String
   case_number: String
   arbitration_board: String
@@ -60,14 +62,14 @@ type case {
   med_count: Int
   arb_or_cca_count: Int
   adr_process: String
-  createdAt: String!
-  updatedAt: String!
+  created_at: String!
+  updated_at: String!
   Parties(after: String, first: Int, before: String, last: Int, orderBy: [casePartyConnectionOrder]): casePartyConnection
 }
 
 type CaseParty {
   type: String
-  case_id: Int!
+  case_id: String!
   party_id: Int!
   firm_id: Int
   party_name: String
@@ -76,9 +78,9 @@ type CaseParty {
   firm_slug: String
   date: String
   fees: Int
-  createdAt: String!
-  updatedAt: String!
-  Case: case
+  created_at: String!
+  updated_at: String!
+  Case: Case
   Party: Party
   Firm: Party
 }
@@ -199,8 +201,8 @@ type Party {
   name: String
   slug: String
   aggregate_data: JSON
-  createdAt: String!
-  updatedAt: String!
+  created_at: String!
+  updated_at: String!
   Cases(after: String, first: Int, before: String, last: Int, orderBy: [casesConnectionOrder]): casesConnection
   FirmCases(after: String, first: Int, before: String, last: Int, orderBy: [firmCasesConnectionOrder]): firmCasesConnection
   Attorneys(after: String, first: Int, before: String, last: Int, orderBy: [attorneysConnectionOrder]): attorneysConnection
@@ -217,7 +219,7 @@ type Query {
     # A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
     where: JSON
     offset: Int
-  ): [case]
+  ): [Case]
   Parties(
     limit: Int
     order: String
@@ -226,7 +228,7 @@ type Query {
     where: JSON
     offset: Int
   ): [Party]
-  Case(id: ID!): case
+  Case(id: ID!): Case
   Party(id: ID, slug: String): Party
 }
 

@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 
-const Search = sequelize.define('search_view', {
+const Search = sequelize.define('SearchView', {
   type: { type: Sequelize.STRING(32), primaryKey: true },
   id: { type: Sequelize.INTEGER, primaryKey: true },
   slug: Sequelize.STRING(255),
@@ -10,16 +10,18 @@ const Search = sequelize.define('search_view', {
   vector: Sequelize.STRING,
   index: Sequelize.STRING,
 }, {
+  tableName: 'search_view',
   createdAt: false,
   updatedAt: false,
   view: true,
 });
 Search.refreshView = function refreshView() {
+  // language=PostgreSQL
   return sequelize.query('REFRESH MATERIALIZED VIEW search_view;');
 };
 Search.sync = function sync() {
-  // language=PostgreSQL
-  return sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  return sequelize.query(/* language=PostgreSQL */ `--
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE OR REPLACE FUNCTION english_join(CHARACTER VARYING [])
   RETURNS CHARACTER VARYING AS
 $BODY$
@@ -42,24 +44,24 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE VIEW case_search_view AS
   WITH parties AS (
     SELECT
-      case_party.case_id                                AS id,
+      case_parties.case_id                                AS id,
       (SELECT array_agg(a)
-       FROM unnest(array_agg(case_party.party_name)) a
+       FROM unnest(array_agg(case_parties.party_name)) a
        WHERE a IS NOT NULL) ||
       (SELECT array_agg(a)
-       FROM unnest(array_agg(case_party.firm_name)) a
-       WHERE a IS NOT NULL)                             AS names,
-      array_to_json(array_agg(row_to_json(case_party))) AS parties
-    FROM case_party
-    GROUP BY "case_party".case_id
+       FROM unnest(array_agg(case_parties.firm_name)) a
+       WHERE a IS NOT NULL)                               AS names,
+      array_to_json(array_agg(row_to_json(case_parties))) AS parties
+    FROM case_parties
+    GROUP BY case_parties.case_id
   ), results AS (
-    SELECT DISTINCT ON ("case".case_id)
-      "case".*,
+    SELECT DISTINCT ON (cases.case_id)
+      cases.*,
       parties.names,
       parties.parties
-    FROM "case", parties
-    WHERE "case".id = parties.id
-    ORDER BY "case".case_id ASC, "case".import_date DESC
+    FROM cases, parties
+    WHERE cases.id = parties.id
+    ORDER BY cases.case_id ASC, cases.import_date DESC
   )
   SELECT
     results.case_id                                       AS id,
@@ -80,32 +82,32 @@ CREATE OR REPLACE VIEW party_search_view AS
     SELECT
       attorney_firms.party_id                     AS party_id,
       array_to_json(array_agg(row_to_json(firm))) AS firms
-    FROM attorney_firms, party AS firm
+    FROM attorney_firms, parties AS firm
     WHERE attorney_firms.firm_id = firm.id
     GROUP BY attorney_firms.party_id
   ), attorneys AS (
     SELECT
       attorney_firms.firm_id                          AS firm_id,
       array_to_json(array_agg(row_to_json(attorney))) AS attorneys
-    FROM attorney_firms, party AS attorney
+    FROM attorney_firms, parties AS attorney
     WHERE attorney_firms.party_id = attorney.id
     GROUP BY attorney_firms.firm_id
   ), case_count AS (
     SELECT
       party_id,
       count(case_id) AS count
-    FROM case_party
+    FROM case_parties
     GROUP BY party_id
   ), results AS (
     SELECT
-      party.*,
+      parties.*,
       firms.firms,
       attorneys.attorneys,
       case_count.count AS case_count
-    FROM party
-      LEFT JOIN firms ON party.id = firms.party_id
-      LEFT JOIN attorneys ON party.id = attorneys.firm_id
-      LEFT JOIN case_count ON party.id = case_count.party_id
+    FROM parties
+      LEFT JOIN firms ON parties.id = firms.party_id
+      LEFT JOIN attorneys ON parties.id = attorneys.firm_id
+      LEFT JOIN case_count ON parties.id = case_count.party_id
   )
   SELECT
     results.id                             AS id,

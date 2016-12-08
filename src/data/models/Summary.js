@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 
-const Summary = sequelize.define('summary_data', {
+const Summary = sequelize.define('SummaryData', {
   name: { type: Sequelize.STRING(32), primaryKey: true },
   data: { type: Sequelize.JSONB() },
 }, {
@@ -11,13 +11,12 @@ const Summary = sequelize.define('summary_data', {
   view: true,
 });
 Summary.sync = function sync() {
-  // language=PostgreSQL
-  return sequelize.query(`--
+  return sequelize.query(/* language=PostgreSQL */ `--
 DROP MATERIALIZED VIEW IF EXISTS summary_data;
 CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
   WITH case_ids AS (
     SELECT DISTINCT ON (case_id) id
-    FROM "case"
+    FROM cases
     ORDER BY case_id ASC, import_date DESC
   )
   SELECT
@@ -34,9 +33,9 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
          FROM (SELECT
                  EXTRACT(YEAR FROM close_date) AS year,
                  type_of_disposition           AS disposition,
-                 count("case".id)              AS count
-               FROM case_ids, "case"
-               WHERE case_ids.id = "case".id
+                 count(cases.id)              AS count
+               FROM case_ids, cases
+               WHERE case_ids.id = cases.id
                GROUP BY 1, 2) case_dispositions
          GROUP BY year
        ) yearly_dispositions
@@ -53,10 +52,10 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
                  CASE WHEN prevailing_party = '---'
                    THEN 'Unknown'
                  ELSE prevailing_party END     AS award,
-                 count("case".id)              AS count
-               FROM case_ids, "case"
-               WHERE case_ids.id = "case".id
-                     AND "case".type_of_disposition = 'Awarded'
+                 count(cases.id)              AS count
+               FROM case_ids, cases
+               WHERE case_ids.id = cases.id
+                     AND cases.type_of_disposition = 'Awarded'
                GROUP BY 1, 2) case_prevailing_parties
          GROUP BY 1
        ) case_awards

@@ -2,9 +2,9 @@
 import Sequelize from 'sequelize';
 import sequelize from '../sequelize';
 
-export default sequelize.define('case_party', {
+export default sequelize.define('CaseParty', {
   type: Sequelize.STRING(32),
-  case_id: { type: Sequelize.UUID, primaryKey: true },
+  case_id: { type: Sequelize.INTEGER, primaryKey: true },
   party_id: { type: Sequelize.INTEGER, primaryKey: true },
   firm_id: Sequelize.INTEGER,
   party_name: Sequelize.STRING(255),

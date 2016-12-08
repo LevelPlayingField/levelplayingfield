@@ -210,16 +210,16 @@ function Case({ case_ }) {
               <dt>Hearing</dt>
               <dd>{case_.type_of_hearing ? 'Yes' : 'No Hearing'}</dd>
               {case_.type_of_hearing && [
-                <dt>Hearing Type</dt>,
-                <dd>{case_.type_of_hearing}</dd>,
+                <dt key={1}>Hearing Type</dt>,
+                <dd key={2}>{case_.type_of_hearing}</dd>,
               ]}
               {case_.document_only_proceeding && [
-                <dt>Documents Only</dt>,
-                <dd>{case_.document_only_proceeding}</dd>,
+                <dt key={1}>Documents Only</dt>,
+                <dd key={2}>{case_.document_only_proceeding}</dd>,
               ]}
               {case_.hearing_state && [
-                <dt>Hearing Location</dt>,
-                <dd>{`${case_.hearing_city}, ${case_.hearing_state}`}</dd>,
+                <dt key={1}>Hearing Location</dt>,
+                <dd key={2}>{`${case_.hearing_city}, ${case_.hearing_state}`}</dd>,
               ]}
             </dl>
 
@@ -237,6 +237,18 @@ function Case({ case_ }) {
             </dl>
           </Col>
         </Row>
+        {/*
+        <Row>
+          <Col>
+            <p>
+              Exported by <strong>{case_.arbitration_board}</strong> on&nbsp;
+              <time dateTime={new Date(case_.import_date).toISOString().substring(0, 10)}>
+                {new Date(case_.import_date).toLocaleDateString()}
+              </time>
+            </p>
+          </Col>
+        </Row>
+        */}
       </Container>
     </Layout>
   );

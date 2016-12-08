@@ -26,8 +26,10 @@ export default {
     }
     
     {
-      case: Case(id: ${params.caseID}) {
+      case: Case(case_id: ${params.caseID}) {
         id
+        case_id
+        import_date
         case_number
         arbitration_board
         initiating_party
