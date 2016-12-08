@@ -36,7 +36,7 @@ function Footer() {
           className={cx(s.link, s.icon)}
           target="_blank"
           rel="noopener noreferrer"
-          href="mailto:contact@lpf.io?subject=Hello, LPF!"
+          href="mailto:team@lpf.io?subject=Hello, LPF!"
         >
           <Email size={ICON_SIZE}/>
         </a>
