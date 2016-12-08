@@ -99,13 +99,13 @@ function Case({ case_ }) {
             <Row>
               <Col>
                 <strong>Filed</strong>&nbsp;
-                {new Date(case_.filing_date).toLocaleDateString()}
+                {new Date(case_.filing_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Closed</strong>&nbsp;
-                {new Date(case_.close_date).toLocaleDateString()}
+                {new Date(case_.close_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
               </Col>
             </Row>
             <Row>
@@ -193,7 +193,7 @@ function Case({ case_ }) {
                     </Link>
                   </h3>
                   <p className={s.details}>
-                    Appointed {new Date(arbitrator.date).toLocaleDateString()}
+                    Appointed {new Date(arbitrator.date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                   </p>
                 </Col>
               </Row>
@@ -252,7 +252,7 @@ function Case({ case_ }) {
             <p>
               Exported by <strong>{case_.arbitration_board}</strong> on&nbsp;
               <time dateTime={new Date(case_.import_date).toISOString().substring(0, 10)}>
-                {new Date(case_.import_date).toLocaleDateString()}
+                {new Date(case_.import_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
               </time>
             </p>
           </Col>

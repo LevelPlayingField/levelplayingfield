@@ -52,7 +52,7 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
         <C className={s.cell3} title="Defendant">{defendant.party_name}</C>
         <C className={s.cell4} title="Arbitration Board">{Case.arbitration_board}</C>
         <C className={s.cell5} title="Disposition">{Case.type_of_disposition}</C>
-        <C className={s.cell6} title="Filed">{new Date(Case.filing_date).toLocaleDateString()}</C>
+        <C className={s.cell6} title="Filed">{new Date(Case.filing_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</C>
       </tr>
       <tr>
         <C className={s.cell1} title="Dispute Type">{Case.dispute_type}</C>
@@ -72,7 +72,7 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
         <C className={s.cell5} title={Case.prevailing_party === '---' ? null : 'Awardee'}>
           {Case.prevailing_party}
         </C>
-        <C className={s.cell6} title="Closed">{new Date(Case.close_date).toLocaleDateString()}</C>
+        <C className={s.cell6} title="Closed">{new Date(Case.close_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</C>
       </tr>
     </tbody>
   );
