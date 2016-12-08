@@ -53,25 +53,26 @@ CREATE OR REPLACE VIEW case_search_view AS
     FROM case_party
     GROUP BY "case_party".case_id
   ), results AS (
-    SELECT
+    SELECT DISTINCT ON ("case".case_id)
       "case".*,
       parties.names,
       parties.parties
     FROM "case", parties
     WHERE "case".id = parties.id
+    ORDER BY "case".case_id ASC, "case".import_date DESC
   )
   SELECT
-    results.id                                             AS id,
-    NULL :: VARCHAR                                        AS slug,
+    results.case_id                                       AS id,
+    NULL :: VARCHAR                                       AS slug,
     'Case #' || results.case_number
-    || ' involving ' || english_join(results.names)        AS index,
+    || ' involving ' || english_join(results.names)       AS index,
     to_tsvector('simple', results.case_number)
     || to_tsvector('simple', results.prevailing_party)
     || to_tsvector('simple', results.type_of_disposition)
     || to_tsvector('simple', results.arbitration_board)
     || to_tsvector('simple', results.dispute_type)
     || to_tsvector('simple', english_join(results.names)) AS vector,
-    row_to_json(results) :: JSONB                          AS document
+    row_to_json(results) :: JSONB                         AS document
   FROM results;
 
 CREATE OR REPLACE VIEW party_search_view AS
@@ -90,10 +91,10 @@ CREATE OR REPLACE VIEW party_search_view AS
     WHERE attorney_firms.party_id = attorney.id
     GROUP BY attorney_firms.firm_id
   ), case_count AS (
-    SELECT 
-      party_id, 
-      count(case_id) AS count 
-    FROM case_party 
+    SELECT
+      party_id,
+      count(case_id) AS count
+    FROM case_party
     GROUP BY party_id
   ), results AS (
     SELECT
@@ -107,12 +108,12 @@ CREATE OR REPLACE VIEW party_search_view AS
       LEFT JOIN case_count ON party.id = case_count.party_id
   )
   SELECT
-    results.id                              AS id,
-    results.slug                            AS slug,
-    results.type || ' ' || results.name     AS index,
+    results.id                             AS id,
+    results.slug                           AS slug,
+    results.type || ' ' || results.name    AS index,
     to_tsvector('simple', results.type)
     || to_tsvector('simple', results.name) AS vector,
-    row_to_json(results) :: JSONB           AS document
+    row_to_json(results) :: JSONB          AS document
   FROM results;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS search_view (

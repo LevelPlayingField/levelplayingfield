@@ -3,6 +3,18 @@ import DataType from 'sequelize';
 import sequelize from '../sequelize';
 
 export default sequelize.define('case', {
+  id: {
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    primaryKey: true
+  },
+  case_id: {
+    type: DataType.INTEGER, autoIncrement: true
+  },
+  import_date: {
+    type: DataType.DATE
+  },
+
   unique_value: DataType.STRING,
   case_number: DataType.STRING(24),
   arbitration_board: DataType.STRING,
@@ -46,6 +58,7 @@ export default sequelize.define('case', {
 }, {
   indexes: [
     { fields: ['id'] },
+    { fields: ['id', 'import_date'], unique: true },
     { fields: ['case_number'] },
   ],
 });

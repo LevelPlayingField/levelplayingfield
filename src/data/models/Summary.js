@@ -15,6 +15,11 @@ Summary.sync = function sync() {
   return sequelize.query(`--
 DROP MATERIALIZED VIEW IF EXISTS summary_data;
 CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
+  WITH case_ids AS (
+    SELECT DISTINCT ON (case_id) id
+    FROM "case"
+    ORDER BY case_id ASC, import_date DESC
+  )
   SELECT
     'null' :: CHARACTER VARYING,
     '{}' :: JSON
@@ -29,8 +34,9 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
          FROM (SELECT
                  EXTRACT(YEAR FROM close_date) AS year,
                  type_of_disposition           AS disposition,
-                 COUNT(id)                     AS count
-               FROM "case"
+                 count("case".id)              AS count
+               FROM case_ids, "case"
+               WHERE case_ids.id = "case".id
                GROUP BY 1, 2) case_dispositions
          GROUP BY year
        ) yearly_dispositions
@@ -47,9 +53,10 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
                  CASE WHEN prevailing_party = '---'
                    THEN 'Unknown'
                  ELSE prevailing_party END     AS award,
-                 count(id)                     AS count
-               FROM "case"
-               WHERE "case".type_of_disposition = 'Awarded'
+                 count("case".id)              AS count
+               FROM case_ids, "case"
+               WHERE case_ids.id = "case".id
+                     AND "case".type_of_disposition = 'Awarded'
                GROUP BY 1, 2) case_prevailing_parties
          GROUP BY 1
        ) case_awards

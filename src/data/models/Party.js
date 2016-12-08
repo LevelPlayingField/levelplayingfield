@@ -21,7 +21,12 @@ Party.ATTORNEY = 'Attorney';
 Party.LAW_FIRM = 'Law Firm';
 
 Party.updateAggregateData = async function updateAggregateData() {
-  await sequelize.query(/* language=PostgreSQL */ `WITH
+  await sequelize.query(/* language=PostgreSQL */ `WITH case_ids AS (
+  SELECT DISTINCT ON (case_id)
+    id
+  FROM "case"
+  ORDER BY case_id ASC, import_date DESC
+),
     parties AS (
     SELECT id AS party_id
     FROM party
@@ -34,7 +39,8 @@ Party.updateAggregateData = async function updateAggregateData() {
       COUNT(c.id)                     AS count
     FROM parties p
       LEFT JOIN case_party cp ON cp.party_id = p.party_id OR cp.firm_id = p.party_id
-      JOIN "case" c ON cp.case_id = c.id
+      JOIN case_ids ON cp.case_id = case_ids.id
+      JOIN "case" c ON case_ids.id = c.id
     GROUP BY 1, 2, 3
   ),
     case_dispositions AS (
@@ -56,8 +62,9 @@ Party.updateAggregateData = async function updateAggregateData() {
     FROM parties
       LEFT JOIN case_party
         ON case_party.party_id = parties.party_id OR case_party.firm_id = parties.party_id
-      JOIN "case" ON case_party.case_id = "case".id
-    WHERE "case".type_of_disposition = 'Awarded'
+      JOIN case_ids ON case_party.case_id = case_ids.id
+      JOIN "case" c ON case_ids.id = c.id
+    WHERE c.type_of_disposition = 'Awarded'
     GROUP BY 1, 2, 3
   ),
     case_awards AS (

@@ -2,6 +2,7 @@
 
 import pace from 'awesome-progress';
 import xlsx from 'xlsx';
+import path from 'path';
 import slugify from '../../src/core/slugify';
 import models, { Party, Search, Summary } from '../../src/data/models';
 
@@ -45,7 +46,7 @@ const fixName = (name: string): string => {
     default:
       return cleanStr(name);
   }
-}
+};
 
 function isInvalidData(v) {
   return (
@@ -80,28 +81,33 @@ function buildUniqueValue(caseNumber: string, ...partyNames: Array<?string>) {
   return [caseNumber, ...partyNames.filter(v => v != null).map(nullOr(slugify))].join(',');
 }
 
+const FISCAL_QUARTER_END_DATES = {
+  'q1': '03/31',
+  'q2': '06/30',
+  'q3': '09/30',
+  'q4': '12/31',
+};
 async function runImport(parseRow: (row: {[key:string]: any}) => bool) {
-  const workbook = xlsx.readFile(process.argv[process.argv.length - 1]);
+  const importFile = process.argv[process.argv.length - 1];
+  const importFileName = path.basename(importFile);
+  const workbook = xlsx.readFile(importFile);
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-  const deleteOldCases = process.argv.includes('--deleteOldCases');
+  const [_, board, year, quarter] = /^(\w+)-(\d+)-(q\d+)\.xlsx?$/.exec(importFileName);
+  const importDate = `${FISCAL_QUARTER_END_DATES[quarter.toLowerCase()]}/${year}`;
+
   const rows = xlsx.utils.sheet_to_row_object_array(worksheet);
   const pb = pace(rows.length);
 
   await models.sync({ logging: false });
 
-  let created = 0;
-  let skipped = 0;
-
   for (const row of rows) {
     try {
-      if (await parseRow(row, deleteOldCases)) {
-        created += 1;
+      if (await parseRow(row, importDate)) {
+        pb.op();
       } else {
-        skipped += 1;
+        pb.op({ errors: 1 });
       }
-
-      pb.op();
     } catch (e) {
       console.log('\n\n\n\n');
       console.error(e);
@@ -109,9 +115,6 @@ async function runImport(parseRow: (row: {[key:string]: any}) => bool) {
       pb.op({ errors: 1 });
     }
   }
-
-  console.log('Added', created);
-  console.log(deleteOldCases ? 'Deleted' : 'Skipped', skipped);
 
   await Party.updateAggregateData();
   await Search.refreshView();

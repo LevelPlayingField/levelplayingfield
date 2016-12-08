@@ -3,7 +3,7 @@
 import { Case, Party, CaseParty } from '../src/data/models';
 import utils, { buildUniqueValue, createParty, runImport, validateCaseData } from './lib/importlib';
 
-async function parseRow(row: {[key: string]: any}, deleteOldCase: bool = false): any {
+async function parseRow(row: {[key: string]: any}, importDate: string): any {
   let retValue = true;
   const {
     CASE_ID,
@@ -67,7 +67,10 @@ async function parseRow(row: {[key: string]: any}, deleteOldCase: bool = false):
     utils.fixName(NONCONSUMER),
   );
   const caseData = {
+    case_id: null,
+    import_date: importDate,
     unique_value: uniqueValue,
+
     case_number: CASE_ID,
     arbitration_board: 'AAA',
     initiating_party: INITIATING_PARTY,
@@ -114,14 +117,12 @@ async function parseRow(row: {[key: string]: any}, deleteOldCase: bool = false):
   };
   validateCaseData(caseData);
 
-  if (deleteOldCase) {
-    retValue = !(await Case.destroy({ where: { unique_value: uniqueValue } }));
-  } else {
-    const caseExists = await Case.count({ where: { unique_value: uniqueValue } });
+  const existingCases = await Case.findAll({ where: { unique_value: uniqueValue } });
 
-    if (caseExists) {
-      return false;
-    }
+  if (existingCases.filter(c => c.import_date.toDateString() === new Date(importDate).toDateString()).length) {
+    return false;
+  } else if (existingCases.length) {
+    caseData.case_id = existingCases[0].case_id;
   }
 
   const newCase = await Case.create(caseData);
@@ -173,7 +174,7 @@ async function parseRow(row: {[key: string]: any}, deleteOldCase: bool = false):
     });
   }
 
-  return Boolean(retValue);
+  return true;
 }
 
 export default async function importAAA() {
