@@ -27,7 +27,6 @@ export default {
     }`);
 
     return {
-      title: 'LevelPlayingField',
       component: <Home awards={awards.data} dispositions={dispositions.data}/>,
     };
   },

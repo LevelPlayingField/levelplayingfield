@@ -10,12 +10,12 @@
 
 import React from 'react';
 import cx from 'classnames';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
   IoEmail as Email,
   IoSocialFacebook as Facebook,
   IoSocialTwitter as Twitter,
 } from 'react-icons/lib/io';
+import Helmet from 'react-helmet';
 import s from './Footer.scss';
 import Link from '../Link';
 
@@ -23,6 +23,7 @@ const ICON_SIZE = 20;
 function Footer() {
   return (
     <div className={s.root}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <div className={s.container}>
         <span className={s.text}>© Level Playing Field</span>
         <span className={s.spacer}>·</span>
@@ -61,4 +62,4 @@ function Footer() {
   );
 }
 
-export default withStyles(s)(Footer);
+export default Footer;

@@ -9,7 +9,8 @@
  */
 
 import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
+import englishJoin from '../../core/englishJoin';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
 import { Container, Row, Col } from '../../components/Grid';
@@ -71,6 +72,14 @@ function Case({ case_ }) {
 
   return (
     <Layout>
+      <Helmet
+        title={`${case_.arbitration_board} Case #${case_.case_number} - Level Playing Field`}
+        meta={[{
+          name: 'description',
+          content: `${case_.arbitration_board} Case #${case_.case_number}, involving ${englishJoin(parties.map(p => p.Party.name))}`,
+        }]}
+        style={[{ type: 'text/css', cssText: s._getCss() }]}
+      />
       <Container>
         <Row>
           <Col md={4} lg={4}>
@@ -258,4 +267,4 @@ Case.propTypes = {
   case_: PropTypes.any.isRequired,
 };
 
-export default withStyles(s)(Case);
+export default Case;

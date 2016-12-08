@@ -1,14 +1,19 @@
 /* @flow */
-import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import React from 'react';
+import Helmet from 'react-helmet';
 import s from './Debug.scss';
 
-function Debug({ children }) {
-  return <div className={s.debug}>{children}</div>;
-}
-
-Debug.propTypes = {
-  children: PropTypes.element.isRequired,
+type Props = {
+  children: any,
 };
 
-export default withStyles(s)(Debug);
+function Debug({ children }: Props) {
+  return (
+    <div className={s.debug}>
+      <Helmet style={[s]}/>
+      {children}
+    </div>
+  );
+}
+
+export default Debug;

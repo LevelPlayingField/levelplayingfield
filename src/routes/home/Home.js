@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import Layout from '../../components/Layout';
 import { Container, Row, Col } from '../../components/Grid';
 import SummaryTable from '../../components/SummaryTable';
@@ -11,6 +11,7 @@ import content from './Home.md';
 function Home({ awards, dispositions }) {
   return (
     <Layout>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <Container>
         <Row>
           <Col>
@@ -34,4 +35,4 @@ function Home({ awards, dispositions }) {
   );
 }
 
-export default withStyles(s)(Home);
+export default Home;

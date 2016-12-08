@@ -20,7 +20,6 @@ export default {
     require('./home').default,
     require('./privacy').default,
     require('./about-us').default,
-    require('./contact-us').default,
     require('./donate').default,
 
     require('./search').default,
@@ -32,14 +31,6 @@ export default {
   ],
 
   async action({ next }: any) {
-    // Execute each child route until one of them return the result
-    const route = await next();
-
-    // Provide default values for title, description etc.
-    route.title = `${route.title || 'Untitled Page'} - LevelPlayingField`;
-    route.description = route.description || '';
-
-    return route;
+    return await next();
   },
-
 };

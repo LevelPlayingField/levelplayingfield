@@ -1,12 +1,17 @@
 /* @flow */
 
 import React from 'react';
+import Helmet from 'react-helmet';
 import Layout from '../../components/Layout';
 import { Container, Row, Col } from '../../components/Grid';
 
 const Donate = () => {
   return (
     <Layout>
+      <Helmet
+        title="Donate to Level Playing Field"
+        meta={[{ name: 'description', content: 'Please consider donating to Level Playing Field to help fund development' }]}
+      />
       <Container>
         <Row centerSm centerMd centerLg>
           <Col lg={4} md={6}>

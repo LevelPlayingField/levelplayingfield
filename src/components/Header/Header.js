@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import s from './Header.scss';
 import Link from '../Link';
 import Navigation from '../Navigation';
@@ -19,6 +19,7 @@ import SearchBar from '../SearchBar';
 function Header() {
   return (
     <div className={s.root}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
@@ -32,4 +33,4 @@ function Header() {
   );
 }
 
-export default withStyles(s)(Header);
+export default Header;

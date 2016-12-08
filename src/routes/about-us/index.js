@@ -16,7 +16,6 @@ export default {
 
   action() {
     return {
-      title: 'About Us',
       component: <About/>,
     };
   },

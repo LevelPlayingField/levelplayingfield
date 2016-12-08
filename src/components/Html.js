@@ -10,7 +10,21 @@
 
 import React from 'react';
 
+type HelmetProp = {
+  toString: () => string,
+  toComponent: () => any,
+};
 type Props = {
+  helmet: {
+    htmlAttributes: HelmetProp,
+    title: HelmetProp,
+    base: HelmetProp,
+    meta: HelmetProp,
+    link: HelmetProp,
+    script: HelmetProp,
+    noscript: HelmetProp,
+    style: HelmetProp,
+  },
   title: string,
   description: string,
   style: ?string,
@@ -19,19 +33,14 @@ type Props = {
   children: ?string,
 };
 
-function Html({ title, description, style, script, chunk, children }: Props) {
+function Html({ helmet, script, chunk, children }: Props) {
   return (
-    <html className="no-js" lang="en">
+    <html lang="en" className="no-js" {...helmet.htmlAttributes.toComponent()}>
       <head>
-        <meta charSet="utf-8"/>
-        <meta httpEquiv="x-ua-compatible" content="ie=edge"/>
-        <title>{title}</title>
-        <meta name="description" content={description}/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-        <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"/>
-        <link rel="author" href="humans.txt"/>
-        {style && <style id="css" dangerouslySetInnerHTML={{ __html: style }}/>}
+        {helmet.title.toComponent()}
+        {helmet.meta.toComponent()}
+        {helmet.link.toComponent()}
+        {helmet.style.toComponent()}
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{ __html: children }}/>

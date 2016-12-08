@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 
 import s from './SummaryTable.scss';
 
@@ -29,6 +29,7 @@ const SummaryTable = ({ data, heading }: {heading: string, data: DataSet}) => {
 
   return (
     <table className={s.summaryTable}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <caption>{heading}</caption>
       <thead>
         <tr>
@@ -79,4 +80,4 @@ const SummaryTable = ({ data, heading }: {heading: string, data: DataSet}) => {
   );
 };
 
-export default withStyles(s)(SummaryTable);
+export default SummaryTable;

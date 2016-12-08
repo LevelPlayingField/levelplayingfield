@@ -3,8 +3,8 @@
 import React from 'react';
 import cx from 'classnames';
 import querystring from 'query-string';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import MDSearch from 'react-icons/lib/io/android-search';
+import Helmet from 'react-helmet';
 import s from './SearchBar.scss';
 
 type FullLocation = Location & {
@@ -72,6 +72,7 @@ class SearchBar extends React.Component {
 
     return (
       <div className={cx(s.root, className)} role="navigation">
+        <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
         {this.state.hideField ? null : (
           <label htmlFor="search" className={s.search}>
             <input
@@ -91,4 +92,4 @@ class SearchBar extends React.Component {
   }
 }
 
-export default withStyles(s)(SearchBar);
+export default SearchBar;

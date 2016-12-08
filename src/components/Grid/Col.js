@@ -2,7 +2,6 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import s from './Grid.scss';
 
@@ -27,4 +26,4 @@ function Col({ sm, md, lg, className, ...props }: Props) {
   );
 }
 
-export default withStyles(s)(Col);
+export default Col;

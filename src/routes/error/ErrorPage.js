@@ -9,13 +9,22 @@
  */
 
 import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import s from './ErrorPage.scss';
 
 function ErrorPage({ error }: { error: Error }) {
+  const helmet = (
+    <Helmet
+      title="Internal Server Error"
+      meta={[{ name: 'description', content: error.toString() }]}
+      style={[{ type: 'text/css', cssText: s._getCss() }]}
+    />
+  );
+
   if (process.env.NODE_ENV !== 'production') {
     return (
       <div>
+        {helmet}
         <h1>{error.name}</h1>
         <p>{error.message}</p>
         <pre>{error.stack}</pre>
@@ -25,6 +34,7 @@ function ErrorPage({ error }: { error: Error }) {
 
   return (
     <div>
+      {helmet}
       <h1>Error</h1>
       <p>Sorry, a critical error occurred on this page.</p>
     </div>
@@ -36,4 +46,4 @@ ErrorPage.propTypes = {
 };
 
 export { ErrorPage as ErrorPageWithoutStyle };
-export default withStyles(s)(ErrorPage);
+export default ErrorPage;

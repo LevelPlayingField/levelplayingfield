@@ -185,7 +185,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "id",
+                  "name": "case_id",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",

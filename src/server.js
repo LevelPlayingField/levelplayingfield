@@ -16,6 +16,7 @@ import morgan from 'morgan';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import UniversalRouter from 'universal-router';
+import Helmet from 'react-helmet';
 import PrettyError from 'pretty-error';
 import createMemoryHistory from 'history/createMemoryHistory';
 import App from './components/App';
@@ -60,20 +61,10 @@ app.use('/graphql', expressGraphQL(req => ({
 // -----------------------------------------------------------------------------
 app.get('*', async(req, res, next) => {
   try {
-    const css = new Set();
-
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
     const history = createMemoryHistory({ initialEntries: [req.url] });
-    const context = {
-      // Enables critical path CSS rendering
-      // https://github.com/kriasoft/isomorphic-style-loader
-      insertCss: (...styles) => {
-        // eslint-disable-next-line no-underscore-dangle
-        styles.forEach(style => css.add(style._getCss()));
-      },
-      history,
-    };
+    const context = { history };
 
     const route = await UniversalRouter.resolve(routes, {
       path: req.path,
@@ -85,12 +76,17 @@ app.get('*', async(req, res, next) => {
       return;
     }
 
-    const data = { ...route };
-    data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
-    data.style = [...css].join('');
-    data.script = assets.main.js;
-    data.chunk = assets[route.chunk] && assets[route.chunk].js;
-    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+    const children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
+    const helmet = Helmet.rewind();
+    const html = ReactDOM.renderToStaticMarkup(
+      <Html
+        helmet={helmet}
+        script={assets.main.js}
+        chunk={assets[route.chunk] && assets[route.chunk].js}
+      >
+      {children}
+      </Html>
+    );
 
     res.status(route.status || 200);
     res.send(`<!doctype html>${html}`);
@@ -108,14 +104,11 @@ pe.skipPackage('express');
 
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   console.log(pe.render(err)); // eslint-disable-line no-console
+  const children = ReactDOM.renderToString(<ErrorPageWithoutStyle error={err}/>);
+  const helmet = Helmet.rewind();
+
   const html = ReactDOM.renderToStaticMarkup(
-    <Html
-      title="Internal Server Error"
-      description={err.message}
-      style={errorPageStyle._getCss()} // eslint-disable-line no-underscore-dangle
-    >
-      {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
-    </Html>
+    <Html helmet={helmet}>{children}</Html>
   );
   res.status(err.status || 500);
   res.send(`<!doctype html>${html}`);

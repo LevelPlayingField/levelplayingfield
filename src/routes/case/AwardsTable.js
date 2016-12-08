@@ -1,6 +1,6 @@
 /* @flow */
 import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import MoneyCents from '../../components/MoneyCents';
 import { partyType, CONSUMER, NON_CONSUMER } from './utils';
 import s from './Case.scss';
@@ -13,6 +13,7 @@ function AwardsTable({ case_ }: { case_: {[key: any]: any}}) {
 
   return (
     <table className={s.table}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <tbody>
         <tr>
           <th>Claims & Awards</th>
@@ -57,4 +58,4 @@ AwardsTable.propTypes = {
   case_: PropTypes.any.isRequired,
 };
 
-export default withStyles(s)(AwardsTable);
+export default AwardsTable;

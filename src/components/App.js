@@ -9,12 +9,10 @@
  */
 
 import React, { PropTypes } from 'react';
+import Helmet from 'react-helmet';
 import { IntlProvider } from 'react-intl';
 
 const ContextType = {
-  // Enables critical path CSS rendering
-  // https://github.com/kriasoft/isomorphic-style-loader
-  insertCss: PropTypes.func.isRequired,
   history: PropTypes.any.isRequired,
 };
 
@@ -50,7 +48,25 @@ class App extends React.Component {
     // please do that inside the Layout component.
     return (
       <IntlProvider locale="en">
-        {React.Children.only(this.props.children)}
+        <div>
+          <Helmet
+            title="Level Playing Field"
+            htmlAttributes={{
+              lang: 'en',
+            }}
+            meta={[
+              { charSet: 'utf-8' },
+              { httpEquiv: 'x-ua-compatible', content: 'ie=edge' },
+              { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' },
+            ]}
+            link={[
+              { rel: 'author', href: 'humans.txt' },
+              { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' },
+              { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' },
+            ]}
+          />
+          {React.Children.only(this.props.children)}
+        </div>
       </IntlProvider>
     );
   }

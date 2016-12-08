@@ -43,7 +43,6 @@ export default {
     `);
 
     return {
-      title: 'Search',
       component: (
         <Container
           Component={Search}

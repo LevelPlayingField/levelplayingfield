@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import { Row, Col } from '../../components/Grid';
 import SummaryTable from '../../components/SummaryTable';
 import s from './Party.scss';
@@ -13,6 +13,7 @@ const PartySummary = ({ party }: { party: PartyType }) => {
 
   return (
     <Row>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <Col className={s.alignCenter}>
         {party.aggregate_data.dispositions && (
           <SummaryTable data={party.aggregate_data.dispositions} heading="Dispositions"/>
@@ -27,4 +28,4 @@ const PartySummary = ({ party }: { party: PartyType }) => {
   );
 };
 
-export default withStyles(s)(PartySummary);
+export default PartySummary;

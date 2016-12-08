@@ -9,13 +9,14 @@
  */
 
 import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import Layout from '../../components/Layout';
 import s from './NotFound.scss';
 
 function NotFound({ title }) {
   return (
     <Layout full={false}>
+      <Helmet title="Page Not Found" style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <div className={s.root}>
         <div className={s.container}>
           <h1>{title}</h1>
@@ -30,4 +31,4 @@ NotFound.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default withStyles(s)(NotFound);
+export default NotFound;

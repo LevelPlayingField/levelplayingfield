@@ -2,7 +2,6 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import s from './Grid.scss';
 
@@ -35,4 +34,4 @@ class Row extends React.Component {
 }
 
 
-export default withStyles(s)(Row);
+export default Row;

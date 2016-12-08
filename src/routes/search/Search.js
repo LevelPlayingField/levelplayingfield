@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import MDSearch from 'react-icons/lib/io/android-search';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
@@ -54,6 +54,10 @@ class Search extends React.Component {
 
     return (
       <Layout>
+        <Helmet
+          title="Search - Level Playing Field"
+          style={[{ type: 'text/css', cssText: s._getCss() }]}
+        />
         <Container>
           <Row centerMd centerLg>
             <Col sm={12} md={8} lg={6}>
@@ -175,4 +179,4 @@ class Search extends React.Component {
   }
 }
 
-export default withStyles(s)(Search);
+export default Search;

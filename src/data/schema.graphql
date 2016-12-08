@@ -228,7 +228,7 @@ type Query {
     where: JSON
     offset: Int
   ): [Party]
-  Case(id: ID!): Case
+  Case(case_id: ID!): Case
   Party(id: ID, slug: String): Party
 }
 

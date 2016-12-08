@@ -7,7 +7,6 @@ export default {
   path: '/donate',
   action() {
     return {
-      title: 'Donate',
       component: <Donate/>,
     };
   },

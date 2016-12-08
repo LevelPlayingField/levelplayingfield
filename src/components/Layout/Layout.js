@@ -8,24 +8,21 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import React from 'react';
+import Helmet from 'react-helmet';
 import s from './Layout.scss';
 import Header from '../Header';
 import Footer from '../Footer';
 
-function Layout({ children }) {
+function Layout({ children }: any) {
   return (
     <div>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <Header />
-      {React.Children.only(children)}
+      {children}
       <Footer />
     </div>
   );
 }
 
-Layout.propTypes = {
-  children: PropTypes.element.isRequired,
-};
-
-export default withStyles(s)(Layout);
+export default Layout;

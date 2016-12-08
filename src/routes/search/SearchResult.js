@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import Link from '../../components/Link';
 import s from './Search.scss';
 import { NON_CONSUMER, partyType } from '../case/utils';
@@ -13,10 +13,8 @@ import type { Result, PartyType, CaseType } from './Types';
 const isEmpty = (val: ?Array<any>): bool => (val == null || val.length === 0);
 
 function cell(url) {
-  return withStyles(s)(
-    ({ children, ...props }: { children: Array<any> }) => (
-      <td {...props}><Link className={s.cellLink} to={url} title={children}>{children}</Link></td>
-    )
+  return ({ children, ...props }: { children: Array<any> }) => (
+    <td {...props}><Link className={s.cellLink} to={url} title={children}>{children}</Link></td>
   );
 }
 
@@ -47,6 +45,7 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
 
   return (
     <tbody className={s.resultRow}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <tr>
         <C className={s.cell1} title="Case #">{Case.case_number}</C>
         <C className={s.cell2} title="Plaintiff">{plaintiff.party_name}</C>
@@ -84,6 +83,7 @@ function PartyResult({ url, Party }: { url: string, Party: PartyType }) {
 
   return (
     <tbody className={s.resultRow}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <tr>
         <C title="Type">{Party.type}</C>
         <C title="Name">{Party.name}</C>
@@ -110,4 +110,4 @@ function SearchResult({ result }: { result: Result }) {
   }
 }
 
-export default withStyles(s)(SearchResult);
+export default SearchResult;

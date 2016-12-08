@@ -81,7 +81,6 @@ fragment PartyFields on Party {
     if (!data || !data.party) throw new Error('Failed to load party.');
 
     return {
-      title: 'Party',
       component: <Party party={data.party}/>,
     };
   },

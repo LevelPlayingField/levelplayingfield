@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import Link from '../../components/Link';
 import s from './Party.scss';
 import first from '../../core/first';
@@ -32,6 +32,7 @@ function CaseItem({ case_ }: { case_: {node: CaseType} }) {
 
   return (
     <li className={s.caseItem}>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <Link to={`/case/${case_.node.case_id}`} className={s.caseNumber}>
         Case Number {case_.node.Case.case_number}
       </Link>
@@ -40,4 +41,4 @@ function CaseItem({ case_ }: { case_: {node: CaseType} }) {
   );
 }
 
-export default withStyles(s)(CaseItem);
+export default CaseItem;

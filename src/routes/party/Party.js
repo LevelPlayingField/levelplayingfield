@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Helmet from 'react-helmet';
 import Layout from '../../components/Layout';
 import { Container, Row, Col } from '../../components/Grid';
 import Link from '../../components/Link';
@@ -14,6 +14,11 @@ import type { PartyType } from './';
 function Party({ party }: { party: PartyType }) {
   return (
     <Layout>
+      <Helmet
+        title={`${party.name} - Level Playing Field`}
+        meta={[{ name: 'description', content: `${party.type} - ${party.name} on Level Playing Field` }]}
+        style={[{ type: 'text/css', cssText: s._getCss() }]}
+      />
       <Container>
         <Row>
           <Col>
@@ -41,4 +46,4 @@ function Party({ party }: { party: PartyType }) {
   );
 }
 
-export default withStyles(s)(Party);
+export default Party;
