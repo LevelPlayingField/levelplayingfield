@@ -56,6 +56,7 @@ export type PartyType = {
   slug: string,
   type: string,
   name: string,
+  case_count: number,
   firms: Array<PartyType>,
   attorneys: Array<PartyType>,
 }

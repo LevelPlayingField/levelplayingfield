@@ -87,11 +87,12 @@ function PartyResult({ url, Party }: { url: string, Party: PartyType }) {
       <tr>
         <C title="Type">{Party.type}</C>
         <C title="Name">{Party.name}</C>
-        <C colSpan={4} title={(Party.firms && 'Firms') || (Party.attorneys && 'Attorneys')}>{
+        <C colSpan={3} title={(Party.firms && 'Firms') || (Party.attorneys && 'Attorneys')}>{
           (Party.firms && `${Party.firms.map(firm => firm.name).join(', ')}`) ||
           (Party.attorneys && `${Party.attorneys.map(attorney => attorney.name).join(', ')}`) ||
           null}
         </C>
+        <C title={(Party.case_count)}>{Party.case_count}</C>
       </tr>
     </tbody>
   );
