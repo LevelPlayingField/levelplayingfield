@@ -92,7 +92,13 @@ function PartyResult({ url, Party }: { url: string, Party: PartyType }) {
           (Party.attorneys && `${Party.attorneys.map(attorney => attorney.name).join(', ')}`) ||
           null}
         </C>
-        <C title={(Party.case_count)}>{Party.case_count}</C>
+        <C title="Cases">
+          {Object.keys(Party.aggregate_data.dispositions).map(year =>
+            Object.keys(Party.aggregate_data.dispositions[year]).map(award =>
+              Party.aggregate_data.dispositions[year][award]
+            ).reduce((a, b) => a + b)
+          ).reduce((a, b) => a + b)}
+          </C>
       </tr>
     </tbody>
   );
