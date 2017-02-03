@@ -24,6 +24,7 @@ export const searchOptions = {
     'board',
     'party',
     'state',
+    'disposition',
   ],
   groups: {
     is: [
@@ -36,7 +37,14 @@ export const searchOptions = {
   ],
 };
 
-
+const DISPOSITIONS = [
+  'settled',
+  'administrative',
+  'dismissed',
+  'awarded',
+  'withdrawn',
+  'impasse',
+];
 const validateKeyword = (word: KeywordType, match: RegExp | Array<string>) => {
   if (Array.isArray(match)) {
     const arr: Array<string> = match;
@@ -148,6 +156,9 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
     }
     if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
       where = { $and: [where, { $or: safeMap(parsed.board, b => ["document->>'arbitration_board' ILIKE ?", b]) }] };
+    }
+    if (parsed.disposition != null && validateKeyword(parsed.disposition, DISPOSITIONS)) {
+      where = { $and: [where, { $or: safeMap(parsed.disposition, d => ["document->>'type_of_disposition' ILIKE ?", d]) }] };
     }
     if (parsed.party != null) {
       where = { $and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])] };
@@ -274,6 +285,7 @@ type ParsedType = string | {
   text?: string,
   is?: KeywordType,
   board?: KeywordType,
+  disposition?:KeywordType,
   closed?: RangeType,
   filed?: RangeType,
   party?: string,
