@@ -130,11 +130,11 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
     const arbitrator = await createParty(Party.ARBITRATOR, utils.fixName(ARBITRATOR_NAME));
 
     await CaseParty.create({
-      party_id: arbitrator.id,
+      type: arbitrator.type,
       case_id: newCase.id,
+      party_id: arbitrator.id,
       party_name: arbitrator.name,
       party_slug: arbitrator.slug,
-      type: arbitrator.type,
       date: utils.date(APPOINTMENT_DATE),
       fees: utils.money(TOTAL_FEE),
     });
@@ -156,6 +156,7 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
     case_id: newCase.id,
     party_id: attorney.id,
     party_name: attorney.name,
+    party_slug: attorney.slug,
     firm_id: firm.id,
     firm_slug: firm.slug,
     firm_name: firm.name,
@@ -165,11 +166,11 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
     const nonConsumer = await createParty(Party.NON_CONSUMER, utils.fixName(NONCONSUMER));
 
     await CaseParty.create({
-      party_name: nonConsumer.name,
       type: nonConsumer.type,
-      party_id: nonConsumer.id,
-      party_slug: nonConsumer.slug,
       case_id: newCase.id,
+      party_id: nonConsumer.id,
+      party_name: nonConsumer.name,
+      party_slug: nonConsumer.slug,
     });
   }
 
