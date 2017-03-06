@@ -21,6 +21,7 @@ export default {
     require('./privacy').default,
     require('./about-us').default,
     require('./donate').default,
+    require('./donate-thanks').default,
 
     require('./search').default,
 
