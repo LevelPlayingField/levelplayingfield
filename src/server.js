@@ -42,6 +42,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('short'));
