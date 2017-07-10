@@ -1,12 +1,19 @@
 /* @flow */
 
 import React from 'react';
+import Helmet from 'react-helmet';
+import Layout from '../../components/Layout';
+import Link from '../../components/Link';
+import { Container, Row, Col } from '../../components/Grid';
+import s from './Search.scss';
 import graphql from '../../core/graphql';
+import SearchInput from './SearchInput';
+import SearchResults from './SearchResults';
+import SearchPagination from './SearchPagination';
 
 import type { Result } from './Types';
 
 type Props = {
-  Component: any,
   query?: string,
   page: number,
   perPage: number,
@@ -21,9 +28,41 @@ type State = {
   results: [],
 };
 
-class Container extends React.Component {
+function debounce(delay: number) {
+  let timeout;
+
+  return (target, key, descriptor) => {
+    const func = descriptor.value;
+
+    descriptor.value = function() {
+      const later = () => {
+        timeout = null;
+
+        func.apply(this, arguments);
+      }
+      clearTimeout(timeout);
+      timeout = setTimeout(later, delay);
+    }
+
+    return descriptor;
+  }
+}
+
+const suggestedQueries = [
+  'is:case',
+  'filed:9/1/2010-9/30/2010',
+  'is:attorney',
+  'state:CA',
+  'party:"Citibank, N.A."',
+];
+
+class SearchContainer extends React.Component {
   state: State;
   props: Props;
+  
+  static defaultProps = {
+    perPage: 20,
+  }
 
   constructor(props: Props) {
     super(props);
@@ -37,11 +76,11 @@ class Container extends React.Component {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.query !== nextProps.query || this.props.results !== nextProps.results) {
+    if (this.state.query !== nextProps.query) {
+      console.log(this.props.query, nextProps.query);
       this.setState({
         query: nextProps.query,
         page: nextProps.page,
-        results: nextProps.results,
       }, () => {
         this.updateResults();
       });
@@ -62,13 +101,13 @@ class Container extends React.Component {
     this.getResults(query, page);
   }
 
+  @debounce(130)
   async getResults(query: string, page: number = 1) {
     await new Promise(resolve => this.setState({ loading: true }, resolve));
 
-    const { perPage } = this.props;
+    const { perPage = 20 } = this.props;
     const { Search: { Results } } = await graphql(`
-    {
-      Search(query: ${JSON.stringify(query)}) {
+    { Search(query: ${JSON.stringify(query)}) {
         Results(page: ${page}, perPage: ${perPage}) {
           page
           pages
@@ -80,12 +119,8 @@ class Container extends React.Component {
               type
               slug
               document
-            }
-          }
-        }
-      }
-    }
-    `);
+    } } } } } 
+    `);;
 
     this.setState({
       results: Results.edges.map(edge => edge.node),
@@ -95,17 +130,41 @@ class Container extends React.Component {
 
   render() {
     const { Component, ...props } = this.props;
-    const { results, query } = this.state;
+    const { results, query, page, pages, perPage, loading } = this.state;
 
     return (
-      <Component
-        {...props}
-        updateQuery={(q: string) => this.handleQueryChange(q)}
-        query={query}
-        results={results}
-      />
+      <Layout>
+        <Helmet
+          title="Search - Level Playing Field"
+          style={[{ type: 'text/css', cssText: s._getCss() }]}
+        />
+        <Container>
+          <SearchInput 
+            query={query} 
+            onChange={v => { this.handleQueryChange(v) }}
+          />
+
+          <Row centerMd centerLg>
+            <Col>
+              <small>
+                Try these useful search queries:
+                {suggestedQueries.map((q, i) => (
+                  <span key={q}>
+                    &nbsp;
+                    <Link to={`/search?q=${encodeURIComponent(q)}`}>{q}</Link>
+                    {i < suggestedQueries.length - 1 && ','}
+                  </span>
+                ))}
+              </small>
+            </Col>
+          </Row>
+
+          <SearchResults loading={loading} results={results} />
+          <SearchPagination page={page} pages={pages} perPage={perPage} query={query} />
+        </Container>
+      </Layout>
     );
   }
 }
 
-export default Container;
+export default SearchContainer;

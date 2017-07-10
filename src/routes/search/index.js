@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Container from './Container';
-import Search from './Search';
 import graphql from '../../core/graphql';
 
 type ActionParams = {
@@ -22,8 +21,7 @@ export default {
   async action(args: ActionParams) {
     const { query: { q = '', page = 1, perPage = 20 } } = args;
     const { Search: { Results } } = await graphql(`
-    {
-      Search(query: ${JSON.stringify(q)}) {
+    { Search(query: ${JSON.stringify(q)}) {
         Results(page: ${page}, perPage: ${perPage}) {
           page
           pages
@@ -35,17 +33,12 @@ export default {
               type
               slug
               document
-            }
-          }
-        }
-      }
-    }
+    } } } } }
     `);
 
     return {
       component: (
         <Container
-          Component={Search}
           results={Results.edges.map(e => e.node)}
           page={Results.page}
           pages={Results.pages}

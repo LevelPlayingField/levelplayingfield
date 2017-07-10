@@ -61,6 +61,7 @@ const config = {
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime
             'transform-flow-strip-types',
             'transform-runtime',
+            "transform-decorators-legacy",
             ...isDebug ? [
               // Adds component stack to warning messages
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-source
