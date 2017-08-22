@@ -45,6 +45,10 @@ export default async function updateSitemap() {
       loc: `https://${host}/about-us`,
       lastmod: new Date(fs.statSync(path.join(__dirname, '../src/routes/about-us/About.md')).mtime),
     },
+    {
+      loc: `https://${host}/search-help`,
+      lastmod: new Date(fs.statSync(path.join(__dirname, '../src/routes/search-help/SearchHelp.md')).mtime),
+    },
 
     ...cases.map(c => ({
       loc: `https://${host}/case/${c.case_id}`,
