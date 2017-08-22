@@ -14,15 +14,17 @@
  * ========================================================================== */
 
 html {
+  background-color: #333;
   color: #222;
   font-weight: 100;
-  font-size: 1em; /* ~16px; */
+  font-size: 14px; /* ~16px; */
   font-family: $font-family-base;
   line-height: 1.375; /* ~22px */
   overflow-x: hidden;
 }
 
 body {
+  background: #fff;
   overflow-x: hidden;
 }
 

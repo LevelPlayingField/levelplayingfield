@@ -50,6 +50,22 @@
   @extend .section;
 }
 
+.subContainer {
+  margin: 0 auto;
+  padding: 0.1rem;
+  min-height: 20px;
+  background: #61dafb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .heading {
+    margin: auto auto;
+    color: #373277;
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: $screen-md-min) {
   .container {
     padding: 0;

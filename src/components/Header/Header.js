@@ -19,7 +19,7 @@ import SearchBar from '../SearchBar';
 function Header() {
   return (
     <div className={s.root}>
-      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
+      <Helmet style={[{type: 'text/css', cssText: s._getCss()}]}/>
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">
@@ -28,6 +28,9 @@ function Header() {
           <SearchBar className={s.search}/>
           <Navigation className={s.nav}/>
         </div>
+      </div>
+      <div className={s.subContainer}>
+        <Link to="/search-help" className={s.heading}>How to Search Level Playing Field</Link>
       </div>
     </div>
   );

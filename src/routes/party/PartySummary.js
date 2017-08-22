@@ -16,12 +16,12 @@ const PartySummary = ({ party }: { party: PartyType }) => {
       <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <Col className={s.alignCenter}>
         {party.aggregate_data.dispositions && (
-          <SummaryTable data={party.aggregate_data.dispositions} heading="Dispositions"/>
+          <SummaryTable data={party.aggregate_data.dispositions} heading="Dispositions" headingQuery="disposition" extraTerms={{party: party.name}}/>
         )}
       </Col>
       <Col className={s.alignCenter}>
         {party.aggregate_data.awards && (
-          <SummaryTable data={party.aggregate_data.awards} heading="Awards"/>
+          <SummaryTable data={party.aggregate_data.awards} heading="Awards" headingQuery="awarded" extraTerms={{party: party.name}}/>
         )}
       </Col>
     </Row>

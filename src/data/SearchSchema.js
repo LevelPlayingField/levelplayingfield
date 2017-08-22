@@ -49,7 +49,7 @@ const validateKeyword = (word: KeywordType, match: RegExp | Array<string>) => {
   if (Array.isArray(match)) {
     const arr: Array<string> = match;
 
-    return safeMap(word, w => arr.indexOf(w) !== -1).reduce((a, b) => a && b, true);
+    return safeMap(word, w => arr.indexOf(w.toLowerCase()) !== -1).reduce((a, b) => a && b, true);
   }
 
   const re: RegExp = match;

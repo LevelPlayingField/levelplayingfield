@@ -72,20 +72,6 @@ class Search extends React.Component {
               <MDSearch className={s.searchIcon}/>
             </Col>
           </Row>
-          <Row centerMd centerLg sm={12} md={8} lg={6}>
-            <Col>
-              <small>
-                Try these useful search queries:
-                {suggestedQueries.map((q, i) => (
-                  <span key={q}>
-                    &nbsp;
-                    <Link to={`/search?q=${encodeURIComponent(q)}`}>{q}</Link>
-                    {i < suggestedQueries.length - 1 && ','}
-                  </span>
-                ))}
-              </small>
-            </Col>
-          </Row>
 
           <Row>
             <Col>

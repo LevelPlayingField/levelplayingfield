@@ -20,6 +20,7 @@ export default {
     require('./home').default,
     require('./privacy').default,
     require('./about-us').default,
+    require('./search-help').default,
     require('./donate').default,
     require('./donate-thanks').default,
 
