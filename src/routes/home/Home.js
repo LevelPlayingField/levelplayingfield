@@ -27,7 +27,8 @@ function Home({awards, dispositions}: { awards: any, dispositions: any }) {
           </Col>
           <Col md={12} centerMd lg={6}>
             {awards &&
-            <SummaryTable heading="Awarded Parties by Closing Date" headingQuery="awarded" data={awards}/>
+            <SummaryTable heading="Awarded Parties by Closing Date" headingQuery="awarded" data={awards}
+                          extraTerms={{disposition: "awarded"}}/>
             }
           </Col>
         </Row>
