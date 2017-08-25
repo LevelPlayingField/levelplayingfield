@@ -4,7 +4,7 @@ Level Playing Field is composed of cases and parties to cases.  You can search b
 
 You can filter your search results by typing the following modifiers to any search.
 
-# For case search:
+### For case search:
 
 * [filed:mm/dd/yyyy-mm/dd/yyyy](/search?q=is:case filed:1/1/2014-12/31/2014)
 
@@ -30,7 +30,7 @@ You can filter your search results by typing the following modifiers to any sear
   * [awarded:"Home Owner/Business"](/search?q=is:case awarded:"Home Owner/Business")
   * [awarded:"Employee/Business"](/search?q=is:case awarded:"Employee/Business")
 
-# For party search:
+### For party search:
 
 * [is:attorney](/search?q=is:party is:attorney)
 * [is:lawfirm](/search?q=is:party is:lawfirm)
