@@ -1,16 +1,17 @@
 ## How to search on Level Playing Field
 
-Level Playing Field is composed of cases and parties to cases.  Every party has a summary page, which also shows up in search results unless you use a search modifier that limits results to cases.  And vis-versa, you can use a search modifier that limits your results to party pages (e.g. the business, the arbitrator and the attorneys).
+Level Playing Field is composed of cases and parties to cases.  You can search by party or by case.  Every party has a summary page and every case has a details page.  You switch between party and case search by toggling the button to the left of the search bar.
 
-The following query modifiers can be used in any combination if a space is placed between each modifier.  Only one modifier from each group can be used at a time:
-* [is:case](/search?q=is:case)
-* [is:party](/search?q=is:party)
+You can filter your search results by typing the following modifiers to any search.
 
-You can search for cases more specfically using these modifiers:
+# For case search:
 
 * [filed:mm/dd/yyyy-mm/dd/yyyy](/search?q=is:case filed:1/1/2014-12/31/2014)
+
 * [closed:mm/dd/yyyy-mm/dd/yyyy](/search?q=is:case closed:1/1/2014-12/31/2014)
+
 * [state:CA](/search?q=is:case state:CA)
+
 * Dispositions (Limits case results to a case’s final disposition. Otherwise all dispositions are shown.)
   * [disposition:awarded](/search?q=is:case disposition:awarded) 
   * [disposition:settled](/search?q=is:case disposition:settled)
@@ -18,6 +19,7 @@ You can search for cases more specfically using these modifiers:
   * [disposition:impasse](/search?q=is:case disposition:impasse)
   * [disposition:administrative](/search?q=is:case disposition:administrative)	
   * [disposition:dismissed](/search?q=is:case disposition:dismissed)
+  
 * Awarded Party
   * [awarded:Consumer](/search?q=is:case awarded:Consumer)
   * [awarded:Unknown](/search?q=is:case awarded:Unknown)
@@ -28,7 +30,7 @@ You can search for cases more specfically using these modifiers:
   * [awarded:"Home Owner/Business"](/search?q=is:case awarded:"Home Owner/Business")
   * [awarded:"Employee/Business"](/search?q=is:case awarded:"Employee/Business")
 
-Additionally, you may search for only specific type of parties using the following modifiers
+# For party search:
 
 * [is:attorney](/search?q=is:party is:attorney)
 * [is:lawfirm](/search?q=is:party is:lawfirm)
@@ -45,4 +47,4 @@ Or you can search for specific parties by name using
 1. Here is a modified version of the above, limited to only awarded dispositions
   * [Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded](/search?q=Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded)
 1. Here is a search for all known parties matching "Wells Fargo"
-  * [is:nonconsumer Wells Fargo](/search?q=is:nonconsumer Wells Fargo)
+  * [is:nonconsumer Wells Fargo](/search?q=is:party is:nonconsumer Wells Fargo)
