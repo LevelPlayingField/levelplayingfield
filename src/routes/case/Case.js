@@ -8,7 +8,8 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import englishJoin from '../../core/englishJoin';
 import Layout from '../../components/Layout';

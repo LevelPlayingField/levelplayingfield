@@ -44,6 +44,7 @@ function Html({ helmet, script, chunk, children }: Props) {
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{ __html: children }}/>
+        {helmet.script.toComponent()}
         {script && <script src={script}/>}
         {chunk && <script src={chunk}/>}
       </body>

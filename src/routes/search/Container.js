@@ -2,24 +2,50 @@
 
 import React from 'react';
 import graphql from '../../core/graphql';
-
 import type { Result } from './Types';
+import SearchQuery from './SearchQuery.graphql';
 
 type Props = {
   Component: any,
   query?: string,
   page: number,
+  pages: number,
   perPage: number,
   sortBy?: string,
-  sortDir?: string,
+  sortDir?: "DESC" | "ASC",
+  serverRendered?: bool,
   results?: Array<Result>,
 }
 type State = {
   query: string,
   page: number,
+  pages: number,
+  sortBy?: string,
+  sortDir?: "DESC" | "ASC",
   loading: bool,
   results: [],
 };
+
+function debounce(delay: number) {
+  let timeout;
+
+  return (target, key, descriptor) => {
+    const func = descriptor.value;
+
+    // eslint-disable-next-line no-param-reassign
+    descriptor.value = function debounced(...args) {
+      const later = () => {
+        timeout = null;
+
+        func.apply(this, ...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, delay);
+    };
+
+    return descriptor;
+  };
+}
 
 class Container extends React.Component {
   state: State;
@@ -31,20 +57,35 @@ class Container extends React.Component {
     this.state = {
       loading: false,
       page: props.page,
+      pages: props.pages,
       query: props.query || '',
       results: props.results || [],
     };
   }
 
+  componentWillMount() {
+    if (!this.props.serverRendered) {
+      this.updateResults();
+    }
+  }
+
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.query !== nextProps.query || this.props.results !== nextProps.results) {
+    const cb = () => this.updateResults();
+
+    if (this.state.query !== nextProps.query
+      || this.state.sortBy !== nextProps.sortBy
+      || this.state.sortDir !== nextProps.sortDir) {
       this.setState({
         query: nextProps.query,
+        sortBy: nextProps.sortBy,
+        sortDir: nextProps.sortDir,
         page: nextProps.page,
         results: nextProps.results,
-      }, () => {
-        this.updateResults();
-      });
+      }, cb);
+    } else if (nextProps.page && this.state.page !== nextProps.page) {
+      this.setState({
+        page: nextProps.page,
+      }, cb);
     }
   }
 
@@ -56,6 +97,7 @@ class Container extends React.Component {
     }
   }
 
+  @debounce(150)
   updateResults() {
     const { query, page } = this.state;
 
@@ -65,44 +107,36 @@ class Container extends React.Component {
   async getResults(query: string, page: number = 1) {
     await new Promise(resolve => this.setState({ loading: true }, resolve));
 
-    const { perPage } = this.props;
-    const { Search: { Results } } = await graphql(`
-    {
-      Search(query: ${JSON.stringify(query)}) {
-        Results(page: ${page}, perPage: ${perPage}) {
-          page
-          pages
-          total
-          
-          edges {
-            node {
-              id
-              type
-              slug
-              document
-            }
-          }
-        }
-      }
-    }
-    `);
+    const { perPage, sortBy, sortDir } = this.props;
+    const { Search: { Results } } = await graphql(SearchQuery, {
+      query,
+      perPage,
+      page,
+      sortBy,
+      sortDir,
+    });
 
     this.setState({
       results: Results.edges.map(edge => edge.node),
+      page: Results.page,
+      pages: Results.pages,
       loading: false,
     });
   }
 
   render() {
     const { Component, ...props } = this.props;
-    const { results, query } = this.state;
+    const { results, query, page, pages, loading } = this.state;
 
     return (
       <Component
         {...props}
+        page={page}
+        pages={pages}
         updateQuery={(q: string) => this.handleQueryChange(q)}
         query={query}
         results={results}
+        loading={loading}
       />
     );
   }

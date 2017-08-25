@@ -61,24 +61,27 @@ const config = {
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime
             'transform-flow-strip-types',
             'transform-runtime',
-            ...isDebug ? [
-              // Adds component stack to warning messages
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-source
-              'transform-react-jsx-source',
-              // Adds __self attribute to JSX which React will use for some warnings
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-self
-              'transform-react-jsx-self',
-            ] : [
-              // Remove unnecessary React propTypes from the production build
-              // https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types
-              'transform-react-remove-prop-types',
-              // Treat React JSX elements as value types and hoist them to the highest scope
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-              'transform-react-constant-elements',
-              // Turn JSX elements into exploded React objects
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-inline-elements
-              'transform-react-inline-elements',
-            ],
+            'transform-decorators-legacy',
+            ...isDebug
+              ? [
+                // Adds component stack to warning messages
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-source
+                'transform-react-jsx-source',
+                // Adds __self attribute to JSX which React will use for some warnings
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-self
+                'transform-react-jsx-self',
+              ]
+              : [
+                // Remove unnecessary React propTypes from the production build
+                // https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types
+                'transform-react-remove-prop-types',
+                // Treat React JSX elements as value types and hoist them to the highest scope
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+                'transform-react-constant-elements',
+                // Turn JSX elements into exploded React objects
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-inline-elements
+                'transform-react-inline-elements',
+              ],
           ],
         },
       },
@@ -92,7 +95,9 @@ const config = {
             sourceMap: isDebug,
             // CSS Modules https://github.com/css-modules/css-modules
             modules: true,
-            localIdentName: isDebug ? '[name]-[local]-[hash:base64:5]' : '[hash:base64:5]',
+            localIdentName: isDebug
+              ? '[name]-[local]-[hash:base64:5]'
+              : '[hash:base64:5]',
             // CSS Nano http://cssnano.co/options/
             minimize: !isDebug,
             camelCase: true,
@@ -110,7 +115,9 @@ const config = {
             sourceMap: isDebug,
             // CSS Modules https://github.com/css-modules/css-modules
             modules: true,
-            localIdentName: isDebug ? '[name]-[local]-[hash:base64:5]' : '[hash:base64:5]',
+            localIdentName: isDebug
+              ? '[name]-[local]-[hash:base64:5]'
+              : '[hash:base64:5]',
             // CSS Nano http://cssnano.co/options/
             minimize: !isDebug,
             camelCase: true,
@@ -122,6 +129,10 @@ const config = {
       {
         test: /\.json$/,
         loader: 'json-loader',
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        loader: 'raw-loader',
       },
       {
         test: /\.txt$/,
@@ -240,7 +251,9 @@ const clientConfig = extend(true, {}, config, {
 
   output: {
     filename: isDebug ? '[name].js?[chunkhash]' : '[name].[chunkhash].js',
-    chunkFilename: isDebug ? '[name].[id].js?[chunkhash]' : '[name].[id].[chunkhash].js',
+    chunkFilename: isDebug
+      ? '[name].[id].js?[chunkhash]'
+      : '[name].[id].[chunkhash].js',
   },
 
   target: 'web',

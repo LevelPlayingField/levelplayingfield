@@ -13,6 +13,9 @@
 ./interfaces
 
 [options]
+esproposal.decorators=ignore
 module.name_mapper='.+\.s?css$' -> 'CSSModule'
 module.name_mapper='.+\.md$' -> 'MarkdownModule'
+module.name_mapper='.+\.graphql$' -> 'GraphQLModule'
+module.name_mapper='.+\.gql$' -> 'GraphQLModule'
 module.system=haste

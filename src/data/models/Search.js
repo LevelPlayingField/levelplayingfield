@@ -92,22 +92,29 @@ CREATE OR REPLACE VIEW party_search_view AS
     FROM attorney_firms, parties AS attorney
     WHERE attorney_firms.party_id = attorney.id
     GROUP BY attorney_firms.firm_id
+  ), case_ids AS (
+    SELECT DISTINCT ON (case_id) id
+    FROM cases
+    ORDER BY case_id ASC, import_date DESC
   ), case_count AS (
     SELECT
-      party_id,
-      count(case_id) AS count
-    FROM case_parties
-    GROUP BY party_id
+      parties.id,
+      count(case_ids.id) AS count
+    FROM parties, case_parties, case_ids
+    WHERE (parties.id = case_parties.party_id
+           OR parties.id = case_parties.firm_id)
+          AND case_parties.case_id = case_ids.id
+    GROUP BY parties.id
   ), results AS (
     SELECT
       parties.*,
       firms.firms,
       attorneys.attorneys,
-      case_count.count AS case_count
+      coalesce(case_count.count, 0) AS case_count
     FROM parties
       LEFT JOIN firms ON parties.id = firms.party_id
       LEFT JOIN attorneys ON parties.id = attorneys.firm_id
-      LEFT JOIN case_count ON parties.id = case_count.party_id
+      LEFT JOIN case_count ON parties.id = case_count.id
   )
   SELECT
     results.id                             AS id,

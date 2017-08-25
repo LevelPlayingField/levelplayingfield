@@ -1,5 +1,18 @@
 /* @flow */
 
+export type ActionParams = {
+  params: {
+    term?: string,
+  },
+  query: {
+    q?: string,
+    page?: number,
+    perPage?: number,
+    sortBy?: string,
+    sortDir?: 'ASC' | 'DESC',
+  },
+};
+
 export type CaseType = {
   case_number: string,
   arbitration_board: string,
@@ -59,6 +72,7 @@ export type PartyType = {
   case_count: number,
   firms: Array<PartyType>,
   attorneys: Array<PartyType>,
+  aggregate_data: {[key:string]: {[key:string]: {[key:string]: number}}}
 }
 export type Result = {
   id: number,

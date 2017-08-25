@@ -1,0 +1,18 @@
+query Search($query: String!, $page: Int, $perPage: Int, $sortBy: String, $sortDir: SortDir) {
+  Search(query: $query) {
+    Results(page: $page, perPage: $perPage, sortBy: $sortBy, sortDir: $sortDir) {
+      page
+      pages
+      total
+
+      edges {
+        node {
+          id
+          type
+          slug
+          document
+        }
+      }
+    }
+  }
+}

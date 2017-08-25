@@ -10,10 +10,10 @@ import {
   GraphQLString,
 } from 'graphql';
 import Sequelize from 'sequelize';
-import {attributeFields} from 'graphql-sequelize';
+import { attributeFields } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import searchQuery from 'search-query-parser';
-import {Search} from './models';
+import { Search } from './models';
 import patchEscapeLiteral from './sequelizePatchLiteral';
 
 patchEscapeLiteral();
@@ -39,21 +39,22 @@ export const searchOptions = {
 };
 
 const NULL_VALUES = [
-  "---",
-  "unknown",
-  "null",
+  '---',
+  'unknown',
+  'null',
 ];
-const isNullValue = (v: string): bool => NULL_VALUES.indexOf(v.toLowerCase()) !== -1;
+const isNullValue = (v: string): bool => NULL_VALUES.indexOf(
+  v.toLowerCase()) !== -1;
 
 const PREVAILING_PARTIES = [
   ...NULL_VALUES,
-  "business",
-  "consumer/business",
-  "consumer",
-  "employee",
-  "employee/business",
-  "home owner/business",
-  "home owner",
+  'business',
+  'consumer/business',
+  'consumer',
+  'employee',
+  'employee/business',
+  'home owner/business',
+  'home owner',
 ];
 
 const DISPOSITIONS = [
@@ -70,7 +71,8 @@ const validateKeyword = (word: KeywordType, match: RegExp | Array<string>) => {
   if (Array.isArray(match)) {
     const arr: Array<string> = match;
 
-    return safeMap(word, w => arr.indexOf(w.toLowerCase()) !== -1).reduce((a, b) => a && b, true);
+    return safeMap(word, w => arr.indexOf(w.toLowerCase()) !== -1)
+      .reduce((a, b) => a && b, true);
   }
 
   const re: RegExp = match;
@@ -78,7 +80,7 @@ const validateKeyword = (word: KeywordType, match: RegExp | Array<string>) => {
   return safeMap(word, w => re.test(w)).reduce((a, b) => a && b, true);
 };
 
-const validateRange = ({from, to}: RangeType, re: RegExp): bool => {
+const validateRange = ({ from, to }: RangeType, re: RegExp): bool => {
   if (to != null && !re.test(to)) {
     return false;
   }
@@ -98,15 +100,16 @@ const isTypes = {
   case: 'type = ?',
   party: 'type = ?',
 
-  'law firm': "document->>'type' ILIKE ?",
-  'non consumer': "document->>'type' ILIKE ?",
-  attorney: "document->>'type' ILIKE ?",
-  arbitrator: "document->>'type' ILIKE ?",
-  consumer: "document->>'type' ILIKE ?",
+  'law firm': 'document->>\'type\' ILIKE ?',
+  'non consumer': 'document->>\'type\' ILIKE ?',
+  attorney: 'document->>\'type\' ILIKE ?',
+  arbitrator: 'document->>\'type\' ILIKE ?',
+  consumer: 'document->>\'type\' ILIKE ?',
 };
 const convertIs = (vals: string | Array<string>) => {
   const filters = [];
-  const is = safeMap(vals, val => val.toLowerCase().trim().replace(/[-_]/g, ' ').replace(/\s+/g, ' '))
+  const is = safeMap(vals,
+    val => val.toLowerCase().trim().replace(/[-_]/g, ' ').replace(/\s+/g, ' '))
     .map(val => (val in remapIs ? remapIs[val] : val))
     .reduce((groups, val) => {
       if (val in isTypes) {
@@ -120,12 +123,12 @@ const convertIs = (vals: string | Array<string>) => {
     }, {});
 
   for (const key of Object.keys(is)) {
-    filters.push({$or: is[key].map(v => [key, v])});
+    filters.push({ $or: is[key].map(v => [key, v]) });
   }
 
   return filters;
 };
-const filterRange = (field, {from, to}) => {
+const filterRange = (field, { from, to }) => {
   if (from != null && to != null) {
     return [`${field} BETWEEN ? AND ?`, from, to];
   }
@@ -157,52 +160,96 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
       term = parsed.text;
     }
 
-    order.push(Sequelize.literal(`ts_rank(vector, plainto_tsquery('simple', '${term.replace("'", "''")}')) DESC`));
+    order.push(Sequelize.literal(
+      `ts_rank(vector, plainto_tsquery('simple', '${term.replace('\'',
+        '\'\'')}')) DESC`));
     where = {
       $and: [
         where,
         {
           $or: [
-            ["vector @@ plainto_tsquery('simple', ?)", term],
-            {$and: term.split(/\s+/g).map(word => ['index ILIKE ?', [`%${word}%`]])},
+            ['vector @@ plainto_tsquery(\'simple\', ?)', term],
+            {
+              $and: term.split(/\s+/g)
+                .map(word => ['index ILIKE ?', [`%${word}%`]]),
+            },
           ],
         },
       ],
     };
   }
-  console.log(parsed);
 
   if (typeof parsed !== 'string') {
     if (parsed.state != null) {
-      where = {$and: [where, {$or: safeMap(parsed.state, s => ["document->>'consumer_rep_state' ILIKE ?", s])}]};
-    }
-    if (parsed.board != null && validateKeyword(parsed.board, ['aaa', 'jams'])) {
-      where = {$and: [where, {$or: safeMap(parsed.board, b => ["document->>'arbitration_board' ILIKE ?", b])}]};
-    }
-    if (parsed.disposition != null && validateKeyword(parsed.disposition, DISPOSITIONS)) {
-      where = {$and: [where, {$or: safeMap(parsed.disposition, d => ["document->>'type_of_disposition' ILIKE ?", d])}]};
-    }
-    if (parsed.awarded != null && validateKeyword(parsed.awarded, PREVAILING_PARTIES)) {
       where = {
-        $and: [where, {
-          $or: safeMap(parsed.awarded, a => isNullValue(a)
-            ? ["document->>'prevailing_party' LIKE '---'"]
-            : ["document->>'prevailing_party' ILIKE ?", a]
-          )
-        }]
-      }
+        $and: [
+          where,
+          {
+            $or: safeMap(parsed.state,
+              s => ['document->>\'consumer_rep_state\' ILIKE ?', s]),
+          }],
+      };
+    }
+    if (parsed.board != null &&
+      validateKeyword(parsed.board, ['aaa', 'jams'])) {
+      where = {
+        $and: [
+          where,
+          {
+            $or: safeMap(parsed.board,
+              b => ['document->>\'arbitration_board\' ILIKE ?', b]),
+          }],
+      };
+    }
+    if (parsed.disposition != null &&
+      validateKeyword(parsed.disposition, DISPOSITIONS)) {
+      where = {
+        $and: [
+          where,
+          {
+            $or: safeMap(parsed.disposition,
+              d => ['document->>\'type_of_disposition\' ILIKE ?', d]),
+          }],
+      };
+    }
+    if (parsed.awarded != null &&
+      validateKeyword(parsed.awarded, PREVAILING_PARTIES)) {
+      where = {
+        $and: [
+          where, {
+            $or: safeMap(parsed.awarded, a => isNullValue(a)
+              ? ['document->>\'prevailing_party\' LIKE \'---\'']
+              : ['document->>\'prevailing_party\' ILIKE ?', a],
+            ),
+          }],
+      };
     }
     if (parsed.party != null) {
-      where = {$and: [where, ...safeMap(parsed.party, p => ["(document->'names') ? ?", Sequelize.literal('?'), p])]};
+      where = {
+        $and: [
+          where,
+          ...safeMap(parsed.party,
+            p => ['(document->\'names\') ? ?', Sequelize.literal('?'), p])],
+      };
     }
-    if (parsed.filed != null && validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
-      where = {$and: [where, filterRange("(document->>'filing_date')::DATE", parsed.filed)]};
+    if (parsed.filed != null &&
+      validateRange(parsed.filed, /^[<>]?\d+\/\d+\/\d+$/)) {
+      where = {
+        $and: [
+          where,
+          filterRange('(document->>\'filing_date\')::DATE', parsed.filed)],
+      };
     }
-    if (parsed.closed != null && validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
-      where = {$and: [where, filterRange("(document->>'close_date')::DATE", parsed.closed)]};
+    if (parsed.closed != null &&
+      validateRange(parsed.closed, /^[<>]?\d+\/\d+\/\d+$/)) {
+      where = {
+        $and: [
+          where,
+          filterRange('(document->>\'close_date\')::DATE', parsed.closed)],
+      };
     }
     if (parsed.is != null) {
-      where = {$and: [where, convertIs(parsed.is)]};
+      where = { $and: [where, convertIs(parsed.is)] };
     }
   }
 
@@ -215,25 +262,25 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
 export const SearchType = new GraphQLObjectType({
   name: 'Search',
   fields: () => ({
-    query: {type: GraphQLString},
+    query: { type: GraphQLString },
     Results: {
       type: ResultsType,
       args: {
-        page: {type: GraphQLInt, defaultValue: 1},
-        perPage: {type: GraphQLInt, defaultValue: 20},
-        sortBy: {type: GraphQLString},
+        page: { type: GraphQLInt, defaultValue: 1 },
+        perPage: { type: GraphQLInt, defaultValue: 20 },
+        sortBy: { type: GraphQLString },
         sortDir: {
           type: new GraphQLEnumType({
             name: 'SortDir',
             values: {
-              ASC: {value: 'ASC'},
-              DESC: {value: 'DESC'},
+              ASC: { value: 'ASC' },
+              DESC: { value: 'DESC' },
             },
           }),
           defaultValue: 'ASC',
         },
       },
-      async resolve({query}, {sortBy, sortDir, page, perPage}) {
+      async resolve({ query }, { sortBy, sortDir, page, perPage }) {
         const parsed: ParsedType = searchQuery.parse(query, searchOptions);
         const [where, order] = buildQuery(parsed);
 
@@ -242,7 +289,10 @@ export const SearchType = new GraphQLObjectType({
 
         // If user specific a sort, order by that first
         if (sortBy) {
-          order.unshift([Sequelize.literal(`document->>'${sortBy.replace("'", "''")}'`), sortDir]);
+          order.unshift([
+            Sequelize.literal(`document->'${sortBy.replace('\'', '\'\'')}'`),
+            sortDir,
+          ]);
         }
 
         const results = await Search.findAndCount({
@@ -273,19 +323,19 @@ export const SearchType = new GraphQLObjectType({
 export const ResultsType = new GraphQLObjectType({
   name: 'Results',
   fields: () => ({
-    total: {type: GraphQLInt},
-    page: {type: GraphQLInt},
-    pages: {type: GraphQLInt},
-    perPage: {type: GraphQLInt},
+    total: { type: GraphQLInt },
+    page: { type: GraphQLInt },
+    pages: { type: GraphQLInt },
+    perPage: { type: GraphQLInt },
     hasPrevPage: {
       type: GraphQLBoolean,
-      resolve({page}) {
+      resolve({ page }) {
         return page > 1;
       },
     },
     hasNextPage: {
       type: GraphQLBoolean,
-      resolve({total, page, perPage}) {
+      resolve({ total, page, perPage }) {
         return (page * perPage) < total;
       },
     },
@@ -293,13 +343,13 @@ export const ResultsType = new GraphQLObjectType({
       type: new GraphQLList(new GraphQLObjectType({
         name: 'ResultEdge',
         fields: () => ({
-          cursor: {type: GraphQLString},
+          cursor: { type: GraphQLString },
           node: {
             type: new GraphQLObjectType({
               name: 'ResultNode',
               fields: () => ({
                 ...attributeFields(Search),
-                document: {type: JSONType},
+                document: { type: JSONType },
               }),
             }),
           },
@@ -330,11 +380,11 @@ export default {
   fields: {
     Search: {
       type: SearchType,
-      resolve(context: any, {query}: { query: string }) {
-        return {query};
+      resolve(context: any, { query }: { query: string }) {
+        return { query };
       },
       args: {
-        query: {type: new GraphQLNonNull(GraphQLString)},
+        query: { type: new GraphQLNonNull(GraphQLString) },
       },
     },
   },

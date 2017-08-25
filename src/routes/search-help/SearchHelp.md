@@ -47,4 +47,4 @@ Or you can search for specific parties by name using
 1. Here is a modified version of the above, limited to only awarded dispositions
   * [Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded](/search?q=Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded)
 1. Here is a search for all known parties matching "Wells Fargo"
-  * [is:nonconsumer Wells Fargo](/search?q=is:party is:nonconsumer Wells Fargo)
+  * [is:party is:nonconsumer Wells Fargo](/search?q=is:party is:nonconsumer Wells Fargo)

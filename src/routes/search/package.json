@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "name": "search",
+  "main": "./index.server.js",
+  "browser": "./index.client.js"
+}

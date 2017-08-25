@@ -1,6 +1,7 @@
 /* @flow */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import querystring from 'query-string';
 import MDSearch from 'react-icons/lib/io/android-search';
@@ -24,7 +25,7 @@ class SearchBar extends React.Component {
   state: State;
   unlisten: () => void;
   static contextTypes = {
-    history: React.PropTypes.any.isRequired,
+    history: PropTypes.any.isRequired,
   };
 
   constructor(props: Props) {

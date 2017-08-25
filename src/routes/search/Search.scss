@@ -9,18 +9,70 @@
   text-align: center;
 }
 
+.centerText {
+  text-align: center;
+}
+
+.tbodyLoading tr td {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.Sortable {
+  svg {
+    margin-left: 0.5em;
+  }
+}
+
+.rotateIcon g {
+  animation: rotate 1.8s infinite linear;
+  transform-origin: 50% 50% 0;
+}
+
 .searchIcon {
   font-size: 2em;
   color: $primary-color;
 }
 
-.searchField {
+.toggleButton {
+  border: none;
+  color: #555;
+  background-color: mix($accent-color, #eee, 20%);
+  padding: 10px 8px;
+}
+
+.toggleButtonActive {
+  color: #222;
+  background-color: $accent-color;
+}
+
+.searchField, .selectField {
   font-size: 1.2em;
   padding: 8px;
-  width: calc(90% - 8px - 8px - 1em);
   max-width: 400px;
   border: none;
   border-bottom: 1.5px $accent-color solid;
+}
+
+.searchField {
+  width: calc(90% - 8px - 8px - 1em);
+}
+
+.selectField {
+  background-color: transparent;
+  height: 38px;
+  &:hover {
+    outline: none;
+  }
 }
 
 .table {

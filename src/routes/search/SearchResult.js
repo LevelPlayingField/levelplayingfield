@@ -2,19 +2,28 @@
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Link from '../../components/Link';
 import s from './Search.scss';
 import { NON_CONSUMER, partyType } from '../case/utils';
 import first from '../../core/first';
 
-import type { Result, PartyType, CaseType } from './Types';
+import type { CaseType, PartyType } from './Types';
 
 const isEmpty = (val: ?Array<any>): bool => (val == null || val.length === 0);
 
-function cell(url) {
-  return ({ children, ...props }: { children: Array<any> }) => (
-    <td {...props}><Link className={s.cellLink} to={url} title={children}>{children}</Link></td>
+type PropHasChildren = {
+  children: PropTypes.element.isRequired,
+};
+
+function cell(url: string) {
+  return ({ children, ...props }: PropHasChildren) => (
+    <td {...props}>
+      <Link className={s.cellLink} to={url} title={children}>
+        {children}
+      </Link>
+    </td>
   );
 }
 
@@ -25,7 +34,8 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
     party_name: 'Consumer',
     attorneys: Case.parties.filter(party => party.type === 'Attorney'),
   };
-  const nonConsumer = first(Case.parties.filter(party => party.type === 'Non Consumer'));
+  const nonConsumer = first(
+    Case.parties.filter(party => party.type === 'Non Consumer'));
   const arbitrators = Case.parties
     .filter(party => party.type === 'Arbitrator')
     .sort((a, b) => {
@@ -50,29 +60,40 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
         <C className={s.cell1} title="Case #">{Case.case_number}</C>
         <C className={s.cell2} title="Plaintiff">{plaintiff.party_name}</C>
         <C className={s.cell3} title="Defendant">{defendant.party_name}</C>
-        <C className={s.cell4} title="Arbitration Board">{Case.arbitration_board}</C>
-        <C className={s.cell5} title="Disposition">{Case.type_of_disposition}</C>
-        <C className={s.cell6} title="Filed">{new Date(Case.filing_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</C>
+        <C className={s.cell4}
+           title="Arbitration Board">{Case.arbitration_board}</C>
+        <C className={s.cell5}
+           title="Disposition">{Case.type_of_disposition}</C>
+        <C className={s.cell6} title="Filed">{new Date(
+          Case.filing_date).toLocaleDateString('en-US',
+          { timeZone: 'UTC' })}</C>
       </tr>
       <tr>
         <C className={s.cell1} title="Dispute Type">{Case.dispute_type}</C>
-        <C className={s.cell2} title={isEmpty(plaintiff.attorneys) ? null : 'Plaintiff Attorneys'}>
+        <C className={s.cell2}
+           title={isEmpty(plaintiff.attorneys) ? null : 'Plaintiff Attorneys'}>
           {plaintiff.attorneys && plaintiff.attorneys.length
-            ? plaintiff.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
+            ? plaintiff.attorneys.map(p => `${p.party_name} - ${p.firm_name}`)
+              .join(', ')
             : '---'}
         </C>
-        <C className={s.cell3} title={isEmpty(defendant.attorneys) ? null : 'Defendant Attorneys'}>
+        <C className={s.cell3}
+           title={isEmpty(defendant.attorneys) ? null : 'Defendant Attorneys'}>
           {defendant.attorneys
-            ? defendant.attorneys.map(p => `${p.party_name} - ${p.firm_name}`).join(', ')
+            ? defendant.attorneys.map(p => `${p.party_name} - ${p.firm_name}`)
+              .join(', ')
             : '---'}
         </C>
-        <C className={s.cell4} title={isEmpty(arbitrators) ? null : 'Arbitrators'}>
+        <C className={s.cell4}
+           title={isEmpty(arbitrators) ? null : 'Arbitrators'}>
           {arbitrators.map(p => p.party_name).join(', ')}
         </C>
         <C className={s.cell5} title={Case.prevailing_party === '---' ? null : 'Awardee'}>
           {Case.prevailing_party}
         </C>
-        <C className={s.cell6} title="Closed">{new Date(Case.close_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</C>
+        <C className={s.cell6} title="Closed">
+          {new Date(Case.close_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
+        </C>
       </tr>
     </tbody>
   );
@@ -87,18 +108,26 @@ function PartyResult({ url, Party }: { url: string, Party: PartyType }) {
       <tr>
         <C title="Type">{Party.type}</C>
         <C title="Name">{Party.name}</C>
-        <C colSpan={3} title={(Party.firms && 'Firms') || (Party.attorneys && 'Attorneys')}>{
-          (Party.firms && `${Party.firms.map(firm => firm.name).join(', ')}`) ||
-          (Party.attorneys && `${Party.attorneys.map(attorney => attorney.name).join(', ')}`) ||
-          null}
-        </C>
+        {(() => {
+          if (Party.firms) {
+            return (
+              <C title="Firms">
+                {`${Party.firms.map(firm => firm.name).join(', ')}`}
+              </C>
+            );
+          }
+          if (Party.attorneys) {
+            return (
+              <C title="Attorneys">
+                {`${Party.attorneys.map(attorney => attorney.name).join(', ')}`}
+              </C>
+            );
+          }
+          return <C/>;
+        })()}
         <C title="Cases">
-          {Object.keys(Party.aggregate_data.dispositions).map(year =>
-            Object.keys(Party.aggregate_data.dispositions[year]).map(award =>
-              Party.aggregate_data.dispositions[year][award]
-            ).reduce((a, b) => a + b)
-          ).reduce((a, b) => a + b)}
-          </C>
+          {Party.case_count}
+        </C>
       </tr>
     </tbody>
   );
