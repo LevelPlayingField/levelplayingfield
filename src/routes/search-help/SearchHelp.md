@@ -2,7 +2,7 @@
 
 Level Playing Field is composed of cases and parties to cases.  You can search by party or by case.  Every party has a summary page and every case has a details page.  You switch between party and case search by toggling the button to the left of the search bar.
 
-You can filter your search results by typing the following modifiers to any search.
+You can filter your search results by typing the following modifiers to any search:
 
 ### For case search:
 
