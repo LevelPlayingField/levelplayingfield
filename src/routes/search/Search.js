@@ -35,10 +35,8 @@ type Props = {
 }
 type SortableProps = {
   sortKey: string,
-  curSort: string,
-  curDir: string,
   urlArgs: { [key: string]: string },
-  children: any,
+  children?: any,
 };
 const Sortable = ({ sortKey, urlArgs: { sortBy = '', sortDir = '', ...urlArgs }, children, ...props }: SortableProps) => {
   const url = `/search?${qs.stringify({
@@ -131,22 +129,21 @@ class Search extends React.Component {
           </tr>
         </thead>
       );
-    } else {
-      return (
-        <thead>
-          <tr>
-            <th className={s.cell1} style={{ width: '15%' }}>Type</th>
-            <th className={s.cell2} style={{ width: '35%' }}>
-              <Sortable sortKey="name" urlArgs={urlArgs}>Name</Sortable>
-            </th>
-            <th className={s.cell3} style={{ width: '40%' }}>Firm/Attorneys</th>
-            <th className={s.cell4} style={{ width: '10%' }}>
-              <Sortable sortKey="case_count" urlArgs={urlArgs}>Case Count</Sortable>
-            </th>
-          </tr>
-        </thead>
-      );
     }
+    return (
+      <thead>
+        <tr>
+          <th className={s.cell1} style={{ width: '15%' }}>Type</th>
+          <th className={s.cell2} style={{ width: '35%' }}>
+            <Sortable sortKey="name" urlArgs={urlArgs}>Name</Sortable>
+          </th>
+          <th className={s.cell3} style={{ width: '40%' }}>Firm/Attorneys</th>
+          <th className={s.cell4} style={{ width: '10%' }}>
+            <Sortable sortKey="case_count" urlArgs={urlArgs}>Case Count</Sortable>
+          </th>
+        </tr>
+      </thead>
+    );
   }
 
   render() {
@@ -154,9 +151,9 @@ class Search extends React.Component {
     const reMatch = query.match(typeRegex);
     const type = reMatch == null ? 'case' : reMatch[1];
     const parsedQuery = query.replace(typeRegex, '');
-    const setSearch = (type: string) => {
-      this.props.updateQuery(`is:${type} ${parsedQuery}`);
-      this.setUrl(type);
+    const setSearch = (searchType: string) => {
+      this.props.updateQuery(`is:${searchType} ${parsedQuery}`);
+      this.setUrl(searchType);
     };
 
     return (

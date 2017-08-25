@@ -39,7 +39,7 @@ function renderAttorneys(attorneys) {
                 </Link>
               </strong>
 
-              { attorney.Firm && (
+              {attorney.Firm && (
                 <div className={s.detail}>
                   <Link to={`/party/${attorney.Firm.slug}`}>
                     {attorney.Firm.name}
@@ -60,7 +60,7 @@ function renderAttorneys(attorneys) {
   );
 }
 
-function Case({ case_ }) {
+function Case({ case_ }: { case_: any }) {
   const initiatedBy = partyType(case_.initiating_party);
   const parties = case_.Parties.edges.map(edge => edge.node);
   const nonConsumer = first(parties.filter(node => node.Party.type === 'Non Consumer')).Party;
@@ -75,10 +75,12 @@ function Case({ case_ }) {
     <Layout>
       <Helmet
         title={`${case_.arbitration_board} Case #${case_.case_number} - Level Playing Field`}
-        meta={[{
-          name: 'description',
-          content: `${case_.arbitration_board} Case #${case_.case_number}, involving ${englishJoin(parties.map(p => p.Party.name))}`,
-        }]}
+        meta={[
+          {
+            name: 'description',
+            content: `${case_.arbitration_board} Case #${case_.case_number}, involving ${englishJoin(
+              parties.map(p => p.Party.name))}`,
+          }]}
         style={[{ type: 'text/css', cssText: s._getCss() }]}
       />
       <Container>
@@ -194,10 +196,11 @@ function Case({ case_ }) {
                     </Link>
                   </h3>
                   <p className={s.details}>
-                    Appointed {new Date(arbitrator.date).toLocaleDateString('en-US', { timeZone: 'UTC' })}
+                    Appointed {new Date(arbitrator.date).toLocaleDateString('en-US',
+                    { timeZone: 'UTC' })}
                   </p>
                 </Col>
-              </Row>
+              </Row>,
             ) : (
               <Row>
                 <Col>

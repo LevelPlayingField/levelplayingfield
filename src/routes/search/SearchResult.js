@@ -2,19 +2,18 @@
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Link from '../../components/Link';
 import s from './Search.scss';
 import { NON_CONSUMER, partyType } from '../case/utils';
 import first from '../../core/first';
 
-import type { CaseType, PartyType } from './Types';
+import type { CaseType, PartyType, Result } from './Types';
 
 const isEmpty = (val: ?Array<any>): bool => (val == null || val.length === 0);
 
 type PropHasChildren = {
-  children: PropTypes.element.isRequired,
+  children?: any,
 };
 
 function cell(url: string) {
@@ -29,13 +28,13 @@ function cell(url: string) {
 
 function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
   const C = cell(url);
+
   const initiatedBy = partyType(Case.initiating_party);
   const consumer = {
-    party_name: 'Consumer',
     attorneys: Case.parties.filter(party => party.type === 'Attorney'),
+    party_name: 'Consumer',
   };
-  const nonConsumer = first(
-    Case.parties.filter(party => party.type === 'Non Consumer'));
+  const nonConsumer = first(Case.parties.filter(party => party.type === 'Non Consumer'));
   const arbitrators = Case.parties
     .filter(party => party.type === 'Arbitrator')
     .sort((a, b) => {
@@ -60,32 +59,42 @@ function CaseResult({ url, Case }: { url: string, Case: CaseType }) {
         <C className={s.cell1} title="Case #">{Case.case_number}</C>
         <C className={s.cell2} title="Plaintiff">{plaintiff.party_name}</C>
         <C className={s.cell3} title="Defendant">{defendant.party_name}</C>
-        <C className={s.cell4}
-           title="Arbitration Board">{Case.arbitration_board}</C>
-        <C className={s.cell5}
-           title="Disposition">{Case.type_of_disposition}</C>
+        <C
+          className={s.cell4}
+          title="Arbitration Board"
+        >{Case.arbitration_board}</C>
+        <C
+          className={s.cell5}
+          title="Disposition"
+        >{Case.type_of_disposition}</C>
         <C className={s.cell6} title="Filed">{new Date(
           Case.filing_date).toLocaleDateString('en-US',
           { timeZone: 'UTC' })}</C>
       </tr>
       <tr>
         <C className={s.cell1} title="Dispute Type">{Case.dispute_type}</C>
-        <C className={s.cell2}
-           title={isEmpty(plaintiff.attorneys) ? null : 'Plaintiff Attorneys'}>
+        <C
+          className={s.cell2}
+          title={isEmpty(plaintiff.attorneys) ? null : 'Plaintiff Attorneys'}
+        >
           {plaintiff.attorneys && plaintiff.attorneys.length
             ? plaintiff.attorneys.map(p => `${p.party_name} - ${p.firm_name}`)
               .join(', ')
             : '---'}
         </C>
-        <C className={s.cell3}
-           title={isEmpty(defendant.attorneys) ? null : 'Defendant Attorneys'}>
+        <C
+          className={s.cell3}
+          title={isEmpty(defendant.attorneys) ? null : 'Defendant Attorneys'}
+        >
           {defendant.attorneys
             ? defendant.attorneys.map(p => `${p.party_name} - ${p.firm_name}`)
               .join(', ')
             : '---'}
         </C>
-        <C className={s.cell4}
-           title={isEmpty(arbitrators) ? null : 'Arbitrators'}>
+        <C
+          className={s.cell4}
+          title={isEmpty(arbitrators) ? null : 'Arbitrators'}
+        >
           {arbitrators.map(p => p.party_name).join(', ')}
         </C>
         <C className={s.cell5} title={Case.prevailing_party === '---' ? null : 'Awardee'}>

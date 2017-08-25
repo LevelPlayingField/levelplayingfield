@@ -82,10 +82,10 @@ function buildUniqueValue(caseNumber: string, ...partyNames: Array<?string>) {
 }
 
 const FISCAL_QUARTER_END_DATES = {
-  'q1': '03/31',
-  'q2': '06/30',
-  'q3': '09/30',
-  'q4': '12/31',
+  q1: '03/31',
+  q2: '06/30',
+  q3: '09/30',
+  q4: '12/31',
 };
 async function runImport(parseRow: (row: {[key:string]: any}) => bool) {
   const importFile = process.argv[process.argv.length - 1];
@@ -93,6 +93,7 @@ async function runImport(parseRow: (row: {[key:string]: any}) => bool) {
   const workbook = xlsx.readFile(importFile);
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
+// eslint-disable-next-line no-unused-vars
   const [_, board, year, quarter] = /^(\w+)-(\d+)-(q\d+)\.xlsx?$/.exec(importFileName);
   const importDate = `${FISCAL_QUARTER_END_DATES[quarter.toLowerCase()]}/${year}`;
 

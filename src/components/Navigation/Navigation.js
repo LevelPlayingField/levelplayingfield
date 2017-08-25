@@ -18,10 +18,12 @@ function Navigation({ className }: any) {
   return (
     <div className={cx(s.root, className)} role="navigation">
       <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
-      <a className={s.link}
-         href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J8KHLEX98Z38Y"
-         target="_blank"
-         rel="noopener noreferrer">
+      <a
+        className={s.link}
+        href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J8KHLEX98Z38Y"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Donate
       </a>
       <Link className={s.link} to="/search?q=is:case">Cases</Link>

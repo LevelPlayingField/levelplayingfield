@@ -13,7 +13,6 @@ import Sequelize from 'sequelize';
 import { defaultListArgs, attributeFields, typeMapper, resolver, relay } from 'graphql-sequelize';
 import JSONType from 'graphql-sequelize/lib/types/jsonType';
 import { maskErrors } from 'graphql-errors';
-import sequelize from './sequelize';
 import { Case, Party, CaseParty, Summary } from './models';
 import SearchSchema from './SearchSchema';
 

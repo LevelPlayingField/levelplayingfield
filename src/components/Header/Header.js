@@ -19,7 +19,7 @@ import SearchBar from '../SearchBar';
 function Header() {
   return (
     <div className={s.root}>
-      <Helmet style={[{type: 'text/css', cssText: s._getCss()}]}/>
+      <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <div className={s.container}>
         <div className={s.sections}>
           <Link className={s.brand} to="/">

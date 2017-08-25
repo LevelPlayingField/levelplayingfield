@@ -14,7 +14,7 @@ function SearchHelp() {
         title="How to Search - Level Playing Field"
         meta={[{
           name: 'description',
-          content: "A bit of help and advice on how to use the Level Playing Field search engine",
+          content: 'A bit of help and advice on how to use the Level Playing Field search engine',
         }]}
         style={[{ type: 'text/css', cssText: s._getCss() }]}
       />

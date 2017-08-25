@@ -8,6 +8,7 @@ import s from './Grid.scss';
 type Props = {
   fluid?: bool,
   className?: string,
+  children?: any,
 };
 
 function Container({ fluid = false, className, children, ...props }: Props) {

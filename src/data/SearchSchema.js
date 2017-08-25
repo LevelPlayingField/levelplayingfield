@@ -217,9 +217,11 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
       where = {
         $and: [
           where, {
-            $or: safeMap(parsed.awarded, a => isNullValue(a)
-              ? ['document->>\'prevailing_party\' LIKE \'---\'']
-              : ['document->>\'prevailing_party\' ILIKE ?', a],
+            $or: safeMap(parsed.awarded, a => (
+                isNullValue(a)
+                  ? ['document->>\'prevailing_party\' LIKE \'---\'']
+                  : ['document->>\'prevailing_party\' ILIKE ?', a]
+              ),
             ),
           }],
       };
@@ -253,9 +255,6 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
     }
   }
 
-  if (parsed.exclude != null) {
-
-  }
   return [where, order];
 }
 

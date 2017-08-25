@@ -14,7 +14,7 @@ function DonateThanks() {
         title="About Us - Level Playing Field"
         meta={[{
           name: 'description',
-          content: "Thanks for donating!",
+          content: 'Thanks for donating!',
         }]}
         style={[{ type: 'text/css', cssText: s._getCss() }]}
       />

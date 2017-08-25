@@ -22,7 +22,6 @@ import createMemoryHistory from 'history/createMemoryHistory';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
-import errorPageStyle from './routes/error/ErrorPage.scss';
 import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
@@ -60,7 +59,7 @@ app.use('/graphql', expressGraphQL(req => ({
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
-app.get('*', async(req, res, next) => {
+app.get('*', async (req, res, next) => {
   try {
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
@@ -85,8 +84,8 @@ app.get('*', async(req, res, next) => {
         script={assets.main.js}
         chunk={assets[route.chunk] && assets[route.chunk].js}
       >
-      {children}
-      </Html>
+        {children}
+      </Html>,
     );
 
     res.status(route.status || 200);
@@ -109,7 +108,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   const helmet = Helmet.rewind();
 
   const html = ReactDOM.renderToStaticMarkup(
-    <Html helmet={helmet}>{children}</Html>
+    <Html helmet={helmet}>{children}</Html>,
   );
   res.status(err.status || 500);
   res.send(`<!doctype html>${html}`);

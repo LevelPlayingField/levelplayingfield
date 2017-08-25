@@ -22,6 +22,7 @@
   from {
     transform: rotate(360deg);
   }
+
   to {
     transform: rotate(0deg);
   }
@@ -55,7 +56,8 @@
   background-color: $accent-color;
 }
 
-.searchField, .selectField {
+.searchField,
+.selectField {
   font-size: 1.2em;
   padding: 8px;
   max-width: 400px;
@@ -70,6 +72,7 @@
 .selectField {
   background-color: transparent;
   height: 38px;
+
   &:hover {
     outline: none;
   }

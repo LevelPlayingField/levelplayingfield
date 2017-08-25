@@ -3,7 +3,7 @@
 import { Case, Party, CaseParty } from '../src/data/models';
 import utils, { buildUniqueValue, createParty, runImport, validateCaseData } from './lib/importlib';
 
-async function parseRow(row: {[key: string]: any}, importDate: string): any {
+async function parseRow(row: { [key: string]: any }, importDate: string): any {
   const {
     CASE_ID,
     NONCONSUMER,
@@ -89,14 +89,20 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
 
     claim_amount_business: utils.money(CLAIM_AMT_BUSINESS),
     fee_allocation_business: utils.percent(utils.naOr(FEEALLOCATION_BUSINESS)),
-    fees_business: utils.nonNaN(((utils.money(TOTAL_FEE) || 0) * (utils.percent(FEEALLOCATION_BUSINESS) || 0)) / 100),
+    fees_business: (
+      utils.nonNaN(((utils.money(TOTAL_FEE) || 0)
+        * (utils.percent(FEEALLOCATION_BUSINESS) || 0)) / 100)
+    ),
     award_amount_business: utils.money(AWARD_AMT_BUSINESS),
     attorney_fees_business: utils.money(ATTORNEYFEE_BUSINESS),
     other_relief_business: OTHERRELIEF_BUSINESS,
 
     claim_amount_consumer: utils.money(CLAIM_AMT_CONSUMER),
     fee_allocation_consumer: utils.percent(utils.naOr(FEEALLOCATION_CONSUMER)),
-    fees_consumer: utils.nonNaN(((utils.money(TOTAL_FEE) || 0) * (utils.percent(FEEALLOCATION_CONSUMER) || 0)) / 100),
+    fees_consumer: (
+      utils.nonNaN(((utils.money(TOTAL_FEE) || 0)
+        * (utils.percent(FEEALLOCATION_CONSUMER) || 0)) / 100)
+    ),
     award_amount_consumer: utils.money(AWARD_AMT_CONSUMER),
     attorney_fees_consumer: utils.money(ATTORNEYFEE_CONSUMER),
     other_relief_consumer: OTHERRELIEF_CONSUMER,
@@ -118,7 +124,11 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
 
   const existingCases = await Case.findAll({ where: { unique_value: uniqueValue } });
 
-  if (existingCases.filter(c => c.import_date.toDateString() === new Date(importDate).toDateString()).length) {
+  if (
+    existingCases.filter(
+      c => c.import_date.toDateString() === new Date(importDate).toDateString(),
+    ).length
+  ) {
     return false;
   } else if (existingCases.length) {
     caseData.case_id = existingCases[0].case_id;
@@ -143,7 +153,7 @@ async function parseRow(row: {[key: string]: any}, importDate: string): any {
   const isSelfRepresented = utils.fixName(NAME_CONSUMER_ATTORNEY) != null;
   const attorney = await createParty(
     Party.ATTORNEY,
-    isSelfRepresented ? utils.fixName(NAME_CONSUMER_ATTORNEY) : 'Self Represented'
+    isSelfRepresented ? utils.fixName(NAME_CONSUMER_ATTORNEY) : 'Self Represented',
   );
   const firm = await createParty(
     Party.LAW_FIRM,
