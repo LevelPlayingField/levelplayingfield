@@ -44,15 +44,8 @@ const config = {
           // https://babeljs.io/docs/usage/options/
           babelrc: false,
           presets: [
-            // JSX, Flow
-            // https://github.com/babel/babel/tree/master/packages/babel-preset-react
+            'env',
             'react',
-            // Latest stable ECMAScript features
-            // https://github.com/babel/babel/tree/master/packages/babel-preset-latest
-            'latest',
-            // Experimental ECMAScript proposals
-            // https://github.com/babel/babel/tree/master/packages/babel-preset-stage-0
-            'stage-0',
           ],
           plugins: [
             'syntax-flow',
@@ -62,6 +55,8 @@ const config = {
             'transform-flow-strip-types',
             'transform-runtime',
             'transform-decorators-legacy',
+            'transform-class-properties',
+            'transform-object-rest-spread',
             ...isDebug
               ? [
                 // Adds component stack to warning messages
@@ -86,27 +81,7 @@ const config = {
         },
       },
       {
-        test: /\.css/,
-        loaders: [
-          'isomorphic-style-loader',
-          `css-loader?${JSON.stringify({
-            // CSS Loader https://github.com/webpack/css-loader
-            importLoaders: 1,
-            sourceMap: isDebug,
-            // CSS Modules https://github.com/css-modules/css-modules
-            modules: true,
-            localIdentName: isDebug
-              ? '[name]-[local]-[hash:base64:5]'
-              : '[hash:base64:5]',
-            // CSS Nano http://cssnano.co/options/
-            minimize: !isDebug,
-            camelCase: true,
-          })}`,
-          'postcss-loader?pack=default',
-        ],
-      },
-      {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         loaders: [
           'isomorphic-style-loader',
           `css-loader?${JSON.stringify({
@@ -123,7 +98,11 @@ const config = {
             camelCase: true,
           })}`,
           'postcss-loader?pack=sass',
-          'sass-loader',
+          `sass-loader?${JSON.stringify({
+            options: {
+              includePaths: ["node_modules"]
+            }
+          })}`,
         ],
       },
       {

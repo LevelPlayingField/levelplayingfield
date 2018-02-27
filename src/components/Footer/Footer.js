@@ -57,7 +57,7 @@ function Footer() {
           rel="noopener noreferrer"
           href="mailto:team@lpf.io?subject=Hello, LPF!"
         >
-          <FontAwesomeIcon icon={faEnvelope} size='xs'/>
+          <FontAwesomeIcon icon={faEnvelope} size='lg'/>
         </a>
         <a
           className={cx(s.link, s.icon)}
@@ -65,7 +65,7 @@ function Footer() {
           rel="noopener noreferrer"
           href="https://twitter.com/lpf_dot_io"
         >
-          <FontAwesomeIcon icon={faTwitter} size='xs'/>
+          <FontAwesomeIcon icon={faTwitter} size='lg'/>
         </a>
         <a
           className={cx(s.link, s.icon)}
@@ -73,7 +73,7 @@ function Footer() {
           rel="noopener noreferrer"
           href="https://www.facebook.com/levelplayingfieldio/"
         >
-          <FontAwesomeIcon icon={faFacebook} size='xs'/>
+          <FontAwesomeIcon icon={faFacebook} size='lg'/>
         </a>
         <a
           className={cx(s.link, s.icon)}
@@ -81,7 +81,7 @@ function Footer() {
           rel="noopener noreferrer"
           href="https://www.patreon.com/levelplayingfield"
         >
-          <FontAwesomeIcon icon={faPatreon} size='xs'/>
+          <FontAwesomeIcon icon={faPatreon} size='lg'/>
         </a>
       </div>
     </div>

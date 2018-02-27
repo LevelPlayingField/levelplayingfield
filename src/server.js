@@ -8,6 +8,7 @@
  */
 
 import 'babel-polyfill';
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -121,7 +122,15 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 models.sync()
   .catch(err => console.error(err.stack))
   .then(() => {
-    app.listen(port, () => {
-      console.log(`The server is running at http://localhost:${port}/`);
-    });
+    if (/^\d+$/.test(port)) {
+      app.listen(port, () => { console.log(`The server is running at http://localhost:${port}/`); });
+    } else {
+      fs.stat(port, err => {
+        if (!err) { fs.unlinkSync(port); }
+        app.listen(port, () => {
+          fs.chmodSync(port, '777');
+          console.log(`The server is running at http://unix:/${port}`);
+        });
+      });
+    }
   });

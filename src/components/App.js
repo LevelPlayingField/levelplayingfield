@@ -11,6 +11,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import s from '!!isomorphic-style-loader!css?modules=false!@fortawesome/fontawesome/styles.css';
 import { IntlProvider } from 'react-intl';
 
 const ContextType = {
@@ -59,12 +60,18 @@ class App extends React.Component {
               { charSet: 'utf-8' },
               { httpEquiv: 'x-ua-compatible', content: 'ie=edge' },
               { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' },
+              { name: 'msapplication-TileColor', content: '$373277' },
+              { name: 'msapplication-TileImage', content: '/tile.png' },
             ]}
             link={[
               { rel: 'author', href: 'humans.txt' },
-              { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' },
               { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' },
+              { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+              { rel: 'icon', href: '/favicon.png', type: 'image/png' },
+              { rel: 'icon', href: '/favicon.ico', type: 'image/vnd.microsoft.icon' },
+              { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' },
             ]}
+            style={[{ type: 'text/css', cssText: s._getCss() }]}
           />
           {React.Children.only(this.props.children)}
         </div>

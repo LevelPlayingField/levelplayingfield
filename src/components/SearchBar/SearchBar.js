@@ -4,7 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import querystring from 'query-string';
-import MDSearch from 'react-icons/lib/io/android-search';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/fontawesome-free-solid';
 import Helmet from 'react-helmet';
 import s from './SearchBar.scss';
 
@@ -85,7 +86,7 @@ class SearchBar extends React.Component {
               onBlur={e => e.target.value && this.pushUrl(e)}
               onKeyDown={e => e.keyCode === 13 && this.pushUrl(e)}
             />
-            <MDSearch className={s.searchIcon}/>
+            <FontAwesomeIcon icon={faSearch} size='lg'/>
           </label>
         )}
       </div>

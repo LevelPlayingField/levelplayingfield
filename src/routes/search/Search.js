@@ -3,10 +3,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import MDSearch from 'react-icons/lib/io/android-search';
-import Spinner from 'react-icons/lib/io/load-d';
-import SortUp from 'react-icons/lib/io/chevron-up';
-import SortDown from 'react-icons/lib/io/chevron-down';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { faSearch, faSpinner, faChevronUp, faChevronDown } from '@fortawesome/fontawesome-free-solid';
 import cx from 'classnames';
 import qs from 'query-string';
 
@@ -48,10 +46,7 @@ const Sortable = ({ sortKey, urlArgs: { sortBy = '', sortDir = '', ...urlArgs },
   return (
     <Link to={url} {...props} className={s.Sortable}>
       {children}
-      {sortBy === sortKey && (sortDir === 'DESC'
-          ? <SortDown/>
-          : <SortUp/>
-      )}
+      {sortBy === sortKey ? (<FontAwesomeIcon icon={sortDir === 'DESC' ? faChevronDown : faChevronUp} size='1x'/>) : null}
     </Link>
   );
 };
@@ -206,7 +201,7 @@ class Search extends React.Component {
                   this.input = input;
                 }}
               />
-              <MDSearch className={s.searchIcon}/>
+              <FontAwesomeIcon icon={faSearch} size='lg'/>
             </Col>
           </Row>
 
@@ -224,7 +219,7 @@ class Search extends React.Component {
                     </tr>
                     <tr>
                       <td colSpan="6">
-                        <Spinner size={32} className={s.rotateIcon}/>
+                        <FontAwesomeIcon icon={faSpinner} size='3x' pulse/>
                       </td>
                     </tr>
                   </tbody>
