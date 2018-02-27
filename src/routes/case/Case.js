@@ -14,6 +14,7 @@ import Helmet from 'react-helmet';
 import englishJoin from '../../core/englishJoin';
 import Layout from '../../components/Layout';
 import Link from '../../components/Link';
+import DiscussionBox from '../../components/DiscussionBox';
 import { Container, Row, Col } from '../../components/Grid';
 import s from './Case.scss';
 import first from '../../core/first';
@@ -71,16 +72,16 @@ function Case({ case_ }: { case_: any }) {
   const plaintiff = initiatedBy === NON_CONSUMER ? nonConsumer : { ...ConsumerParty, attorneys };
   const defendant = initiatedBy === CONSUMER ? nonConsumer : { ...ConsumerParty, attorneys };
 
+  const case_title = `${case_.arbitration_board} Case #${case_.case_number}, involving ${englishJoin(parties.map(p => p.Party.name))}`;
+
   return (
     <Layout>
       <Helmet
         title={`${case_.arbitration_board} Case #${case_.case_number} - Level Playing Field`}
         meta={[
-          {
-            name: 'description',
-            content: `${case_.arbitration_board} Case #${case_.case_number}, involving ${englishJoin(
-              parties.map(p => p.Party.name))}`,
-          }]}
+          {name: 'og:description', content: case_title},
+          {name: 'description', content: case_title},
+        ]}
         style={[{ type: 'text/css', cssText: s._getCss() }]}
       />
       <Container>
@@ -250,6 +251,17 @@ function Case({ case_ }: { case_: any }) {
             </dl>
           </Col>
         </Row>
+
+        <Row>
+          <Col lg={2} md={1}/>
+          <Col lg={8} md={10}>
+            <DiscussionBox 
+              discourseUrl='https://forum.levelplayingfield.io/'
+              discourseEmbedUrl={`/case/${case_.case_id}`}
+            />
+          </Col>
+        </Row>
+
         {/*
         <Row>
           <Col>

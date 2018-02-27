@@ -20,14 +20,33 @@ function Navigation({ className }: any) {
       <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <a
         className={s.link}
-        href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J8KHLEX98Z38Y"
+        href="https://www.patreon.com/levelplayingfield"
         target="_blank"
         rel="noopener noreferrer"
       >
         Donate
       </a>
+      
+      <a
+        className={s.link}
+        href="https://forum.levelplayingfield.io"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Forum
+      </a>
+      
+      <a
+        className={s.link}
+        href="https://blog.levelplayingfield.io"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Blog
+      </a>
+
       <Link className={s.link} to="/search?q=is:case">Cases</Link>
-      <Link className={s.link} to="/search?q=is:party">Parties</Link>
+      {/*<Link className={s.link} to="/search?q=is:party">Parties</Link>*/}
     </div>
   );
 }

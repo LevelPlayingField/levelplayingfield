@@ -1,7 +1,15 @@
-FROM node:7-onbuild
+FROM node:9
 ENV WEBSITE_HOSTNAME levelplayingfield.io
 
-RUN npm run build -- --release
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app
+RUN npm install \
+ && npm cache clean --force
+
+COPY . /usr/src/app
+RUN npm run build --release
 
 EXPOSE 3000
-ENTRYPOINT ["/bin/bash", "./tools/docker-run.sh"]
+CMD ["/bin/bash", "./tools/docker-run.sh"]

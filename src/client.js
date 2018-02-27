@@ -10,16 +10,19 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactGA from 'react-ga';
+import ReactPixel from 'react-facebook-pixel';
 import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import UniversalRouter from 'universal-router';
 import queryString from 'query-string';
 import createBrowserHistory from 'history/createBrowserHistory';
 import App from './components/App';
-import { ErrorReporter, deepForceUpdate } from './core/devUtils';
+import { deepForceUpdate, ErrorReporter } from './core/devUtils';
 import { analytics } from './config';
 
 ReactGA.initialize(analytics.google);
+ReactPixel.init(analytics.facebook);
+ReactPixel.pageView();
 
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
@@ -81,6 +84,7 @@ async function onLocationChange(location) {
   }
   currentLocation = location;
   ReactGA.pageview(location.pathname + location.search);
+  ReactPixel.pageView();
 
   try {
     // Traverses the list of routes in the order they are defined until
@@ -104,7 +108,7 @@ async function onLocationChange(location) {
     appInstance = ReactDOM.render(
       <App context={context}>{route.component}</App>,
       container,
-      () => onRenderComplete(route, location)
+      () => onRenderComplete(route, location),
     );
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
@@ -118,7 +122,7 @@ async function onLocationChange(location) {
     // Display the error in full-screen for development mode
     if (process.env.NODE_ENV !== 'production') {
       appInstance = null;
-      document.title = `Error: ${error.message}`;
+      document.title = 'Error: ' + error.message;
       ReactDOM.render(<ErrorReporter error={error}/>, container);
       return;
     }
@@ -131,7 +135,17 @@ async function onLocationChange(location) {
 // Handle client-side navigation by using HTML5 History API
 // For more information visit https://github.com/mjackson/history#readme
 history.listen(onLocationChange);
-onLocationChange(currentLocation);
+
+if (!window.Intl) {
+  require.ensure(['intl', 'intl/'], r => {
+    r('intl');
+    r('intl/locale-data/jsonp/en.js');
+
+    onLocationChange(currentLocation);
+  });
+} else {
+  onLocationChange(currentLocation);
+}
 
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {
@@ -144,7 +158,7 @@ if (module.hot) {
         deepForceUpdate(appInstance);
       } catch (error) {
         appInstance = null;
-        document.title = `Hot Update Error: ${error.message}`;
+        document.title = 'Hot Update Error: ' + error.message;
         ReactDOM.render(<ErrorReporter error={error}/>, container);
         return;
       }

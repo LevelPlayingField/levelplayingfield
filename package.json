@@ -1,10 +1,14 @@
 {
   "private": true,
   "engines": {
-    "node": ">=6.5",
-    "npm": ">=3.10"
+    "node": ">=8.0",
+    "npm": ">=5.5.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.4",
+    "@fortawesome/fontawesome-free-brands": "^5.0.7",
+    "@fortawesome/fontawesome-free-solid": "^5.0.7",
+    "@fortawesome/react-fontawesome": "0.0.17",
     "awesome-progress": "0.0.53",
     "babel-polyfill": "6.16.0",
     "babel-runtime": "6.18.0",
@@ -33,13 +37,14 @@
     "graphql-type-json": "^0.1.4",
     "history": "4.3.0",
     "html-loader": "^0.4.4",
+    "intl": "^1.2.5",
     "isomorphic-style-loader": "1.0.0",
     "jsonwebtoken": "7.1.9",
     "markdown-it": "8.0.1",
     "markdown-loader": "^0.1.7",
     "morgan": "^1.7.0",
     "node-fetch": "1.6.3",
-    "node-sass": "^3.13.0",
+    "node-sass": "^4.7.2",
     "normalize.css": "^5.0.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
@@ -48,6 +53,7 @@
     "query-string": "4.2.3",
     "react": "15.3.2",
     "react-dom": "15.3.2",
+    "react-facebook-pixel": "^0.1.0",
     "react-ga": "^2.1.2",
     "react-helmet": "^3.2.3",
     "react-icons": "^2.2.1",

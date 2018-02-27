@@ -10,11 +10,10 @@
 
 import React from 'react';
 import cx from 'classnames';
-import {
-  IoEmail as Email,
-  IoSocialFacebook as Facebook,
-  IoSocialTwitter as Twitter,
-} from 'react-icons/lib/io';
+import fontawesome from '@fortawesome/fontawesome';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/fontawesome-free-solid';
+import { faTwitter, faFacebook, faPatreon } from '@fortawesome/fontawesome-free-brands';
 import Helmet from 'react-helmet';
 import s from './Footer.scss';
 import Link from '../Link';
@@ -33,13 +32,32 @@ function Footer() {
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/privacy">Privacy</Link>
         <span className={s.spacer}>·</span>
+
+        <a
+          className={s.link}
+          href="https://forum.levelplayingfield.io"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Forum
+        </a>
+        <span className={s.spacer}>·</span>        
+        <a
+          className={s.link}
+          href="https://blog.levelplayingfield.io"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Blog
+        </a>
+        <span className={s.spacer}>·</span>
         <a
           className={cx(s.link, s.icon)}
           target="_blank"
           rel="noopener noreferrer"
           href="mailto:team@lpf.io?subject=Hello, LPF!"
         >
-          <Email size={ICON_SIZE}/>
+          <FontAwesomeIcon icon={faEnvelope} size='xs'/>
         </a>
         <a
           className={cx(s.link, s.icon)}
@@ -47,7 +65,7 @@ function Footer() {
           rel="noopener noreferrer"
           href="https://twitter.com/lpf_dot_io"
         >
-          <Twitter size={ICON_SIZE}/>
+          <FontAwesomeIcon icon={faTwitter} size='xs'/>
         </a>
         <a
           className={cx(s.link, s.icon)}
@@ -55,7 +73,15 @@ function Footer() {
           rel="noopener noreferrer"
           href="https://www.facebook.com/levelplayingfieldio/"
         >
-          <Facebook size={ICON_SIZE}/>
+          <FontAwesomeIcon icon={faFacebook} size='xs'/>
+        </a>
+        <a
+          className={cx(s.link, s.icon)}
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.patreon.com/levelplayingfield"
+        >
+          <FontAwesomeIcon icon={faPatreon} size='xs'/>
         </a>
       </div>
     </div>

@@ -263,6 +263,7 @@ const clientConfig = extend(true, {}, config, {
     // https://webpack.github.io/docs/list-of-plugins.html#defineplugin
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': isDebug ? '"development"' : '"production"',
+      'process.env.WEBSITE_HOSTNAME': process.env.WEBSITE_HOSTNAME ? JSON.stringify(process.env.WEBSITE_HOSTNAME) : null,
       'process.env.BROWSER': true,
       __DEV__: isDebug,
     }),
