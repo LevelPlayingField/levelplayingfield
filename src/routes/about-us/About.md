@@ -1,21 +1,21 @@
 ### About Us
 
-If forced consumer arbitration is fair, shouldn't the distribution of outcomes in arbitration be comparable to the distribution of outcomes in the public court system?
+Level Playing Field is a 501(c)(3) non-profit that educates the public on forced consumer and employee arbitration and related issues.
 
-Yes.
+We leverage technology to empower individuals with disputes *today.* Not everyone can wait for the civil justice system to be made more fair *tomorrow.* We're fighting to put you on a more *level playing field* right now.
 
-The studies we've reviewed indicate the answer is far from yes. This points to a problem. Is forced consumer arbitration a more efficient way of getting to fair resolution or is it a way to tilt the playing field by perverting incentives?
+We began by publishing a freely-available, continuously-updated consumer and employee arbitration case database.  We also provide ongoing summary data analysis.  Reports, expert testimony and affidavits are available on request.
 
-If we assume arbitrators are generally impartial (an open question), why is the distribution of arbitration outcomes lopsided in favor of businesses?
+We encourage parties that have been through forced arbitration to share their stories [in our forums](https://forum.levelplayingfield.io) and by commenting on their cases (which tie back to the forums). If you think your case might be subject to confidentiality, [ask us.](mailto:team@lpf.io?subject=About+Us+Confidentiality) We've yet to see a non-neogtiated consumer agreement with a confidentiality clause. Employment and settlement agreements usually have one.
 
-One theory is that the lack of transparency in consumer arbitration prevents consumers and their counsel from learning the lessons of prior cases. So unsuccessful strategies are employed repeatedly. We have our doubts about this theory but can help test it.
+We also encourage those with experience in dispute resolution to contribute to the forums.
 
-Level Playing Field is a regularly-updated searchable database of consumer arbitration cases - with ongoing summary analysis. This allows parties to more readily share information and perform due diligence and analysis that was previously difficult-to-impossible.
+The more information parties share, the better off we all are.
 
-It's also an experiment. Can measuring and sharing the distribution of outcomes result in a shift? Can we help make forced arbitration fairer?
+We now [publish a blog](https://blog.levelplayingfield.io) where we highlight arbitration and related stories that we aren't seeing covered elsewhere.
 
-Over time, and as our budget allows, we plan to add features that allow parties to share information about their case. e.g., "I sued Big Bank over this and here is my complaint"; or, "this case is related to this court case"; or even further, for attorneys, "contact me if you're considering a similar case and I'll help you learn from our lessons."
+Finally, as a 501(c)(3), your donations are fully tax-deductible - and fully-appreciated.  We have a [Patreon for recurring monthly donations](https://www.patreon.com/levelplayingfield) and a [Paypal for one-time donations.](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J8KHLEX98Z38Y)
 
-In addition, Level Playing Field allows you to perform such due diligence as: how has Johnny Arbitrator decided in the past?
+Even one dollar a month helps. We try to offer our supporters early access to data and analysis.
 
-Level Playing Field is a 501(c)(3) non-profit. Monetary donations are fully tax-deductible. The more money we can raise, the mose useful features we can develop.
+Level Playing Field is just getting started and we have plenty more big ideas to roll out as time and our budget allows.
