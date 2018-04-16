@@ -12,6 +12,10 @@ You can filter your search results by typing the following modifiers to any sear
 
 * [state:CA](/search?q=is:case state:CA)
 
+* Dispute Types
+  * [type:consumer](/search?q=is:case type:consumer)
+  * [type:employment](/search?q=is:case type:employment) 
+
 * Dispositions (Limits case results to a case’s final disposition. Otherwise all dispositions are shown.)
   * [disposition:awarded](/search?q=is:case disposition:awarded) 
   * [disposition:settled](/search?q=is:case disposition:settled)
@@ -44,7 +48,9 @@ Or you can search for specific parties by name using
 
 1. Here is an example query searching for Wells Fargo, limited to California, and closed during 2016
   * [Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016](/search?q=Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016)
-1. Here is a modified version of the above, limited to only awarded dispositions
+2. Here is a modified version of the above, limited to only awarded dispositions
   * [Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded](/search?q=Wells Fargo is:case state:CA closed:1/1/2016-12/31/2016 disposition:awarded)
-1. Here is a search for all known parties matching "Wells Fargo"
+3. Here is a search for all known parties matching "Wells Fargo"
   * [is:party is:nonconsumer Wells Fargo](/search?q=is:party is:nonconsumer Wells Fargo)
+4. Here is a search for all Macy's employment cases:
+  * [Macy's is:case type:employment](/search?q=Macy's is:case is:employment)
