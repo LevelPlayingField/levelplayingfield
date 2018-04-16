@@ -152,7 +152,11 @@ const filterRange = (field, { from, to }) => {
 };
 
 function buildQuery(parsed: ParsedType): [any, Array<any>] {
-  let where = {};
+  let where = convertIs(
+    (typeof parsed === 'object' && parsed.is != null)
+      ? parsed.is
+      : 'case'
+  );
   const order = [];
 
   if (typeof parsed === 'string' || typeof parsed.text === 'string') {
@@ -263,12 +267,8 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
           filterRange('(document->>\'close_date\')::DATE', parsed.closed)],
       };
     }
-    if (parsed.is != null) {
-      where = { $and: [where, convertIs(parsed.is)] };
-    }
   }
 
-  console.log(JSON.stringify(where, null, 2));
   return [where, order];
 }
 
