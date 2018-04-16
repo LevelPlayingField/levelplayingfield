@@ -14,7 +14,7 @@ export default {
   path: '/search',
 
   async action(args: ActionParams) {
-    const { query: { q = '', page = 1, perPage = 20, sortBy = '', sortDir = 'ASC' } } = args;
+    const { query: { q = '', page = 1, perPage = 20, sortBy = 'close_date', sortDir = 'DESC' } } = args;
     const { Search: { Results } } = await graphql(SearchQuery, {
       query: q,
       perPage,

@@ -12,7 +12,7 @@ export default {
   path: '/search',
 
   async action(args: ActionParams) {
-    const { query: { q = '', page = 1, perPage = 20, sortBy = '', sortDir = 'ASC' } } = args;
+    const { query: { q = '', page = 1, perPage = 20, sortBy = 'close_date', sortDir = 'DESC' } } = args;
     const initialResults = window[RESULTS_KEY];
 
     delete window[RESULTS_KEY];
