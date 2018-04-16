@@ -26,10 +26,14 @@ export const searchOptions = {
     'state',
     'disposition',
     'awarded',
+    'type',
   ],
   groups: {
     is: [
       ['case', 'party'],
+    ],
+    type: [
+      ['employment', 'consumer'],
     ],
   },
   ranges: [
@@ -180,6 +184,15 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
   }
 
   if (typeof parsed !== 'string') {
+    if (parsed.type != null) {
+      where = {
+        $and: [
+          where, {
+            $or: safeMap(parsed.type,
+              s => ['document->>\'normal_type\' ILIKE ?', s]),
+          }],
+      };
+    }
     if (parsed.state != null) {
       where = {
         $and: [
@@ -255,6 +268,7 @@ function buildQuery(parsed: ParsedType): [any, Array<any>] {
     }
   }
 
+  console.log(JSON.stringify(where, null, 2));
   return [where, order];
 }
 

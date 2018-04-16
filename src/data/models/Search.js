@@ -41,6 +41,28 @@ BEGIN
 END $BODY$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION aaa_normalize_dispute_type(dispute_type TEXT)
+  RETURNS TEXT AS $$
+SELECT CASE
+       WHEN dispute_type IN (
+         'Consumer',
+         'Consumer Construction',
+         'Consumer Real Esate',
+         'Consumer Real Estate',
+         'Residential Real Estate',
+         'Residential Construction (B2C)',
+         'Texas Nonsubscriber'
+       )
+         THEN 'Consumer'
+       -- 'Employer Promulgated Employment'
+       -- 'Employment Issues/Commercial Contract'
+       -- 'Other Industry'
+       ELSE 'Employment'
+       END;
+$$
+LANGUAGE SQL;
+
+
 CREATE OR REPLACE VIEW case_search_view AS
   WITH parties AS (
     SELECT
@@ -56,6 +78,7 @@ CREATE OR REPLACE VIEW case_search_view AS
     GROUP BY case_parties.case_id
   ), results AS (
     SELECT DISTINCT ON (cases.case_id)
+      aaa_normalize_dispute_type(cases.dispute_type) AS normal_type,
       cases.*,
       parties.names,
       parties.parties
