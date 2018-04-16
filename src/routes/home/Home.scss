@@ -20,3 +20,26 @@
 .smallTable {
   font-size: 0.9rem;
 }
+
+.marginAuto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tableColumns {
+  thead tr {
+    & > th {
+      width: 40px;
+      text-align: center;
+    }
+    & > th:first-of-type {
+      width: 150px;
+    }
+    & > th:last-of-type {
+      width: 50px;
+    }
+  }
+  tbody tr td {
+    text-align: right;
+  }
+}

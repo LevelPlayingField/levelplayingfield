@@ -69,6 +69,25 @@ WITH case_ids AS (
     json_object_agg(d.awarded_party, d.count) AS data
   FROM case_awards_data d
   GROUP BY 1, 2
+), case_types_data AS (
+  SELECT
+    party_ids.party_id                       AS party_id,
+    EXTRACT(YEAR FROM close_date)            AS quarter,
+    aaa_normalize_dispute_type(dispute_type) AS normal_type,
+    count(*)                                 AS count
+  FROM party_ids
+    LEFT JOIN case_parties
+      ON case_parties.party_id = party_ids.party_id OR case_parties.firm_id = party_ids.party_id
+    join case_ids on case_parties.case_id = case_ids.id
+    JOIN cases c on case_ids.id = c.id
+  GROUP BY 1, 2, 3
+), case_types AS (
+  SELECT
+    d.party_id                              AS party_id,
+    d.quarter                               AS quarter,
+    json_object_agg(d.normal_type, d.count) AS data
+  FROM case_types_data d
+  GROUP BY 1, 2
 ), aggregate_data AS (
   SELECT
     party_id                       AS party_id,
@@ -83,6 +102,14 @@ WITH case_ids AS (
     'dispositions' :: CHARACTER VARYING AS key,
     json_object_agg(quarter, data)      AS data
   FROM case_dispositions
+  GROUP BY party_id
+  UNION ALL
+
+  SELECT
+    party_id                           AS party_id,
+    'types' :: CHARACTER VARYING       AS key,
+    json_object_agg(quarter, data) AS data
+  FROM case_types
   GROUP BY party_id
 ), data AS (
   SELECT

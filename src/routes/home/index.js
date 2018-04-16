@@ -17,17 +17,24 @@ export default {
   path: '/',
 
   async action() {
-    const { awards, dispositions } = await graphql(`{
+    const { awards, dispositions, dispute_types } = await graphql(`{
       awards: Summary(name: "case_awards") {
         data
       }
       dispositions: Summary(name: "case_dispositions") {
         data
       }
+      dispute_types: Summary(name: "dispute_types") {
+        data
+      }
     }`);
 
     return {
-      component: <Home awards={awards.data} dispositions={dispositions.data}/>,
+      component: <Home
+        awards={awards.data}
+        dispositions={dispositions.data}
+        dispute_types={dispute_types.data}
+      />,
     };
   },
 

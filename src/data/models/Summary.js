@@ -33,7 +33,7 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
          FROM (SELECT
                  EXTRACT(YEAR FROM close_date) AS year,
                  type_of_disposition           AS disposition,
-                 count(cases.id)              AS count
+                 count(cases.id)               AS count
                FROM case_ids, cases
                WHERE case_ids.id = cases.id
                GROUP BY 1, 2) case_dispositions
@@ -52,16 +52,33 @@ CREATE MATERIALIZED VIEW summary_data ("name", "data") AS (
                  CASE WHEN prevailing_party = '---'
                    THEN 'Unknown'
                  ELSE prevailing_party END     AS award,
-                 count(cases.id)              AS count
+                 count(cases.id)               AS count
                FROM case_ids, cases
                WHERE case_ids.id = cases.id
                      AND cases.type_of_disposition = 'Awarded'
                GROUP BY 1, 2) case_prevailing_parties
          GROUP BY 1
        ) case_awards
+  UNION ALL
+  SELECT
+    'dispute_types',
+    json_object_agg(year, data)
+  FROM (
+         SELECT
+           year,
+           json_object_agg(type, count) AS data
+         FROM (SELECT
+                 extract(YEAR FROM close_date)            AS year,
+                 aaa_normalize_dispute_type(dispute_type) AS type,
+                 count(cases.id)                          AS count
+               FROM case_ids, cases
+               WHERE case_ids.id = cases.id
+               GROUP BY 1, 2) case_normal_types
+         GROUP BY 1
+       ) case_types
 )
 WITH DATA;
-`);
+  `);
 };
 
 export default Summary;

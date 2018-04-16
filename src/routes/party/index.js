@@ -4,22 +4,20 @@ import React from 'react';
 import Party from './Party';
 import graphql from '../../core/graphql';
 
+type AggregateData = {
+  [key: string]: {
+    [key: string]: number,
+  },
+}
 type PartyFields = {
   id: number,
   slug: string,
   type: string,
   name: string,
   aggregate_data: {
-    awards: {
-      [key: string]: {
-        [key: string]: number,
-      },
-    },
-    dispositions: {
-      [key: string]: {
-        [key: string]: number,
-      }
-    }
+    awards: AggregateData,
+    dispositions: AggregateData,
+    types: AggregateData,
   }
 }
 export type CaseType = {
@@ -39,8 +37,8 @@ export type CaseType = {
   }
 }
 export type PartyType = PartyFields & {
-  Attorneys: { edges: Array<{node: PartyFields}>},
-  Firms: { edges: Array<{node: PartyFields}>},
+  Attorneys: { edges: Array<{ node: PartyFields }> },
+  Firms: { edges: Array<{ node: PartyFields }> },
 };
 
 export default {
