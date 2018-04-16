@@ -35,8 +35,6 @@ function Party({ party }: { party: PartyType }) {
           <Col>
             <PartySummary party={party}/>
           </Col>
-        </Row>
-        <Row>
           <Col>
             <PartyDetails party={party}/>
           </Col>

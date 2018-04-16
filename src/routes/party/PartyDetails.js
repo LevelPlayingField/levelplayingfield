@@ -3,7 +3,6 @@
 import React from 'react';
 import LawFirmDetails from './LawFirmDetails';
 import AttorneyDetails from './AttorneyDetails';
-import GeneralPartyDetails from './GeneralPartyDetails';
 import type { PartyType } from './';
 
 function PartyDetails({ party }: {party:PartyType}) {
@@ -13,7 +12,7 @@ function PartyDetails({ party }: {party:PartyType}) {
     case 'Attorney':
       return <AttorneyDetails party={party}/>;
     default:
-      return <GeneralPartyDetails party={party}/>;
+      return null;
   }
 }
 

@@ -18,7 +18,6 @@ const PartySummary = ({ party }: { party: PartyType }) => {
       <Col className={s.alignCenter}>
         {party.aggregate_data.types && (
           <SummaryTable
-            className={s.marginAuto}
             data={party.aggregate_data.types} heading="Dispute Types" headingQuery="type"
             extraTerms={{ party: party.name }}
           />
@@ -30,7 +29,6 @@ const PartySummary = ({ party }: { party: PartyType }) => {
       <Col className={s.alignCenter}>
         {party.aggregate_data.dispositions && (
           <SummaryTable
-            className={s.marginAuto}
             data={party.aggregate_data.dispositions} heading="Dispositions"
             headingQuery="disposition"
             extraTerms={{ party: party.name }}
@@ -43,7 +41,6 @@ const PartySummary = ({ party }: { party: PartyType }) => {
       <Col className={s.alignCenter}>
         {party.aggregate_data.awards && (
           <SummaryTable
-            className={s.marginAuto}
             data={party.aggregate_data.awards} heading="Awards" headingQuery="awarded"
             extraTerms={{ party: party.name, disposition: 'awarded' }}
           />
