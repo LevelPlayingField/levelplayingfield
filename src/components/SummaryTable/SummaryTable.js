@@ -17,6 +17,7 @@ type Props = {
   headingQuery: string,
   extraTerms?: Terms,
   data: DataSet,
+  className?: string,
 };
 
 const notNull = d => d != null;
@@ -43,7 +44,7 @@ function buildQuery(values: { [key: string]: string }): string {
   return encodeURIComponent(query.join(' '));
 }
 
-const SummaryTable = ({ data, heading, headingQuery, extraTerms }: Props) => {
+const SummaryTable = ({ data, heading, headingQuery, extraTerms, className = '' }: Props) => {
   const years = Object.keys(data);
   const headings = years
     .map(y => Object.keys(data[y]))
@@ -53,7 +54,7 @@ const SummaryTable = ({ data, heading, headingQuery, extraTerms }: Props) => {
     });
 
   return (
-    <table className={s.summaryTable}>
+    <table className={`${s.summaryTable} ${className}`}>
       <Helmet style={[{ type: 'text/css', cssText: s._getCss() }]}/>
       <caption>{heading}</caption>
       <thead>

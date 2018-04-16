@@ -21,15 +21,20 @@ function Home({ awards, dispositions }: { awards: any, dispositions: any }) {
         <br/>
         <Row>
           <Col md={12} lg={6}>
-            {dispositions &&
-            <SummaryTable heading="Case Dispositions by Closing Date" headingQuery="disposition" data={dispositions}/>
-            }
+            {dispositions ? (
+              <SummaryTable
+                className={s.smallTable}
+                heading="Case Dispositions by Closing Date" headingQuery="disposition"
+                data={dispositions}
+              />
+            ) : null}
           </Col>
           <Col md={12} lg={6}>
             {awards &&
             <SummaryTable
-              heading="Awarded Parties by Closing Date" headingQuery="awarded" data={awards}
-              extraTerms={{ disposition: 'awarded' }}
+              className={s.smallTable}
+              heading="Awarded Parties by Closing Date" headingQuery="awarded"
+              data={awards} extraTerms={{ disposition: 'awarded' }}
             />
             }
           </Col>
