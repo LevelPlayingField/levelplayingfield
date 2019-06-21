@@ -6,7 +6,7 @@ We leverage technology to empower individuals with disputes *today.* Not everyon
 
 We began by publishing a freely-available, continuously-updated consumer and employee arbitration case database.  We also provide ongoing summary data analysis.  Reports, expert testimony and affidavits are available on request.
 
-We encourage parties that have been through forced arbitration to share their stories [in our forums](https://forum.levelplayingfield.io) and by commenting on their cases (which tie back to the forums). If you think your case might be subject to confidentiality, [ask us.](mailto:team@lpf.io?subject=About+Us+Confidentiality) We've yet to see a non-neogtiated consumer agreement with a confidentiality clause. Employment and settlement agreements usually have one.
+We encourage parties that have been through forced arbitration to share their stories [in our forums](https://forum.levelplayingfield.io) and by commenting on their cases (which tie back to the forums). If you think your case might be subject to confidentiality, [ask us.](mailto:team@lpf.io?subject=About+Us+Confidentiality) We've yet to see a non-negotiated consumer agreement with a confidentiality clause. Employment and settlement agreements usually have one.
 
 We also encourage those with experience in dispute resolution to contribute to the forums.
 
