@@ -60,7 +60,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "react-transition-group": "^2.2.0",
     "search-query-parser": "mixmaxhq/search-query-parser#694d67e",
-    "sequelize": "3.24.8",
+    "sequelize": "5.15.1",
     "source-map-support": "0.4.5",
     "universal-router": "2.0.0",
     "whatwg-fetch": "1.0.0",
