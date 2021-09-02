@@ -40,14 +40,14 @@ type Case {
   claim_amount_business: String
   fee_allocation_business: String
   fees_business: String
-  award_amount_business: Int
-  attorney_fees_business: Int
+  award_amount_business: String
+  attorney_fees_business: String
   other_relief_business: String
   claim_amount_consumer: String
   fee_allocation_consumer: String
   fees_consumer: String
-  award_amount_consumer: Int
-  attorney_fees_consumer: Int
+  award_amount_consumer: String
+  attorney_fees_consumer: String
   other_relief_consumer: String
   consumer_rep_state: String
   consumer_self_represented: Boolean
