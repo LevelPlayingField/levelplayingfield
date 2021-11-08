@@ -28,7 +28,7 @@
     "flexibility": "^2.0.1",
     "formidable-charts": "0.0.6",
     "front-matter": "2.1.0",
-    "graphiql": "0.7.8",
+    "graphiql": "1.4.7",
     "graphql": "0.7.2",
     "graphql-date": "^1.0.2",
     "graphql-errors": "^2.1.0",
