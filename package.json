@@ -40,7 +40,7 @@
     "intl": "^1.2.5",
     "isomorphic-style-loader": "1.0.0",
     "jsonwebtoken": "7.1.9",
-    "markdown-it": "8.0.1",
+    "markdown-it": "12.3.2",
     "markdown-loader": "^0.1.7",
     "morgan": "^1.7.0",
     "node-fetch": "1.6.3",
