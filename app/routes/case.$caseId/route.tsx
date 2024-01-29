@@ -276,14 +276,6 @@ export default function Case() {
           </dl>
         </Col>
       </Row>
-
-      <Debug>
-        <Row>
-          <Col>
-            <pre>{JSON.stringify(data.case, null, 2)}</pre>
-          </Col>
-        </Row>
-      </Debug>
     </Container>
   );
 }
