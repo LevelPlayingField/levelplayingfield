@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+build/
+.env
+prisma/seed.pg
+app/routes/**/*.css
+app/routes/**/*.css.map

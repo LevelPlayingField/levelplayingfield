@@ -1,0 +1,38 @@
+@import "../../layout";
+
+.rowMargin {
+  margin-bottom: 1.5rem;
+}
+
+.marginAuto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.titleMuted {
+  font-size: 0.75em;
+  padding-left: 2em;
+  color: #888;
+}
+
+.cases,
+.parties {
+  list-style: none;
+}
+
+.caseItem,
+.partyItem {
+  padding-bottom: 0.5em;
+}
+
+.caseItem .caseNumber {
+  margin-left: 1em;
+}
+
+.subtitle {
+  margin-top: 0;
+}

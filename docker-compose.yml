@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - "DATABASE_URL=postgresql://levelplayingfield:levelplayingfield@db/levelplayingfield"
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=levelplayingfield
+      - POSTGRES_PASSWORD=levelplayingfield
+      - POSTGRES_DB=levelplayingfield
+    ports: 
+      - "5432:5432"

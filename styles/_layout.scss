@@ -1,0 +1,35 @@
+.root {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.title {
+  margin-top: 10px;
+}
+
+.table {
+  width: 100%;
+
+  th {
+    text-align: left;
+  }
+}
+
+.dl_horizontal {
+  margin: 0;
+  width: 100%;
+}
+
+.dl_horizontal dt {
+  margin: 0;
+  font-weight: 500;
+  width: 50%;
+  display: inline-block;
+  text-align: right;
+}
+
+.dl_horizontal dd {
+  margin-left: 2%;
+  display: inline-block;
+  width: 48%;
+}

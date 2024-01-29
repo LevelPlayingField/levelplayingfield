@@ -1,29 +1,50 @@
 {
-  "name": "",
+  "name": "levelplayingfield",
   "private": true,
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev --manual",
+    "build": "npm-run-all build:prisma build:sass build:remix",
+    "build:sass": "sass -I node_modules --quiet-deps --no-source-map ./styles/:app",
+    "build:prisma": "prisma generate",
+    "build:remix": "remix build",
+    "dev": "concurrently npm:dev:*",
+    "dev:remix": "remix dev --manual",
+    "dev:sass": "sass -I node_modules --quiet-deps --no-source-map --watch ./styles/:app",
+    "dev:prisma": "prisma generate --watch",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "cli": "tsx ./scripts/cli.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.8.1",
     "@remix-run/css-bundle": "^2.5.1",
     "@remix-run/node": "^2.5.1",
     "@remix-run/react": "^2.5.1",
     "@remix-run/serve": "^2.5.1",
+    "classnames": "^2.5.1",
+    "flexboxgrid": "^6.3.1",
+    "flexboxgrid-sass": "^8.0.5",
     "isbot": "^4.1.0",
+    "normalize.css": "^8.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "reflect-metadata": "^0.2.1",
+    "search-query-parser": "^1.6.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@commander-js/extra-typings": "^11.1.0",
     "@remix-run/dev": "^2.5.1",
+    "@types/cli-progress": "^3.11.5",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "cli-progress": "^3.12.0",
+    "commander": "^11.1.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -31,7 +52,12 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.1.6"
+    "npm-run-all": "^4.1.5",
+    "prisma": "^5.8.1",
+    "sass": "^1.70.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.1.6",
+    "xlsx": "^0.18.5"
   },
   "engines": {
     "node": ">=18.0.0"

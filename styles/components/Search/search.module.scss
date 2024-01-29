@@ -1,0 +1,232 @@
+@import "../../variables";
+@import "../../layout";
+
+.container {
+  max-width: $screen-lg-min - 40;
+}
+
+.heading {
+  & > a {
+    text-decoration: none;
+    color: black
+  }
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.queryRow {
+  text-align: center;
+}
+
+.centerText {
+  text-align: center;
+}
+
+.tbodyLoading tr td {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.padding1 {
+  padding: 1em;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.Sortable {
+  svg {
+    margin-left: 0.5em;
+  }
+}
+
+.rotateIcon {
+  animation: rotate 1.8s infinite linear;
+  transform-origin: 50% 50% 0;
+}
+
+.searchIcon {
+  font-size: 2em;
+  color: $primary-color;
+}
+
+.toggleButton {
+  border: none;
+  color: #555;
+  background-color: mix($accent-color, #eee, 20%);
+  padding: 10px 8px;
+}
+
+.toggleButtonActive {
+  color: #222;
+  background-color: $accent-color;
+}
+
+.searchField,
+.selectField {
+  font-size: 1.2em;
+  padding: 8px;
+  max-width: 400px;
+  border: none;
+  border-bottom: 1.5px $accent-color solid;
+}
+
+.searchField {
+  width: calc(90% - 8px - 8px - 1em);
+}
+
+.selectField {
+  background-color: transparent;
+  height: 38px;
+
+  &:hover {
+    outline: none;
+  }
+}
+
+.table {
+  margin-top: 20px;
+  border-spacing: 0;
+  font-size: 1em;
+}
+
+.table thead tr th {
+  text-align: left;
+}
+
+.table tbody {
+  font-size: 0.9em;
+
+  tr td {
+    transition: background-color 0.5s;
+  }
+
+  &:hover {
+    tr td {
+      background-color: darken(white, 5%);
+    }
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+  td {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.resultRow {
+  border-top: 1px gray solid;
+}
+
+.resultRow tr td {
+  padding: 2px;
+}
+
+.cellLink {
+  text-decoration: none;
+  display: block;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.pagination {
+  $border-radius: 5px;
+
+  list-style: none;
+  display: flex;
+  justify-content: center;
+
+  li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 1px lightgray solid;
+    border-left: none;
+
+    &:first-of-type {
+      border-left: 1px lightgray solid;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
+    a,
+    span {
+      text-decoration: none;
+      display: inline-block;
+      padding: 10px;
+    }
+  }
+}
+
+@media all and (max-width: $screen-md-min) {
+  .searchIcon {
+    display: none;
+  }
+
+  .searchField {
+    width: calc(100% - 8px * 2);
+  }
+
+  .table {
+    display: block;
+
+    thead {
+      display: none;
+    }
+
+    tbody.resultRow {
+      display: flex;
+      flex-direction: column;
+
+      &:not(:first-of-type) {
+        border-top: 1px lightgray solid;
+      }
+
+      tr {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        td {
+          border-top: none !important;
+
+          &:not([title]) {
+            display: none;
+          }
+
+          &::before {
+            content: attr(title);
+            width: calc(45% - 1em);
+            text-align: right;
+            padding-right: 1em;
+            font-weight: 600;
+            display: inline-block;
+          }
+
+          .cellLink {
+            display: inline-block;
+            width: 55%;
+          }
+        }
+      }
+    }
+  }
+}

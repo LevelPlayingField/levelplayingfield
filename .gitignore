@@ -1,6 +1,12 @@
+.vscode
+
 node_modules
 
 /.cache
 /build
 /public/build
 .env
+app/**/*.css
+app/**/*.css.map
+
+prisma/seed.pg

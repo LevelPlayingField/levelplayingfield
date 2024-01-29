@@ -1,0 +1,148 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views", "postgresqlExtensions", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model attorney_firms {
+  created_at DateTime @db.Timestamptz(6)
+  updated_at DateTime @db.Timestamptz(6)
+  party_id   Int
+  firm_id    Int
+
+  firm  parties @relation("attorney_firms_firm_idToparties", fields: [firm_id], references: [id], onDelete: Cascade)
+  party parties @relation("attorney_firms_party_idToparties", fields: [party_id], references: [id], onDelete: Cascade)
+
+  @@id([party_id, firm_id])
+}
+
+model case_parties {
+  type       String?   @db.VarChar(32)
+  case_id    String    @db.Uuid
+  party_id   Int
+  firm_id    Int?
+  party_name String?   @db.VarChar(255)
+  firm_name  String?   @db.VarChar(255)
+  party_slug String?   @db.VarChar(255)
+  firm_slug  String?   @db.VarChar(255)
+  date       DateTime? @db.Timestamptz(6)
+  fees       Int?
+  created_at DateTime  @db.Timestamptz(6)
+  updated_at DateTime  @db.Timestamptz(6)
+
+  case  cases    @relation(fields: [case_id], references: [id], onDelete: Cascade)
+  firm  parties? @relation("case_parties_firm_idToparties", fields: [firm_id], references: [id], onDelete: Cascade)
+  party parties  @relation("case_parties_party_idToparties", fields: [party_id], references: [id], onDelete: Cascade)
+
+  @@id([case_id, party_id])
+  @@index([case_id], map: "case_parties_case_id")
+  @@index([firm_id], map: "case_parties_firm_id")
+  @@index([party_id], map: "case_parties_party_id")
+}
+
+model cases {
+  id                        String    @id @db.Uuid
+  case_id                   Int       @unique @default(autoincrement())
+  import_date               DateTime? @db.Timestamptz(6)
+  unique_value              String?   @db.VarChar(255)
+  case_number               String?   @db.VarChar(24)
+  arbitration_board         String?   @db.VarChar(255)
+  initiating_party          String?   @db.VarChar(255)
+  source_of_authority       String?   @db.VarChar(255)
+  dispute_type              String?   @db.VarChar(255)
+  dispute_subtype           String?   @db.VarChar(255)
+  salary_range              String?   @db.VarChar(255)
+  prevailing_party          String?   @db.VarChar(255)
+  filing_date               DateTime? @db.Timestamptz(6)
+  close_date                DateTime? @db.Timestamptz(6)
+  type_of_disposition       String?   @db.VarChar(255)
+  claim_amount_business     BigInt?
+  fee_allocation_business   Decimal?  @db.Decimal(5, 2)
+  fees_business             BigInt?
+  award_amount_business     BigInt?
+  attorney_fees_business    BigInt?
+  other_relief_business     String?   @db.VarChar(255)
+  claim_amount_consumer     BigInt?
+  fee_allocation_consumer   Decimal?  @db.Decimal(5, 2)
+  fees_consumer             BigInt?
+  award_amount_consumer     BigInt?
+  attorney_fees_consumer    BigInt?
+  other_relief_consumer     String?   @db.VarChar(255)
+  consumer_rep_state        String?   @db.VarChar(255)
+  consumer_self_represented Boolean?
+  document_only_proceeding  Boolean?
+  type_of_hearing           String?   @db.VarChar(255)
+  hearing_addr1             String?   @db.VarChar(255)
+  hearing_addr2             String?   @db.VarChar(255)
+  hearing_city              String?   @db.VarChar(255)
+  hearing_state             String?   @db.VarChar(255)
+  hearing_zip               String?   @db.VarChar(255)
+  arb_count                 Int?
+  med_count                 Int?
+  arb_or_cca_count          Int?
+  adr_process               String?   @db.VarChar(255)
+  created_at                DateTime  @db.Timestamptz(6)
+  updated_at                DateTime  @db.Timestamptz(6)
+
+  case_parties case_parties[]
+
+  @@unique([id, import_date], map: "cases_id_import_date")
+  @@index([case_number], map: "cases_case_number")
+  @@index([id], map: "cases_id")
+}
+
+model parties {
+  id             Int      @id @default(autoincrement())
+  type           String?  @db.VarChar(32)
+  name           String?  @db.VarChar(255)
+  slug           String?  @db.VarChar(255)
+  aggregate_data Json?
+  created_at     DateTime @db.Timestamptz(6)
+  updated_at     DateTime @db.Timestamptz(6)
+
+  attornies attorney_firms[] @relation("attorney_firms_firm_idToparties")
+  firms     attorney_firms[] @relation("attorney_firms_party_idToparties")
+
+  case_parties_case_parties_firm_idToparties  case_parties[] @relation("case_parties_firm_idToparties")
+  case_parties_case_parties_party_idToparties case_parties[] @relation("case_parties_party_idToparties")
+
+  @@index([id], map: "parties_id")
+  @@index([name], map: "parties_name")
+  @@index([type, name], map: "parties_type_name")
+}
+
+view party_search_view {
+  id       Int                     @unique
+  slug     String                  @db.VarChar(255)
+  index    String
+  vector   Unsupported("tsvector")
+  document Json
+}
+
+view case_search_view {
+  id       Int                     @unique
+  slug     String                  @db.VarChar
+  index    String
+  vector   Unsupported("tsvector")
+  document Json
+}
+
+view search_view {
+  type     String
+  id       Int
+  slug     String?                 @db.VarChar(255)
+  index    String
+  vector   Unsupported("tsvector")
+  document Json
+
+  @@unique([type, id])
+}
+
+view summary_data {
+  name String @unique
+  data Json
+}

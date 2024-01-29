@@ -1,0 +1,23 @@
+
+h2 {
+    font-size: 1.6em;
+  }
+  
+  h3 {
+    font-size: 1.4em;
+  }
+  
+  p,
+  ol,
+  li {
+    font-size: 1em;
+  }
+  
+  ol:first-of-type {
+    list-style-type: upper-alpha;
+  
+    li ol {
+      list-style-type: lower-roman;
+    }
+  }
+  

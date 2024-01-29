@@ -1,0 +1,96 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+ @import '../_variables.scss';
+
+ .root {
+   background: $primary-color;
+   color: #fff;
+ }
+ 
+ .container {
+   margin: 0 auto;
+   padding: 20px 0;
+   max-width: $max-content-width;
+ }
+ 
+ .sections {
+   display: flex;
+ }
+ 
+ .section {
+   flex: 1;
+ }
+ 
+ .brand {
+   @extend .section;
+ 
+   color: lighten($accent-color, 10);
+   text-decoration: none;
+   font-size: 1.75em; /* ~28px */
+ }
+ 
+ .brandTxt {
+   margin: 10px;
+ }
+ 
+ .nav {
+   @extend .section;
+ 
+   text-align: right;
+   margin-top: 6px;
+ }
+ 
+ .search {
+   @extend .section;
+ }
+ 
+ .subContainer {
+   margin: 0 auto;
+   padding: 0.1rem;
+   min-height: 20px;
+   background: #61dafb;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+ 
+   .heading {
+     margin: auto;
+     color: #373277;
+     font-size: 0.9rem;
+   }
+ }
+ 
+ @media (max-width: $screen-md-min) {
+   .container {
+     padding: 0;
+   }
+ 
+   .sections {
+     flex-direction: column;
+   }
+ 
+   .brand {
+     order: 1;
+     font-size: 2.4em;
+     text-align: center;
+   }
+ 
+   .nav {
+     order: 2;
+     text-align: center;
+     font-size: 1.5em;
+     display: flex;
+     flex-direction: row;
+   }
+ 
+   .search {
+     order: 3;
+   }
+ }
+ 

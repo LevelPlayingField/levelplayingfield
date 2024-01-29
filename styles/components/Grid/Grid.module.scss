@@ -1,0 +1,24 @@
+@use "flexboxgrid-sass/flexboxgrid.scss";
+@import "../../variables";
+
+.container {
+  margin: 16px auto;
+}
+
+@media only screen and (min-width: $screen-sm-min) and (max-width: ($screen-md-min - 1)) {
+  .hidden-sm {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: $screen-md-min) and (max-width: ($screen-lg-min - 1)) {
+  .hidden-md {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: $screen-lg-min) {
+  .hidden-lg {
+    display: none;
+  }
+}
