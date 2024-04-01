@@ -35,10 +35,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const filters: Prisma.Sql[] = [];
 
   if (query.is?.length) {
-    filters.push(Prisma.sql`lower(type) in (${Prisma.join(mapLower(query.is))})`);
+    filters.push(Prisma.sql`lower(type) IN (${Prisma.join(mapLower(query.is))})`);
   }
   if (query.type?.length) {
-    filters.push(Prisma.sql`lower(document->>'normal_type') in (${Prisma.join(mapLower(query.type))})`);
+    filters.push(Prisma.sql`lower(document->>'normal_type') IN (${Prisma.join(mapLower(query.type))})`);
   }
   if (query.state?.length) {
     filters.push(Prisma.sql`lower(document->>'consumer_rep_state') IN (${Prisma.join(mapLower(query.state))})`);
@@ -58,45 +58,56 @@ export async function loader({ request }: LoaderFunctionArgs) {
     );
   }
   if (query.filed) {
-    filters.push(Prisma.sql`(document->>'filing_date')::DATE BETWEEN ${query.filed.from} and ${query.filed.to}`);
+    filters.push(Prisma.sql`(document->>'filing_date')::DATE BETWEEN ${query.filed.from} AND ${query.filed.to}`);
   }
   if (query.closed) {
-    filters.push(Prisma.sql`(document->>'close_date')::DATE BETWEEN ${query.closed.from} and ${query.closed.to}`);
+    filters.push(Prisma.sql`(document->>'close_date')::DATE BETWEEN ${query.closed.from} AND ${query.closed.to}`);
   }
+  if (query.text?.length) {
+    filters.push(
+      Prisma.join(
+        query.text.map((q) => (q ? Prisma.sql`vector @@ to_tsquery('simple' :: regconfig, ${q})` : Prisma.empty)),
+        " AND "
+      )
+    );
+  }
+
+  const whereClause = filters.length > 0 ? Prisma.join(filters, " AND ", "WHERE ") : Prisma.empty;
+  const orderByClause =
+    sortBy != null
+      ? Prisma.sql`document->${sortBy.replace("'", "''")} ${Prisma.raw(
+          sortDir?.toLowerCase() == "asc" ? "ASC" : "DESC"
+        )},`
+      : Prisma.empty;
 
   const { count = 0 } = first(
     await db.$queryRaw<{ count: number }[]>`
-      SELECT 
-      COUNT(*) :: INT as "count"
+      SELECT
+          COUNT(*) :: INT as "count"
       FROM "search_view"
-      ${Prisma.join(filters, " AND ", "WHERE ")}
+      ${whereClause}
     `
   )!;
 
   // TODO: I think I could do this easier with Prisma.join over an array of Prisma.sql
   const results = await db.$queryRaw<Array<SearchResult>>`
-    SELECT 
+    SELECT
         "type"
         , "id"
         , "slug"
         , "index"
         , "document"
     FROM "search_view"
-    ${Prisma.join(filters, " AND ", "WHERE ")}
+    ${whereClause}
     ORDER BY
-      ${
-        sortBy != null
-          ? Prisma.sql`document->${sortBy.replace("'", "''")} ${Prisma.raw(
-              sortDir?.toLowerCase() == "asc" ? "ASC" : "DESC"
-            )},`
-          : Prisma.empty
-      }
-      id asc
-      
+        ${orderByClause}
+        id ASC,
+        type DESC
     LIMIT ${perPage} OFFSET ${(page - 1) * perPage}
   `;
 
-  return json({ results, page, pages: Math.ceil(count / perPage), count });
+  const pages = Math.ceil(count / perPage);
+  return json({ results, page, pages, count });
 }
 
 export default function Search() {
@@ -236,7 +247,12 @@ export default function Search() {
           <ul className={s.pagination}>
             {page > 2 && (
               <li>
-                <Link to={`?${qs.stringify({ ...Object.fromEntries(searchParams.entries()), page: 1 })}`}>
+                <Link
+                  to={`?${qs.stringify({
+                    ...Object.fromEntries(searchParams.entries()),
+                    page: 1,
+                  })}`}
+                >
                   First {perPage}
                 </Link>
               </li>
@@ -244,7 +260,12 @@ export default function Search() {
 
             <li>
               {page > 1 ? (
-                <Link to={`?${qs.stringify({ ...Object.fromEntries(searchParams.entries()), page: page - 1 })}`}>
+                <Link
+                  to={`?${qs.stringify({
+                    ...Object.fromEntries(searchParams.entries()),
+                    page: page - 1,
+                  })}`}
+                >
                   Previous {perPage}
                 </Link>
               ) : (
@@ -260,7 +281,12 @@ export default function Search() {
 
             <li>
               {page < pages ? (
-                <Link to={`?${qs.stringify({ ...Object.fromEntries(searchParams.entries()), page: page + 1 })}`}>
+                <Link
+                  to={`?${qs.stringify({
+                    ...Object.fromEntries(searchParams.entries()),
+                    page: page + 1,
+                  })}`}
+                >
                   Next {perPage}
                 </Link>
               ) : (

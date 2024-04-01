@@ -1,6 +1,5 @@
 import z from "zod";
 import searchQueryParser from "search-query-parser";
-import Prisma from "@prisma/client";
 
 const keywords = ["is", "board", "party", "state", "disposition", "awarded", "type"];
 /// Well, need to validate these ourself
